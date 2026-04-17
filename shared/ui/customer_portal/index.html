@@ -1,0 +1,730 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>NouRion · Customer Portal</title>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&family=Cormorant+Garamond:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&family=Cairo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg-void: #0A0A0B; --bg-ebony: #121315; --bg-carbon: #1A1C20;
+    --silver: #B8BCC2; --silver-bright: #E8ECEF; --silver-deep: #6A7075;
+    --cyan: #3FA2E0; --cyan-bright: #5AB4E8; --cyan-deep: #1E5FA8;
+    --amber: #D4A35A; --coral: #E63946; --green: #10B981;
+    --text-primary: #EAECEE; --text-soft: #8A8F95; --text-muted: #4E5358;
+    --border: rgba(184, 188, 194, 0.15);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Cairo', 'Manrope', sans-serif;
+    background: var(--bg-void); color: var(--text-primary);
+    min-height: 100vh; line-height: 1.5; font-variant-numeric: lining-nums;
+  }
+  body::before {
+    content: ''; position: fixed; inset: 0; z-index: 0; pointer-events: none;
+    background:
+      radial-gradient(circle at 20% 20%, rgba(63, 162, 224, 0.1) 0%, transparent 40%),
+      radial-gradient(circle at 80% 80%, rgba(212, 163, 90, 0.05) 0%, transparent 40%);
+  }
+
+  /* LOGIN */
+  .login-screen {
+    min-height: 100vh; display: grid; place-items: center;
+    padding: 24px; position: relative; z-index: 2;
+  }
+  .login-card {
+    width: 100%; max-width: 440px;
+    background: var(--bg-ebony);
+    border: 1px solid var(--border);
+    border-radius: 24px;
+    padding: 48px 40px;
+    position: relative;
+    overflow: hidden;
+  }
+  .login-card::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--cyan) 50%, transparent);
+  }
+  .login-logo {
+    text-align: center; margin-bottom: 36px;
+  }
+  .login-logo svg { width: 60px; height: 60px; margin-bottom: 16px; }
+  .login-title {
+    font-family: 'Manrope', sans-serif;
+    font-size: 32px; font-weight: 800;
+    letter-spacing: -1px; direction: ltr;
+    margin-bottom: 6px;
+  }
+  .login-title .r {
+    background: linear-gradient(180deg, #7AC7EE, #3FA2E0, #1E5FA8);
+    -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+    filter: drop-shadow(0 0 10px rgba(63, 162, 224, 0.4));
+  }
+  .login-sub {
+    font-size: 13px; color: var(--silver);
+    letter-spacing: 2px; text-transform: uppercase;
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  .field { margin-bottom: 16px; }
+  .field label {
+    display: block; font-size: 12px; color: var(--silver);
+    margin-bottom: 8px; font-family: 'Cairo', sans-serif; font-weight: 600;
+  }
+  .field input {
+    width: 100%; padding: 14px 18px;
+    background: var(--bg-carbon);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    color: var(--text-primary);
+    font-family: inherit; font-size: 14px;
+    direction: ltr;
+  }
+  .field input:focus {
+    outline: none; border-color: var(--cyan);
+    background: rgba(63, 162, 224, 0.05);
+  }
+
+  .btn-login {
+    width: 100%; padding: 14px;
+    background: linear-gradient(180deg, var(--cyan-bright) 0%, var(--cyan-deep) 100%);
+    color: #FFFFFF; border: none; border-radius: 12px;
+    font-family: inherit; font-size: 14px; font-weight: 700;
+    letter-spacing: 1px; cursor: pointer;
+    box-shadow: 0 8px 24px rgba(63, 162, 224, 0.3);
+    transition: all 0.2s;
+  }
+  .btn-login:hover { transform: translateY(-1px); box-shadow: 0 12px 32px rgba(63, 162, 224, 0.5); }
+
+  .login-hint {
+    text-align: center; margin-top: 20px;
+    font-size: 11px; color: var(--silver);
+    padding: 12px; background: rgba(184, 188, 194, 0.04);
+    border: 1px solid var(--border); border-radius: 10px;
+  }
+
+  /* PORTAL — shown after login */
+  .portal { display: none; }
+  .portal.active { display: block; }
+  .login-screen.hidden { display: none; }
+
+  nav.portal-nav {
+    position: sticky; top: 0; z-index: 100;
+    padding: 16px 28px;
+    background: rgba(10, 10, 11, 0.85);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border);
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .nav-brand {
+    display: flex; align-items: center; gap: 12px;
+    font-size: 18px; font-weight: 700; direction: ltr;
+  }
+  .nav-brand svg { width: 26px; height: 26px; }
+  .nav-brand .r {
+    background: linear-gradient(180deg, #7AC7EE, #3FA2E0, #1E5FA8);
+    -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+  }
+  .nav-user {
+    display: flex; align-items: center; gap: 10px;
+    padding: 6px 14px; background: rgba(184, 188, 194, 0.05);
+    border: 1px solid var(--border); border-radius: 100px;
+    font-size: 12px;
+  }
+  .avatar {
+    width: 28px; height: 28px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--cyan-bright), var(--cyan-deep));
+    display: grid; place-items: center;
+    color: #FFFFFF; font-weight: 700; font-size: 13px;
+  }
+
+  /* Tabs */
+  .tabs {
+    display: flex; gap: 0; padding: 0 28px;
+    background: var(--bg-ebony);
+    border-bottom: 1px solid var(--border);
+    overflow-x: auto;
+  }
+  .tab {
+    padding: 16px 20px;
+    font-family: 'Cairo', sans-serif;
+    font-size: 14px; font-weight: 500;
+    color: var(--text-soft);
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    white-space: nowrap;
+    transition: all 0.2s;
+  }
+  .tab:hover { color: var(--text-primary); }
+  .tab.active {
+    color: var(--cyan-bright);
+    border-bottom-color: var(--cyan-bright);
+  }
+  .tab .badge {
+    display: inline-block; padding: 2px 8px;
+    background: var(--coral); color: #FFFFFF;
+    border-radius: 100px; font-size: 10px;
+    margin-right: 6px; font-family: 'JetBrains Mono', monospace;
+  }
+
+  /* Content */
+  main { padding: 28px; max-width: 1200px; margin: 0 auto; position: relative; z-index: 2; }
+
+  /* Home: Timeline */
+  .contract-banner {
+    background: linear-gradient(135deg, var(--bg-ebony), var(--bg-carbon));
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    padding: 28px 32px;
+    margin-bottom: 24px;
+    position: relative; overflow: hidden;
+  }
+  .contract-banner::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+    background: linear-gradient(90deg, transparent, var(--cyan-bright), transparent);
+  }
+  .contract-head {
+    display: flex; justify-content: space-between; align-items: flex-start;
+    margin-bottom: 20px;
+  }
+  .contract-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; color: var(--cyan-bright);
+    letter-spacing: 3px; margin-bottom: 6px;
+  }
+  .contract-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 32px; font-weight: 500;
+    letter-spacing: -1px;
+  }
+  .countdown {
+    background: rgba(212, 163, 90, 0.1);
+    border: 1px solid rgba(212, 163, 90, 0.3);
+    padding: 12px 18px; border-radius: 12px;
+    font-family: 'JetBrains Mono', monospace;
+    color: var(--amber); text-align: center; min-width: 120px;
+  }
+  .countdown .num { font-size: 24px; font-weight: 700; }
+  .countdown .lbl { font-size: 10px; letter-spacing: 2px; margin-top: 2px; }
+
+  .timeline {
+    position: relative; padding-right: 24px;
+  }
+  .timeline::before {
+    content: ''; position: absolute; right: 12px; top: 10px; bottom: 10px;
+    width: 2px; background: var(--border);
+  }
+  .tl-item {
+    position: relative; padding-right: 24px;
+    margin-bottom: 16px;
+  }
+  .tl-item::before {
+    content: ''; position: absolute; right: -16px; top: 6px;
+    width: 14px; height: 14px; border-radius: 50%;
+    background: var(--bg-void); border: 2px solid var(--border);
+  }
+  .tl-item.done::before { background: var(--green); border-color: var(--green); }
+  .tl-item.active::before {
+    background: var(--cyan-bright); border-color: var(--cyan-bright);
+    box-shadow: 0 0 0 4px rgba(63, 162, 224, 0.2);
+    animation: pulse 2s infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { box-shadow: 0 0 0 4px rgba(63, 162, 224, 0.2); }
+    50% { box-shadow: 0 0 0 8px rgba(63, 162, 224, 0.1); }
+  }
+  .tl-stage {
+    font-family: 'Cairo', sans-serif; font-size: 15px;
+    font-weight: 600; color: var(--text-primary);
+    margin-bottom: 4px;
+  }
+  .tl-date {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; color: var(--silver); direction: ltr;
+  }
+  .tl-status { font-size: 12px; color: var(--text-soft); margin-top: 4px; }
+
+  /* Drawings Approval */
+  .drawings-grid {
+    display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px;
+  }
+  .window-card {
+    background: var(--bg-ebony);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 24px;
+  }
+  .window-card.approved { border-color: var(--green); }
+  .window-header {
+    display: flex; justify-content: space-between; align-items: center;
+    padding-bottom: 14px; margin-bottom: 16px; border-bottom: 1px solid var(--border);
+  }
+  .window-drawing {
+    aspect-ratio: 1.2;
+    background: var(--bg-carbon);
+    border-radius: 10px;
+    display: grid; place-items: center;
+    font-size: 48px; color: var(--silver-deep);
+    margin-bottom: 16px;
+    position: relative; overflow: hidden;
+  }
+  .window-drawing svg { width: 80%; height: 80%; }
+  .dim-label {
+    position: absolute; background: rgba(10, 10, 11, 0.8);
+    padding: 3px 8px; border-radius: 6px;
+    font-family: 'JetBrains Mono', monospace; font-size: 10px;
+    color: var(--cyan); backdrop-filter: blur(4px);
+  }
+
+  .color-section { margin-bottom: 16px; }
+  .color-label {
+    font-size: 12px; font-weight: 600; color: var(--silver);
+    margin-bottom: 8px; display: flex; justify-content: space-between;
+  }
+  .color-swatches {
+    display: flex; gap: 6px; flex-wrap: wrap;
+  }
+  .swatch {
+    width: 32px; height: 32px; border-radius: 8px;
+    cursor: pointer; border: 2px solid transparent;
+    transition: all 0.2s; position: relative;
+  }
+  .swatch.selected { border-color: var(--cyan-bright); transform: scale(1.1); }
+  .swatch:hover { transform: scale(1.1); }
+
+  .btn-approve {
+    width: 100%; padding: 12px;
+    background: linear-gradient(180deg, var(--green), #059669);
+    color: #FFFFFF; border: none; border-radius: 10px;
+    font-family: inherit; font-weight: 700; cursor: pointer;
+    margin-top: 10px;
+  }
+  .btn-modify {
+    width: 100%; padding: 10px;
+    background: transparent; color: var(--amber);
+    border: 1px solid rgba(212, 163, 90, 0.3); border-radius: 10px;
+    font-family: inherit; font-weight: 600; cursor: pointer;
+    margin-top: 8px; font-size: 13px;
+  }
+
+  /* Chat */
+  .chat-container {
+    background: var(--bg-ebony); border: 1px solid var(--border);
+    border-radius: 16px; height: 500px; display: flex; flex-direction: column;
+  }
+  .chat-header {
+    padding: 16px 20px; border-bottom: 1px solid var(--border);
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .chat-header .factory-status {
+    display: flex; align-items: center; gap: 8px;
+    font-size: 13px; color: var(--green);
+  }
+  .chat-header .factory-status::before {
+    content: ''; width: 8px; height: 8px; border-radius: 50%;
+    background: var(--green); box-shadow: 0 0 6px var(--green);
+  }
+  .messages {
+    flex: 1; padding: 16px; overflow-y: auto;
+    display: flex; flex-direction: column; gap: 10px;
+  }
+  .msg {
+    max-width: 70%; padding: 10px 14px;
+    border-radius: 14px; font-size: 14px;
+    line-height: 1.5;
+  }
+  .msg.from-factory {
+    background: var(--bg-carbon); align-self: flex-start;
+  }
+  .msg.from-client {
+    background: linear-gradient(180deg, var(--cyan-bright), var(--cyan-deep));
+    color: #FFFFFF; align-self: flex-end;
+  }
+  .msg .time {
+    font-size: 10px; opacity: 0.6; margin-top: 4px;
+    font-family: 'JetBrains Mono', monospace;
+    direction: ltr;
+  }
+  .chat-input {
+    padding: 14px; border-top: 1px solid var(--border);
+    display: flex; gap: 10px;
+  }
+  .chat-input input {
+    flex: 1; padding: 10px 16px;
+    background: var(--bg-carbon);
+    border: 1px solid var(--border);
+    border-radius: 100px;
+    color: var(--text-primary);
+    font-family: inherit; font-size: 14px;
+  }
+  .chat-input button {
+    padding: 10px 18px;
+    background: linear-gradient(180deg, var(--cyan-bright), var(--cyan-deep));
+    color: #FFFFFF; border: none; border-radius: 100px;
+    cursor: pointer; font-family: inherit;
+  }
+
+  .section-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 26px; font-weight: 500;
+    margin-bottom: 16px; letter-spacing: -0.5px;
+  }
+
+  /* Hide all tab contents except active */
+  .tab-content { display: none; }
+  .tab-content.active { display: block; }
+
+  @media (max-width: 800px) {
+    .drawings-grid { grid-template-columns: 1fr; }
+    .contract-head { flex-direction: column; gap: 16px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div class="login-screen" id="loginScreen">
+  <div class="login-card">
+    <div class="login-logo">
+      <svg viewBox="0 0 80 80" style="display: block; margin: 0 auto;">
+        <defs><linearGradient id="lG" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#E8ECEF"/><stop offset="100%" stop-color="#6A7075"/></linearGradient></defs>
+        <g transform="translate(40,40)">
+          <ellipse rx="32" ry="12" fill="none" stroke="url(#lG)" stroke-width="2"/>
+          <ellipse rx="32" ry="12" fill="none" stroke="url(#lG)" stroke-width="2" transform="rotate(60)"/>
+          <ellipse rx="32" ry="12" fill="none" stroke="url(#lG)" stroke-width="2" transform="rotate(-60)"/>
+          <circle r="7" fill="url(#lG)"/>
+        </g>
+      </svg>
+      <div class="login-title">Nou<span class="r">R</span>ion</div>
+      <div class="login-sub">Customer Portal</div>
+    </div>
+
+    <div class="field">
+      <label>رقم العقد</label>
+      <input type="text" value="CONT-2026-0142" readonly>
+    </div>
+    <div class="field">
+      <label>كلمة المرور</label>
+      <input type="password" value="0142">
+    </div>
+    <button class="btn-login" onclick="doLogin()">دخول →</button>
+
+    <div class="login-hint">
+      💡 اسم المستخدم وكلمة المرور الافتراضية = رقم العقد<br>
+      (يمكن تغييرها من الإعدادات بعد الدخول)
+    </div>
+  </div>
+</div>
+
+<!-- PORTAL -->
+<div class="portal" id="portal">
+
+  <nav class="portal-nav">
+    <div class="nav-brand">
+      <svg viewBox="0 0 80 80">
+        <defs><linearGradient id="pG" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#E8ECEF"/><stop offset="100%" stop-color="#6A7075"/></linearGradient></defs>
+        <g transform="translate(40,40)">
+          <ellipse rx="32" ry="12" fill="none" stroke="url(#pG)" stroke-width="1.8"/>
+          <ellipse rx="32" ry="12" fill="none" stroke="url(#pG)" stroke-width="1.8" transform="rotate(60)"/>
+          <ellipse rx="32" ry="12" fill="none" stroke="url(#pG)" stroke-width="1.8" transform="rotate(-60)"/>
+          <circle r="6" fill="url(#pG)"/>
+        </g>
+      </svg>
+      <span>Nou<span class="r">R</span>ion</span>
+    </div>
+    <div class="nav-user">
+      <div class="avatar">أ</div>
+      <div>
+        <div style="font-weight: 600;">أحمد الغروي</div>
+        <div style="font-size: 10px; color: var(--silver); font-family: 'JetBrains Mono', monospace;">CONT-2026-0142</div>
+      </div>
+    </div>
+  </nav>
+
+  <div class="tabs">
+    <div class="tab active" onclick="showTab('home')">🏠 الرئيسية</div>
+    <div class="tab" onclick="showTab('drawings')"><span class="badge">2</span>المخططات</div>
+    <div class="tab" onclick="showTab('progress')">📸 تقدم العمل</div>
+    <div class="tab" onclick="showTab('documents')">📄 الوثائق</div>
+    <div class="tab" onclick="showTab('payments')">💳 الدفعات</div>
+    <div class="tab" onclick="showTab('chat')"><span class="badge">3</span>💬 المحادثة</div>
+  </div>
+
+  <main>
+
+    <!-- HOME -->
+    <div class="tab-content active" id="tab-home">
+      <div class="contract-banner">
+        <div class="contract-head">
+          <div>
+            <div class="contract-num">CONTRACT #CONT-2026-0142</div>
+            <div class="contract-title">مشروعك <em style="font-style: italic; color: var(--cyan-bright);">قيد التنفيذ</em></div>
+            <div style="color: var(--silver); margin-top: 6px;">4 نوافذ + 2 باب + واجهة زجاجية · التحليه</div>
+          </div>
+          <div class="countdown">
+            <div class="num">14</div>
+            <div class="lbl">يوم متبقي</div>
+          </div>
+        </div>
+      </div>
+
+      <h2 class="section-title">مراحل المشروع</h2>
+      <div class="timeline">
+        <div class="tl-item done">
+          <div class="tl-stage">✓ توقيع العقد</div>
+          <div class="tl-date">2026-04-10 · 14:30</div>
+          <div class="tl-status">تم استلام الدفعة الأولى 30%</div>
+        </div>
+        <div class="tl-item done">
+          <div class="tl-stage">✓ جاهزية الموقع</div>
+          <div class="tl-date">2026-04-17 · 10:25</div>
+          <div class="tl-status">زيارة المندوب + توقيع</div>
+        </div>
+        <div class="tl-item done">
+          <div class="tl-stage">✓ رفع المقاسات</div>
+          <div class="tl-date">2026-04-18 · 09:45</div>
+          <div class="tl-status">7 قطاعات · دقة ±1mm</div>
+        </div>
+        <div class="tl-item active">
+          <div class="tl-stage">⚡ اعتماد المخططات (يحتاج موافقتك)</div>
+          <div class="tl-date">2026-04-18 · اليوم</div>
+          <div class="tl-status">2 نوافذ بانتظار اعتمادك — افتح المخططات</div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-stage">طلب الخامات</div>
+          <div class="tl-date">متوقع: 2026-04-20</div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-stage">الإنتاج والتصنيع</div>
+          <div class="tl-date">متوقع: 2026-04-22 → 2026-04-30</div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-stage">التوريد والتركيب</div>
+          <div class="tl-date">متوقع: 2026-05-02</div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-stage">الاستلام النهائي</div>
+          <div class="tl-date">متوقع: 2026-05-03</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- DRAWINGS -->
+    <div class="tab-content" id="tab-drawings">
+      <h2 class="section-title">اعتماد المخططات</h2>
+      <p style="color: var(--silver); margin-bottom: 20px;">اعتمد كل نافذة بعد اختيار الألوان. يمكنك طلب تعديل الشكل.</p>
+
+      <div class="drawings-grid">
+
+        <div class="window-card">
+          <div class="window-header">
+            <div><strong>نافذة #1</strong> · CF-50 · غرفة المعيشة</div>
+            <span style="font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--amber);">⏳ بانتظار</span>
+          </div>
+
+          <div class="window-drawing">
+            <svg viewBox="0 0 200 150">
+              <rect x="20" y="20" width="160" height="110" fill="none" stroke="#3FA2E0" stroke-width="3" rx="2"/>
+              <rect x="28" y="28" width="72" height="94" fill="rgba(63, 162, 224, 0.1)" stroke="#3FA2E0" stroke-width="1"/>
+              <rect x="100" y="28" width="72" height="94" fill="rgba(63, 162, 224, 0.1)" stroke="#3FA2E0" stroke-width="1"/>
+              <line x1="28" y1="60" x2="36" y2="60" stroke="#5AB4E8" stroke-width="1"/>
+              <line x1="28" y1="64" x2="36" y2="64" stroke="#5AB4E8" stroke-width="1"/>
+            </svg>
+            <div class="dim-label" style="top: 6px; left: 50%; transform: translateX(-50%);">2400mm</div>
+            <div class="dim-label" style="top: 50%; right: 6px; transform: translateY(-50%);">1800mm</div>
+          </div>
+
+          <div class="color-section">
+            <div class="color-label"><span>لون الألمنيوم</span><span style="color: var(--cyan);">RAL 9005 أسود</span></div>
+            <div class="color-swatches">
+              <div class="swatch selected" style="background: #0A0A0A;" title="RAL 9005"></div>
+              <div class="swatch" style="background: #FFFFFF;" title="RAL 9016"></div>
+              <div class="swatch" style="background: #8B7355;" title="RAL 8014"></div>
+              <div class="swatch" style="background: #708090;" title="RAL 7012"></div>
+              <div class="swatch" style="background: #C0C0C0;" title="RAL 9006"></div>
+            </div>
+          </div>
+
+          <div class="color-section">
+            <div class="color-label"><span>لون الزجاج (خارجي)</span><span style="color: var(--cyan);">شفاف</span></div>
+            <div class="color-swatches">
+              <div class="swatch selected" style="background: rgba(255,255,255,0.1); border: 1px dashed #B8BCC2;" title="شفاف"></div>
+              <div class="swatch" style="background: #4A5878;" title="أزرق"></div>
+              <div class="swatch" style="background: #2C3E50;" title="رمادي"></div>
+              <div class="swatch" style="background: #8B4513;" title="برونزي"></div>
+              <div class="swatch" style="background: #00704A;" title="أخضر"></div>
+              <div class="swatch" style="background: #B8860B;" title="ذهبي"></div>
+              <div class="swatch" style="background: repeating-linear-gradient(45deg, #B8BCC2 0, #B8BCC2 2px, #6A7075 2px, #6A7075 4px);" title="رش رمل"></div>
+            </div>
+          </div>
+
+          <button class="btn-approve">✓ اعتماد نافذة 1</button>
+          <button class="btn-modify">⚙ طلب تعديل الشكل (+50 SAR/م²)</button>
+        </div>
+
+        <div class="window-card approved">
+          <div class="window-header">
+            <div><strong>باب #1</strong> · DF-65 · المدخل الرئيسي</div>
+            <span style="font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--green);">✓ معتمد</span>
+          </div>
+
+          <div class="window-drawing">
+            <svg viewBox="0 0 200 150">
+              <rect x="30" y="10" width="140" height="130" fill="none" stroke="#10B981" stroke-width="3" rx="2"/>
+              <rect x="38" y="18" width="124" height="114" fill="rgba(16, 185, 129, 0.1)" stroke="#10B981" stroke-width="1"/>
+              <circle cx="150" cy="75" r="4" fill="#D4A35A"/>
+            </svg>
+            <div class="dim-label" style="top: 6px; left: 50%; transform: translateX(-50%);">2400mm</div>
+            <div class="dim-label" style="top: 50%; right: 6px; transform: translateY(-50%);">2800mm</div>
+          </div>
+
+          <div style="padding: 14px; background: rgba(16, 185, 129, 0.08); border: 1px solid rgba(16, 185, 129, 0.25); border-radius: 10px; color: var(--green); font-size: 13px;">
+            ✓ تم الاعتماد في 2026-04-18 · 10:00<br>
+            الألوان: ألمنيوم رمادي RAL 7012 · زجاج شفاف
+          </div>
+        </div>
+
+      </div>
+
+      <div style="margin-top: 24px; padding: 20px; background: linear-gradient(135deg, rgba(230, 57, 70, 0.08), rgba(212, 163, 90, 0.04)); border: 1px solid rgba(230, 57, 70, 0.25); border-radius: 14px; font-size: 13px; color: var(--coral);">
+        <strong>⚠ تنبيه:</strong> لا يمكن التعديل بعد الاعتماد النهائي. أي تعديل بعد 3 أيام من الاعتماد يترتب عليه تكلفة إضافية حسب العقد.
+      </div>
+    </div>
+
+    <!-- PROGRESS PHOTOS -->
+    <div class="tab-content" id="tab-progress">
+      <h2 class="section-title">صور تقدم العمل</h2>
+      <p style="color: var(--silver); margin-bottom: 20px;">صور يومية من الموقع ومن المصنع.</p>
+      <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 16px;">
+        <div style="aspect-ratio: 1; background: linear-gradient(135deg, #1a2030, #0a0a0b); border-radius: 12px; display: grid; place-items: center; color: var(--cyan); position: relative; overflow: hidden;">
+          📸
+          <div style="position: absolute; bottom: 8px; left: 8px; right: 8px; font-size: 11px; color: #FFFFFF; font-family: 'JetBrains Mono', monospace;">18/4 · 09:20<br>رفع مقاسات</div>
+        </div>
+        <div style="aspect-ratio: 1; background: linear-gradient(135deg, #1a2030, #0a0a0b); border-radius: 12px; display: grid; place-items: center; color: var(--cyan); position: relative; overflow: hidden;">
+          📸
+          <div style="position: absolute; bottom: 8px; left: 8px; right: 8px; font-size: 11px; color: #FFFFFF; font-family: 'JetBrains Mono', monospace;">17/4 · 10:30<br>زيارة المندوب</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- DOCUMENTS -->
+    <div class="tab-content" id="tab-documents">
+      <h2 class="section-title">الوثائق والعقود</h2>
+      <div style="display: flex; flex-direction: column; gap: 10px;">
+        <div style="padding: 16px 20px; background: var(--bg-ebony); border: 1px solid var(--border); border-radius: 12px; display: flex; justify-content: space-between; align-items: center;">
+          <div>
+            <div style="font-weight: 600;">📄 العقد الأساسي</div>
+            <div style="font-size: 12px; color: var(--silver); margin-top: 2px;">CONT-2026-0142.pdf · 1.2 MB</div>
+          </div>
+          <button style="padding: 8px 16px; background: var(--bg-carbon); border: 1px solid var(--border); color: var(--cyan); border-radius: 8px; cursor: pointer; font-family: inherit;">تحميل</button>
+        </div>
+        <div style="padding: 16px 20px; background: var(--bg-ebony); border: 1px solid var(--border); border-radius: 12px; display: flex; justify-content: space-between; align-items: center;">
+          <div>
+            <div style="font-weight: 600;">📋 تقرير جاهزية الموقع</div>
+            <div style="font-size: 12px; color: var(--silver); margin-top: 2px;">SR-0142.pdf · 845 KB</div>
+          </div>
+          <button style="padding: 8px 16px; background: var(--bg-carbon); border: 1px solid var(--border); color: var(--cyan); border-radius: 8px; cursor: pointer; font-family: inherit;">تحميل</button>
+        </div>
+        <div style="padding: 16px 20px; background: var(--bg-ebony); border: 1px solid var(--border); border-radius: 12px; display: flex; justify-content: space-between; align-items: center;">
+          <div>
+            <div style="font-weight: 600;">📐 تقرير المقاسات</div>
+            <div style="font-size: 12px; color: var(--silver); margin-top: 2px;">MEAS-0142.pdf · 2.1 MB · 7 قطاعات</div>
+          </div>
+          <button style="padding: 8px 16px; background: var(--bg-carbon); border: 1px solid var(--border); color: var(--cyan); border-radius: 8px; cursor: pointer; font-family: inherit;">تحميل</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- PAYMENTS -->
+    <div class="tab-content" id="tab-payments">
+      <h2 class="section-title">جدول الدفعات</h2>
+      <div style="background: var(--bg-ebony); border: 1px solid var(--border); border-radius: 14px; padding: 24px;">
+        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 24px;">
+          <div style="padding: 16px; background: rgba(16, 185, 129, 0.08); border: 1px solid rgba(16, 185, 129, 0.3); border-radius: 10px;">
+            <div style="font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--green); letter-spacing: 2px;">PAID · 30%</div>
+            <div style="font-family: 'Cormorant Garamond', serif; font-size: 28px; margin-top: 6px;">15,194 SAR</div>
+            <div style="font-size: 11px; color: var(--silver); margin-top: 4px;">دفعة أولى · 10 أبريل 2026</div>
+          </div>
+          <div style="padding: 16px; background: rgba(212, 163, 90, 0.08); border: 1px solid rgba(212, 163, 90, 0.3); border-radius: 10px;">
+            <div style="font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--amber); letter-spacing: 2px;">DUE · 40%</div>
+            <div style="font-family: 'Cormorant Garamond', serif; font-size: 28px; margin-top: 6px;">20,258 SAR</div>
+            <div style="font-size: 11px; color: var(--silver); margin-top: 4px;">قبل الإنتاج · يستحق 20 أبريل</div>
+          </div>
+          <div style="padding: 16px; background: rgba(184, 188, 194, 0.04); border: 1px solid var(--border); border-radius: 10px;">
+            <div style="font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--silver); letter-spacing: 2px;">PENDING · 30%</div>
+            <div style="font-family: 'Cormorant Garamond', serif; font-size: 28px; margin-top: 6px;">15,193 SAR</div>
+            <div style="font-size: 11px; color: var(--silver); margin-top: 4px;">عند الاستلام · 3 مايو</div>
+          </div>
+        </div>
+        <div style="padding-top: 16px; border-top: 1px solid var(--border); display: flex; justify-content: space-between; font-size: 14px;">
+          <span>الإجمالي (شامل ضريبة 15%)</span>
+          <span style="font-family: 'JetBrains Mono', monospace; font-weight: 700; color: var(--cyan-bright); font-size: 18px;">50,645 SAR</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- CHAT -->
+    <div class="tab-content" id="tab-chat">
+      <h2 class="section-title">محادثة مع المصنع</h2>
+      <div class="chat-container">
+        <div class="chat-header">
+          <div>
+            <strong>مصنع ألمنيوم ملهم</strong>
+            <div style="font-size: 11px; color: var(--silver); margin-top: 2px;">المسؤول: خالد المصمم</div>
+          </div>
+          <div class="factory-status">متصل الآن</div>
+        </div>
+        <div class="messages">
+          <div class="msg from-factory">
+            مرحباً أستاذ أحمد، يسعدنا خدمتك. رفعنا المقاسات اليوم — بالإمكان معاينة المخططات.
+            <div class="time">10:15</div>
+          </div>
+          <div class="msg from-client">
+            شكراً، شفتها. عندي استفسار عن لون الألمنيوم — هل الأسود متوفر؟
+            <div class="time">10:20</div>
+          </div>
+          <div class="msg from-factory">
+            نعم متوفر (RAL 9005). يمكنك اختياره من قسم المخططات.
+            <div class="time">10:22</div>
+          </div>
+          <div class="msg from-factory">
+            ملاحظة: نافذة رقم 1 بانتظار اعتمادك. بعد الاعتماد ننطلق مباشرة بطلب الخامات.
+            <div class="time">10:23</div>
+          </div>
+        </div>
+        <div class="chat-input">
+          <input type="text" placeholder="اكتب رسالتك...">
+          <button>إرسال</button>
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<script>
+  function doLogin() {
+    document.getElementById('loginScreen').classList.add('hidden');
+    document.getElementById('portal').classList.add('active');
+  }
+  function showTab(id) {
+    document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.getElementById('tab-' + id).classList.add('active');
+    event.target.classList.add('active');
+  }
+
+  // Color swatch interaction
+  document.querySelectorAll('.color-swatches').forEach(group => {
+    group.addEventListener('click', (e) => {
+      if (e.target.classList.contains('swatch')) {
+        group.querySelectorAll('.swatch').forEach(s => s.classList.remove('selected'));
+        e.target.classList.add('selected');
+      }
+    });
+  });
+</script>
+
+</body>
+</html>
