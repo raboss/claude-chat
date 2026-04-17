@@ -1,0 +1,1003 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>NouRion · Cost Breakdown Panel</title>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&family=Cormorant+Garamond:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&family=Cairo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg-void: #0A0A0B;
+    --bg-ebony: #121315;
+    --bg-carbon: #1A1C20;
+    --silver: #B8BCC2;
+    --silver-bright: #E8ECEF;
+    --silver-deep: #6A7075;
+    --cyan: #3FA2E0;
+    --cyan-bright: #5AB4E8;
+    --cyan-deep: #1E5FA8;
+    --amber: #D4A35A;
+    --coral: #E63946;
+    --green: #10B981;
+    --text-primary: #EAECEE;
+    --text-soft: #8A8F95;
+    --text-muted: #4E5358;
+    --border: rgba(184, 188, 194, 0.15);
+    --border-bright: rgba(184, 188, 194, 0.35);
+  }
+  html[data-theme="light"] {
+    --bg-void: #F8FAFC;
+    --bg-ebony: #FFFFFF;
+    --bg-carbon: #F1F5F9;
+    --text-primary: #0A1628;
+    --text-soft: #475569;
+    --text-muted: #94A3B8;
+    --border: rgba(10, 22, 40, 0.08);
+    --border-bright: rgba(10, 22, 40, 0.2);
+    --silver-bright: #1E5FA8;
+    --silver-deep: #3FA2E0;
+    --silver: #64748B;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Cairo', 'Manrope', sans-serif;
+    background: var(--bg-void);
+    color: var(--text-primary);
+    min-height: 100vh;
+    line-height: 1.5;
+    font-variant-numeric: lining-nums;
+    transition: background 0.3s, color 0.3s;
+  }
+  body::before {
+    content: '';
+    position: fixed; inset: 0; z-index: 0; pointer-events: none;
+    background:
+      radial-gradient(circle at 15% 15%, rgba(63, 162, 224, 0.08) 0%, transparent 40%),
+      radial-gradient(circle at 85% 85%, rgba(16, 185, 129, 0.04) 0%, transparent 40%);
+  }
+
+  /* NAV */
+  nav {
+    position: sticky; top: 0; z-index: 100;
+    padding: 20px 48px;
+    background: rgba(10, 10, 11, 0.85);
+    backdrop-filter: blur(20px) saturate(1.5);
+    border-bottom: 1px solid var(--border);
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  html[data-theme="light"] nav { background: rgba(255, 255, 255, 0.85); }
+  .nav-brand {
+    display: flex; align-items: center; gap: 14px;
+    font-size: 20px; font-weight: 600;
+    direction: ltr;
+  }
+  .nav-brand svg { width: 30px; height: 30px; }
+  .nav-brand .r {
+    font-weight: 800;
+    background: linear-gradient(180deg, #7AC7EE 0%, #3FA2E0 50%, #1E5FA8 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    filter: drop-shadow(0 0 8px rgba(63, 162, 224, 0.3));
+    padding: 0 2px;
+  }
+  .nav-divider { height: 20px; width: 1px; background: var(--border); margin: 0 4px; }
+  .nav-title {
+    font-family: 'Cairo', sans-serif;
+    font-weight: 600; font-size: 16px;
+    color: var(--text-soft);
+  }
+  .nav-right { display: flex; align-items: center; gap: 10px; }
+  .lang-switcher, .theme-switcher, .view-switcher {
+    display: inline-flex;
+    background: rgba(184, 188, 194, 0.05);
+    border: 1px solid var(--border);
+    border-radius: 100px;
+    padding: 3px; gap: 2px;
+  }
+  .sw-btn {
+    padding: 6px 14px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; font-weight: 700;
+    letter-spacing: 2px; color: var(--text-soft);
+    background: transparent; border: none;
+    border-radius: 100px; cursor: pointer;
+    transition: all 0.2s;
+  }
+  .sw-btn:hover { color: var(--text-primary); }
+  .sw-btn.active {
+    background: linear-gradient(180deg, var(--silver-bright) 0%, var(--silver) 100%);
+    color: var(--bg-void);
+  }
+
+  main {
+    position: relative; z-index: 2;
+    padding: 40px 48px 80px;
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+
+  /* Access Banner */
+  .access-banner {
+    padding: 14px 20px;
+    background: linear-gradient(135deg, rgba(230, 57, 70, 0.1), rgba(212, 163, 90, 0.06));
+    border: 1px solid rgba(230, 57, 70, 0.25);
+    border-radius: 12px;
+    display: flex; align-items: center; gap: 12px;
+    font-family: 'Cairo', sans-serif;
+    font-size: 13px;
+    color: var(--coral);
+    margin-bottom: 24px;
+    direction: rtl;
+  }
+  .access-banner.sales {
+    background: linear-gradient(135deg, rgba(63, 162, 224, 0.1), rgba(16, 185, 129, 0.06));
+    border-color: rgba(63, 162, 224, 0.25);
+    color: var(--cyan-bright);
+  }
+  .access-banner svg { flex-shrink: 0; width: 18px; height: 18px; }
+
+  /* Header card */
+  .quote-header {
+    background: var(--bg-ebony);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 36px 40px;
+    margin-bottom: 24px;
+    position: relative;
+    overflow: hidden;
+  }
+  .quote-header::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--cyan) 30%, var(--cyan-bright) 50%, var(--cyan) 70%, transparent);
+  }
+  .quote-head-row {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 24px;
+    align-items: flex-start;
+    margin-bottom: 24px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--border);
+  }
+  .quote-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--cyan);
+    letter-spacing: 3px;
+    margin-bottom: 6px;
+    text-transform: uppercase;
+  }
+  .quote-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 40px;
+    font-weight: 500;
+    letter-spacing: -1.5px;
+    margin-bottom: 4px;
+  }
+  .quote-num em {
+    font-style: italic;
+    background: linear-gradient(180deg, var(--silver-bright), var(--silver-deep));
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .quote-client {
+    font-family: 'Cairo', sans-serif;
+    font-size: 18px;
+    color: var(--text-soft);
+    margin-top: 4px;
+  }
+  .quote-status {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 8px 18px;
+    background: linear-gradient(135deg, rgba(212, 163, 90, 0.15), rgba(244, 169, 30, 0.08));
+    border: 1px solid rgba(212, 163, 90, 0.3);
+    border-radius: 100px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--amber);
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+  }
+  .quote-meta {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+  }
+  .meta-item {
+    padding: 14px 18px;
+    background: rgba(184, 188, 194, 0.03);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+  }
+  .meta-lbl {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--silver);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+  .meta-val {
+    font-size: 15px;
+    color: var(--text-primary);
+    font-weight: 600;
+    direction: ltr;
+  }
+
+  /* Items table */
+  .panel {
+    background: var(--bg-ebony);
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    padding: 32px;
+    margin-bottom: 24px;
+  }
+  .panel-head {
+    display: flex; justify-content: space-between; align-items: center;
+    padding-bottom: 16px;
+    margin-bottom: 20px;
+    border-bottom: 1px solid var(--border);
+  }
+  .panel-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 24px;
+    font-weight: 500;
+    letter-spacing: -0.5px;
+  }
+  .panel-sub {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--silver);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+
+  .items-table { width: 100%; border-collapse: collapse; }
+  .items-table th {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--silver);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 12px 14px;
+    text-align: right;
+    font-weight: 700;
+    border-bottom: 1px solid var(--border);
+  }
+  .items-table th.num-col { text-align: left; direction: ltr; }
+  .items-table td {
+    padding: 16px 14px;
+    font-family: 'Cairo', sans-serif;
+    font-size: 14px;
+    color: var(--text-primary);
+    border-bottom: 1px solid var(--border);
+  }
+  .items-table td.num-col {
+    font-family: 'JetBrains Mono', monospace;
+    direction: ltr;
+    text-align: left;
+  }
+  .items-table tr:hover { background: rgba(184, 188, 194, 0.02); }
+
+  .section-code {
+    display: inline-block;
+    padding: 3px 10px;
+    background: rgba(63, 162, 224, 0.08);
+    border: 1px solid rgba(63, 162, 224, 0.2);
+    border-radius: 6px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--cyan);
+    letter-spacing: 1px;
+    margin-right: 8px;
+  }
+
+  /* Cost breakdown section */
+  .breakdown-wrap {
+    display: grid;
+    grid-template-columns: 1.3fr 1fr;
+    gap: 24px;
+  }
+
+  .breakdown-table {
+    width: 100%; border-collapse: collapse;
+  }
+  .breakdown-table tr.group-header td {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--silver);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 16px 14px 8px;
+    border-bottom: 1px solid var(--border);
+  }
+  .breakdown-table td {
+    padding: 14px;
+    border-bottom: 1px solid rgba(184, 188, 194, 0.05);
+  }
+  .breakdown-table .lbl {
+    font-family: 'Cairo', sans-serif;
+    font-size: 14px;
+    color: var(--text-primary);
+  }
+  .breakdown-table .val {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--silver-bright);
+    text-align: left;
+    direction: ltr;
+  }
+  .breakdown-table .pct {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--text-muted);
+    margin-right: 8px;
+  }
+  .breakdown-table .locked-tag {
+    display: inline-flex; align-items: center; gap: 4px;
+    padding: 2px 8px;
+    background: rgba(230, 57, 70, 0.12);
+    color: var(--coral);
+    border: 1px solid rgba(230, 57, 70, 0.25);
+    border-radius: 4px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 1px;
+    margin-right: 8px;
+  }
+  .breakdown-table tr.total-row td {
+    padding: 20px 14px;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px;
+    font-weight: 500;
+    border-top: 1px solid var(--border-bright);
+    border-bottom: none;
+  }
+  .breakdown-table tr.total-row .lbl { color: var(--text-primary); }
+  .breakdown-table tr.total-row .val {
+    background: linear-gradient(180deg, var(--silver-bright), var(--silver-deep));
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-size: 32px;
+    letter-spacing: -1px;
+    font-weight: 400;
+  }
+
+  /* Sales Commission Slider */
+  .commission-box {
+    margin: 16px 0 8px;
+    padding: 20px;
+    background: linear-gradient(135deg, rgba(63, 162, 224, 0.06), rgba(184, 188, 194, 0.02));
+    border: 1px dashed rgba(63, 162, 224, 0.3);
+    border-radius: 12px;
+  }
+  .commission-head {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 12px;
+  }
+  .commission-lbl {
+    font-family: 'Cairo', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--cyan-bright);
+  }
+  .commission-val {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--cyan-bright);
+    direction: ltr;
+  }
+  .slider-wrap { position: relative; height: 24px; }
+  .slider-track {
+    position: absolute;
+    top: 50%; transform: translateY(-50%);
+    left: 0; right: 0;
+    height: 4px;
+    background: rgba(184, 188, 194, 0.1);
+    border-radius: 2px;
+  }
+  .slider-fill {
+    position: absolute;
+    top: 50%; transform: translateY(-50%);
+    left: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--cyan), var(--cyan-bright));
+    border-radius: 2px;
+    box-shadow: 0 0 8px rgba(63, 162, 224, 0.5);
+    transition: width 0.15s;
+  }
+  input[type="range"] {
+    position: absolute;
+    inset: 0;
+    width: 100%; height: 100%;
+    -webkit-appearance: none;
+    background: transparent;
+    cursor: pointer;
+    margin: 0;
+  }
+  input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 20px; height: 20px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--cyan-bright), var(--cyan-deep));
+    box-shadow: 0 0 12px rgba(63, 162, 224, 0.6);
+    cursor: grab;
+    border: 2px solid #FFFFFF;
+  }
+  input[type="range"]::-webkit-slider-thumb:active { cursor: grabbing; }
+
+  /* Right side summary card */
+  .summary-card {
+    background: linear-gradient(135deg, rgba(63, 162, 224, 0.08), rgba(184, 188, 194, 0.02));
+    border: 1px solid var(--border-bright);
+    border-radius: 18px;
+    padding: 28px;
+    height: fit-content;
+    position: sticky;
+    top: 100px;
+  }
+  .sum-val-big {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 72px;
+    font-weight: 400;
+    line-height: 1;
+    background: linear-gradient(180deg, var(--silver-bright), var(--silver-deep));
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    letter-spacing: -2px;
+    margin: 12px 0;
+    direction: ltr;
+  }
+  .sum-val-curr {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 14px;
+    color: var(--silver);
+    letter-spacing: 2px;
+  }
+  .sum-val-note {
+    font-family: 'Cairo', sans-serif;
+    font-size: 12px;
+    color: var(--text-soft);
+    margin-top: 8px;
+    padding-top: 16px;
+    border-top: 1px dashed var(--border);
+    line-height: 1.6;
+  }
+
+  /* Buttons */
+  .actions {
+    display: flex; gap: 12px; justify-content: flex-end;
+    padding: 24px 0 0;
+    flex-wrap: wrap;
+  }
+  .btn {
+    padding: 12px 20px;
+    border-radius: 100px;
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--text-primary);
+    cursor: pointer;
+    display: inline-flex; align-items: center; gap: 8px;
+    transition: all 0.2s;
+  }
+  .btn:hover { border-color: var(--cyan); background: rgba(63, 162, 224, 0.08); color: var(--cyan); }
+  .btn.primary {
+    background: linear-gradient(180deg, var(--cyan-bright), var(--cyan-deep));
+    color: #FFFFFF;
+    border-color: transparent;
+    box-shadow: 0 4px 16px rgba(63, 162, 224, 0.3);
+  }
+
+  /* Hide/Show elements based on role */
+  .admin-only { display: block; }
+  body.role-sales .admin-only { display: none !important; }
+
+  /* Sales-only panel */
+  .sales-only { display: none; }
+  body.role-sales .sales-only { display: block; }
+
+  /* Lock icons */
+  .lock-icon {
+    display: inline-flex; align-items: center;
+    color: var(--coral);
+    margin-right: 4px;
+  }
+
+  @media (max-width: 1000px) {
+    .breakdown-wrap { grid-template-columns: 1fr; }
+    .quote-meta { grid-template-columns: repeat(2, 1fr); }
+    .quote-head-row { grid-template-columns: 1fr; }
+  }
+  @media print {
+    nav, .actions, .theme-switcher, .view-switcher, .lang-switcher { display: none; }
+    body { background: white; color: black; }
+  }
+</style>
+</head>
+<body class="role-admin">
+
+<!-- NAV -->
+<nav>
+  <div class="nav-brand">
+    <svg viewBox="0 0 80 80">
+      <defs><linearGradient id="nG" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#E8ECEF"/><stop offset="100%" stop-color="#6A7075"/>
+      </linearGradient></defs>
+      <g transform="translate(40,40)">
+        <ellipse rx="32" ry="12" fill="none" stroke="url(#nG)" stroke-width="1.8"/>
+        <ellipse rx="32" ry="12" fill="none" stroke="url(#nG)" stroke-width="1.8" transform="rotate(60)"/>
+        <ellipse rx="32" ry="12" fill="none" stroke="url(#nG)" stroke-width="1.8" transform="rotate(-60)"/>
+        <circle r="6" fill="url(#nG)"/>
+      </g>
+    </svg>
+    <span>Nou<span class="r">R</span>ion</span>
+    <div class="nav-divider"></div>
+    <span class="nav-title" data-i18n="nav_title">لوحة تفاصيل التكلفة · عرض سعر</span>
+  </div>
+
+  <div class="nav-right">
+    <!-- View Switcher: Admin vs Salesperson -->
+    <div class="view-switcher" title="عرض حسب الدور">
+      <button class="sw-btn active" data-view="admin" onclick="setView('admin')">
+        <span data-i18n="v_admin">مدير</span>
+      </button>
+      <button class="sw-btn" data-view="sales" onclick="setView('sales')">
+        <span data-i18n="v_sales">مندوب</span>
+      </button>
+    </div>
+    <!-- Theme -->
+    <div class="theme-switcher">
+      <button class="sw-btn active" data-theme="dark" onclick="setTheme('dark')">🌙</button>
+      <button class="sw-btn" data-theme="light" onclick="setTheme('light')">☀️</button>
+    </div>
+    <!-- Lang -->
+    <div class="lang-switcher">
+      <button class="sw-btn active" data-lang="ar" onclick="setLang('ar')">عربي</button>
+      <button class="sw-btn" data-lang="en" onclick="setLang('en')">EN</button>
+    </div>
+  </div>
+</nav>
+
+<main>
+
+  <!-- Access banner -->
+  <div class="access-banner admin-only">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+    <span data-i18n="acc_admin"><strong>الوضع: مدير (Admin)</strong> — ترى كل تفاصيل التكلفة والهوامش. صلاحية: <code style="color:var(--amber);">quotations.view_cost</code></span>
+  </div>
+  <div class="access-banner sales sales-only">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
+    <span data-i18n="acc_sales"><strong>الوضع: مندوب (Sales)</strong> — ترى السعر النهائي وعمولتك فقط. تكلفة المصنع وهوامش الشركة مخفية.</span>
+  </div>
+
+  <!-- Quote Header -->
+  <div class="quote-header">
+    <div class="quote-head-row">
+      <div>
+        <div class="quote-label" data-i18n="quote_tag">Quotation · Cost Breakdown</div>
+        <h1 class="quote-num">عرض سعر <em>#QTN-2026-0142</em></h1>
+        <div class="quote-client" data-i18n="client_name">أحمد الغروي · شركة الراجحي · معرض الياسمين</div>
+      </div>
+      <div class="quote-status" data-i18n="status_draft">● مسودة · قيد المراجعة</div>
+    </div>
+
+    <div class="quote-meta">
+      <div class="meta-item">
+        <div class="meta-lbl" data-i18n="m_date">التاريخ</div>
+        <div class="meta-val">2026-04-17</div>
+      </div>
+      <div class="meta-item">
+        <div class="meta-lbl" data-i18n="m_valid">صالح حتى</div>
+        <div class="meta-val">2026-05-17</div>
+      </div>
+      <div class="meta-item">
+        <div class="meta-lbl" data-i18n="m_currency">العملة</div>
+        <div class="meta-val">SAR · ر.س</div>
+      </div>
+      <div class="meta-item">
+        <div class="meta-lbl" data-i18n="m_salesperson">المندوب</div>
+        <div class="meta-val" data-i18n="sales_name">خالد المصمم</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Items -->
+  <div class="panel">
+    <div class="panel-head">
+      <div>
+        <div class="panel-title" data-i18n="items_title">بنود العرض</div>
+        <div class="panel-sub" data-i18n="items_sub">From RaMaterials Catalog · 4 items</div>
+      </div>
+      <button class="btn">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        <span data-i18n="btn_add_item">إضافة بند</span>
+      </button>
+    </div>
+
+    <table class="items-table">
+      <thead>
+        <tr>
+          <th data-i18n="th_item" style="text-align: right;">البند</th>
+          <th class="num-col" data-i18n="th_qty">الكمية</th>
+          <th class="num-col" data-i18n="th_area">المساحة (م²)</th>
+          <th class="num-col admin-only" data-i18n="th_cost">التكلفة الخام</th>
+          <th class="num-col" data-i18n="th_price">السعر</th>
+          <th class="num-col" data-i18n="th_total">الإجمالي</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>
+            <span class="section-code">CF-50</span>
+            <span data-i18n="item1">نافذة ألمنيوم 2 درفة — 2400×1800mm</span>
+          </td>
+          <td class="num-col">4</td>
+          <td class="num-col">17.28</td>
+          <td class="num-col admin-only">3,456</td>
+          <td class="num-col">650</td>
+          <td class="num-col">11,232</td>
+        </tr>
+        <tr>
+          <td>
+            <span class="section-code">DF-65</span>
+            <span data-i18n="item2">باب ألمنيوم رئيسي — 2400×2800mm</span>
+          </td>
+          <td class="num-col">2</td>
+          <td class="num-col">13.44</td>
+          <td class="num-col admin-only">4,032</td>
+          <td class="num-col">820</td>
+          <td class="num-col">11,021</td>
+        </tr>
+        <tr>
+          <td>
+            <span class="section-code">CW-100</span>
+            <span data-i18n="item3">واجهة زجاجية — 4500×3200mm</span>
+          </td>
+          <td class="num-col">1</td>
+          <td class="num-col">14.40</td>
+          <td class="num-col admin-only">6,480</td>
+          <td class="num-col">950</td>
+          <td class="num-col">13,680</td>
+        </tr>
+        <tr>
+          <td>
+            <span class="section-code">GL-DBL</span>
+            <span data-i18n="item4">زجاج مزدوج 6+12A+6mm — شفاف</span>
+          </td>
+          <td class="num-col">45.12</td>
+          <td class="num-col">—</td>
+          <td class="num-col admin-only">2,256</td>
+          <td class="num-col">180/m²</td>
+          <td class="num-col">8,122</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Cost Breakdown + Summary -->
+  <div class="breakdown-wrap">
+
+    <!-- LEFT: Full breakdown (admin only) OR simple view (sales) -->
+    <div class="panel admin-only">
+      <div class="panel-head">
+        <div>
+          <div class="panel-title" data-i18n="bd_title">تفاصيل التكلفة</div>
+          <div class="panel-sub" data-i18n="bd_sub">From CostGroup + CostUsage tables</div>
+        </div>
+      </div>
+
+      <table class="breakdown-table">
+        <tbody>
+          <!-- Raw Materials -->
+          <tr class="group-header">
+            <td colspan="2" data-i18n="g_raw">المواد الخام</td>
+          </tr>
+          <tr>
+            <td class="lbl"><span data-i18n="r_alum">الألمنيوم (قطاعات)</span> <span class="pct">· 248 قطاع</span></td>
+            <td class="val">14,220 SAR</td>
+          </tr>
+          <tr>
+            <td class="lbl"><span data-i18n="r_glass">الزجاج</span></td>
+            <td class="val">8,122 SAR</td>
+          </tr>
+          <tr>
+            <td class="lbl"><span data-i18n="r_acc">الإكسسوارات</span> <span class="pct">· مفصلات، أقفال، مقابض</span></td>
+            <td class="val">3,506 SAR</td>
+          </tr>
+          <tr>
+            <td class="lbl"><strong data-i18n="r_subtotal">مجموع المواد الخام</strong></td>
+            <td class="val" style="color: var(--amber);">25,848 SAR</td>
+          </tr>
+
+          <!-- Labor -->
+          <tr class="group-header">
+            <td colspan="2" data-i18n="g_labor">العمالة</td>
+          </tr>
+          <tr>
+            <td class="lbl"><span data-i18n="r_labor">أجور العمال والفنيين</span> <span class="pct">· 18%</span></td>
+            <td class="val">4,653 SAR</td>
+          </tr>
+
+          <!-- Operational -->
+          <tr class="group-header">
+            <td colspan="2" data-i18n="g_ops">المصاريف التشغيلية</td>
+          </tr>
+          <tr>
+            <td class="lbl"><span data-i18n="r_fuel">محروقات + استهلاك</span> <span class="pct">· 6%</span></td>
+            <td class="val">1,551 SAR</td>
+          </tr>
+          <tr>
+            <td class="lbl"><span data-i18n="r_admin">رواتب إدارية + إقامات</span> <span class="pct">· 4%</span></td>
+            <td class="val">1,034 SAR</td>
+          </tr>
+
+          <!-- Base -->
+          <tr style="background: rgba(184, 188, 194, 0.04);">
+            <td class="lbl"><strong data-i18n="r_base">إجمالي التكلفة الفعلية</strong></td>
+            <td class="val" style="color: var(--silver-bright); font-size: 16px;">33,086 SAR</td>
+          </tr>
+
+          <!-- Company Margin — LOCKED -->
+          <tr class="group-header">
+            <td colspan="2" data-i18n="g_margin">هامش الشركة</td>
+          </tr>
+          <tr>
+            <td class="lbl">
+              <span class="locked-tag">
+                <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                LOCKED
+              </span>
+              <span data-i18n="r_margin">هامش الشركة 20% (ثابت)</span>
+            </td>
+            <td class="val">6,617 SAR</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <!-- Sales Commission Slider -->
+      <div class="commission-box">
+        <div class="commission-head">
+          <div class="commission-lbl" data-i18n="c_title">
+            🎯 نسبة المندوب (قابلة للخصم)
+          </div>
+          <div class="commission-val" id="commissionValue">5%</div>
+        </div>
+        <div class="slider-wrap">
+          <div class="slider-track"></div>
+          <div class="slider-fill" id="sliderFill" style="width: 50%;"></div>
+          <input type="range" id="commissionSlider" min="0" max="10" value="5" step="0.5">
+        </div>
+        <div style="display: flex; justify-content: space-between; margin-top: 8px; font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--silver);">
+          <span>0%</span>
+          <span data-i18n="c_default">افتراضي 5%</span>
+          <span>10%</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT: Summary Card (visible to both) -->
+    <div class="summary-card">
+      <div class="panel-sub" data-i18n="sum_tag">Final Price</div>
+      <div class="sum-val-big" id="finalPrice">44,039</div>
+      <div class="sum-val-curr" data-i18n="sum_currency">ريال سعودي · SAR</div>
+      <div class="sum-val-note admin-only">
+        <span data-i18n="sum_note_admin">الخلاصة: التكلفة 33,086 + هامش ثابت 6,617 + عمولة <span id="commLabel">5%</span> = <span id="totalNote">44,039</span> SAR</span>
+      </div>
+      <div class="sum-val-note sales-only">
+        <span data-i18n="sum_note_sales">عمولتك على هذا العرض: <strong id="myCommission" style="color: var(--cyan-bright);">1,654 SAR</strong> — تعتمد على النسبة المختارة</span>
+      </div>
+
+      <!-- VAT toggle -->
+      <div style="margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--border);">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+          <span class="meta-lbl" data-i18n="vat_lbl">ضريبة القيمة المضافة</span>
+          <span class="meta-val" style="color: var(--silver);">15%</span>
+        </div>
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <span style="font-family: 'Cormorant Garamond', serif; font-size: 18px; font-weight: 500;" data-i18n="total_vat">الإجمالي شامل الضريبة</span>
+          <span style="font-family: 'JetBrains Mono', monospace; font-size: 22px; font-weight: 700; color: var(--cyan-bright); direction: ltr;" id="finalVAT">50,645 SAR</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Actions -->
+  <div class="actions">
+    <button class="btn">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/></svg>
+      <span data-i18n="btn_save">حفظ مسودة</span>
+    </button>
+    <button class="btn admin-only">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+      <span data-i18n="btn_print_full">طباعة (كاملة — للإدارة)</span>
+    </button>
+    <button class="btn">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+      <span data-i18n="btn_export_client">تصدير PDF (للعميل)</span>
+    </button>
+    <button class="btn primary">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+      <span data-i18n="btn_approve">اعتماد وتحويل لعقد</span>
+    </button>
+  </div>
+
+</main>
+
+<script>
+  // ═══ i18n ═══
+  const translations = {
+    ar: {
+      nav_title: 'لوحة تفاصيل التكلفة · عرض سعر',
+      v_admin: 'مدير', v_sales: 'مندوب',
+      acc_admin: '<strong>الوضع: مدير (Admin)</strong> — ترى كل تفاصيل التكلفة والهوامش. صلاحية: <code style="color:var(--amber);">quotations.view_cost</code>',
+      acc_sales: '<strong>الوضع: مندوب (Sales)</strong> — ترى السعر النهائي وعمولتك فقط. تكلفة المصنع وهوامش الشركة مخفية.',
+      quote_tag: 'Quotation · Cost Breakdown',
+      client_name: 'أحمد الغروي · شركة الراجحي · معرض الياسمين',
+      status_draft: '● مسودة · قيد المراجعة',
+      m_date: 'التاريخ', m_valid: 'صالح حتى', m_currency: 'العملة', m_salesperson: 'المندوب',
+      sales_name: 'خالد المصمم',
+      items_title: 'بنود العرض',
+      items_sub: 'من كتالوج RaMaterials · 4 بنود',
+      btn_add_item: 'إضافة بند',
+      th_item: 'البند', th_qty: 'الكمية', th_area: 'المساحة (م²)', th_cost: 'التكلفة الخام', th_price: 'السعر', th_total: 'الإجمالي',
+      item1: 'نافذة ألمنيوم 2 درفة — 2400×1800mm',
+      item2: 'باب ألمنيوم رئيسي — 2400×2800mm',
+      item3: 'واجهة زجاجية — 4500×3200mm',
+      item4: 'زجاج مزدوج 6+12A+6mm — شفاف',
+      bd_title: 'تفاصيل التكلفة',
+      bd_sub: 'من جداول CostGroup + CostUsage',
+      g_raw: 'المواد الخام', g_labor: 'العمالة', g_ops: 'المصاريف التشغيلية', g_margin: 'هامش الشركة',
+      r_alum: 'الألمنيوم (قطاعات)', r_glass: 'الزجاج', r_acc: 'الإكسسوارات', r_subtotal: 'مجموع المواد الخام',
+      r_labor: 'أجور العمال والفنيين',
+      r_fuel: 'محروقات + استهلاك', r_admin: 'رواتب إدارية + إقامات',
+      r_base: 'إجمالي التكلفة الفعلية',
+      r_margin: 'هامش الشركة 20% (ثابت)',
+      c_title: '🎯 نسبة المندوب (قابلة للخصم)',
+      c_default: 'افتراضي 5%',
+      sum_tag: 'Final Price', sum_currency: 'ريال سعودي · SAR',
+      sum_note_admin: 'الخلاصة: التكلفة 33,086 + هامش ثابت 6,617 + عمولة <span id="commLabel">5%</span> = <span id="totalNote">44,039</span> SAR',
+      sum_note_sales: 'عمولتك على هذا العرض: <strong id="myCommission" style="color: var(--cyan-bright);">1,654 SAR</strong> — تعتمد على النسبة المختارة',
+      vat_lbl: 'ضريبة القيمة المضافة', total_vat: 'الإجمالي شامل الضريبة',
+      btn_save: 'حفظ مسودة', btn_print_full: 'طباعة (كاملة — للإدارة)',
+      btn_export_client: 'تصدير PDF (للعميل)', btn_approve: 'اعتماد وتحويل لعقد'
+    },
+    en: {
+      nav_title: 'Cost Breakdown Panel · Quotation',
+      v_admin: 'Admin', v_sales: 'Sales',
+      acc_admin: '<strong>Role: Admin</strong> — Full cost and margin visibility. Permission: <code style="color:var(--amber);">quotations.view_cost</code>',
+      acc_sales: '<strong>Role: Sales</strong> — You see final price and your commission only. Factory costs and company margins are hidden.',
+      quote_tag: 'Quotation · Cost Breakdown',
+      client_name: 'Ahmed Al-Gharawi · Al-Rajhi Group · Al-Yasmeen Showroom',
+      status_draft: '● Draft · Under Review',
+      m_date: 'Date', m_valid: 'Valid Until', m_currency: 'Currency', m_salesperson: 'Salesperson',
+      sales_name: 'Khaled Al-Musammim',
+      items_title: 'Quote Items',
+      items_sub: 'From RaMaterials Catalog · 4 items',
+      btn_add_item: '+ Add Item',
+      th_item: 'Item', th_qty: 'Qty', th_area: 'Area (m²)', th_cost: 'Raw Cost', th_price: 'Price', th_total: 'Total',
+      item1: 'Aluminum Window 2-sash — 2400×1800mm',
+      item2: 'Main Aluminum Door — 2400×2800mm',
+      item3: 'Glass Facade — 4500×3200mm',
+      item4: 'Double Glazing 6+12A+6mm — Clear',
+      bd_title: 'Cost Breakdown',
+      bd_sub: 'From CostGroup + CostUsage tables',
+      g_raw: 'Raw Materials', g_labor: 'Labor', g_ops: 'Operational Costs', g_margin: 'Company Margin',
+      r_alum: 'Aluminum (Profiles)', r_glass: 'Glass', r_acc: 'Accessories', r_subtotal: 'Raw Materials Total',
+      r_labor: 'Workers + Technicians wages',
+      r_fuel: 'Fuel + Depreciation', r_admin: 'Admin salaries + Housing',
+      r_base: 'Actual Total Cost',
+      r_margin: 'Company Margin 20% (Fixed)',
+      c_title: '🎯 Sales Commission (Negotiable)',
+      c_default: 'Default 5%',
+      sum_tag: 'Final Price', sum_currency: 'Saudi Riyal · SAR',
+      sum_note_admin: 'Breakdown: Cost 33,086 + Fixed Margin 6,617 + Commission <span id="commLabel">5%</span> = <span id="totalNote">44,039</span> SAR',
+      sum_note_sales: 'Your commission on this quote: <strong id="myCommission" style="color: var(--cyan-bright);">1,654 SAR</strong> — depends on chosen rate',
+      vat_lbl: 'VAT', total_vat: 'Total incl. VAT',
+      btn_save: 'Save Draft', btn_print_full: 'Print (Full — Admin)',
+      btn_export_client: 'Export PDF (Client)', btn_approve: 'Approve & Convert to Contract'
+    }
+  };
+
+  function setLang(lang) {
+    const dict = translations[lang];
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+      const key = el.dataset.i18n;
+      if (dict[key]) {
+        if (dict[key].includes('<')) el.innerHTML = dict[key];
+        else el.textContent = dict[key];
+      }
+    });
+    document.querySelectorAll('[data-lang]').forEach(b => b.classList.toggle('active', b.dataset.lang === lang));
+    localStorage.setItem('nr_lang', lang);
+  }
+  function setTheme(theme) {
+    document.documentElement.setAttribute('data-theme', theme);
+    document.querySelectorAll('[data-theme]').forEach(b => b.classList.toggle('active', b.dataset.theme === theme));
+    localStorage.setItem('nr_theme', theme);
+  }
+  function setView(view) {
+    document.body.className = 'role-' + view;
+    document.querySelectorAll('[data-view]').forEach(b => b.classList.toggle('active', b.dataset.view === view));
+    localStorage.setItem('nr_view', view);
+  }
+
+  // Initial
+  setLang(localStorage.getItem('nr_lang') || 'ar');
+  setTheme(localStorage.getItem('nr_theme') || 'dark');
+  setView(localStorage.getItem('nr_view') || 'admin');
+
+  // ═══ COST CALCULATION ═══
+  // Real Ra Workshop data model: CostGroup → CostUsage → FinancialValues
+  const COSTS = {
+    rawAluminum:  14220,   // from ComponentMaterial.Quantity * Section.Price
+    rawGlass:     8122,    // from Glass.Price
+    rawAccessory: 3506,    // from Accessory.Price
+    laborPct:     0.18,    // 18% of raw
+    fuelPct:      0.06,    // 6% of raw
+    adminPct:     0.04,    // 4% of raw
+    companyMarginPct: 0.20, // FIXED 20% — LOCKED
+    vatPct:       0.15     // Saudi VAT
+  };
+
+  function calculate(salesCommissionPct) {
+    const rawTotal = COSTS.rawAluminum + COSTS.rawGlass + COSTS.rawAccessory;
+    const labor = rawTotal * COSTS.laborPct;
+    const fuel = rawTotal * COSTS.fuelPct;
+    const admin = rawTotal * COSTS.adminPct;
+    const baseCost = rawTotal + labor + fuel + admin;
+    const companyMargin = baseCost * COSTS.companyMarginPct;
+    const salesCommission = baseCost * (salesCommissionPct / 100);
+    const finalPrice = baseCost + companyMargin + salesCommission;
+    const vat = finalPrice * COSTS.vatPct;
+    const finalWithVat = finalPrice + vat;
+
+    return {
+      rawTotal, labor, fuel, admin, baseCost,
+      companyMargin, salesCommission, finalPrice,
+      vat, finalWithVat
+    };
+  }
+
+  const slider = document.getElementById('commissionSlider');
+  const sliderFill = document.getElementById('sliderFill');
+  const commValue = document.getElementById('commissionValue');
+  const finalPriceEl = document.getElementById('finalPrice');
+  const finalVATEl = document.getElementById('finalVAT');
+
+  function updateUI() {
+    const pct = parseFloat(slider.value);
+    const result = calculate(pct);
+
+    commValue.textContent = pct + '%';
+    sliderFill.style.width = (pct / 10 * 100) + '%';
+    finalPriceEl.textContent = Math.round(result.finalPrice).toLocaleString();
+    finalVATEl.textContent = Math.round(result.finalWithVat).toLocaleString() + ' SAR';
+
+    const commLabel = document.getElementById('commLabel');
+    const totalNote = document.getElementById('totalNote');
+    const myCommission = document.getElementById('myCommission');
+    if (commLabel) commLabel.textContent = pct + '%';
+    if (totalNote) totalNote.textContent = Math.round(result.finalPrice).toLocaleString();
+    if (myCommission) myCommission.textContent = Math.round(result.salesCommission).toLocaleString() + ' SAR';
+  }
+
+  slider.addEventListener('input', updateUI);
+  updateUI();
+</script>
+
+</body>
+</html>
