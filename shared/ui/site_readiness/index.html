@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>NouRion · Site Readiness</title>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&family=Cormorant+Garamond:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&family=Cairo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg-void: #0A0A0B; --bg-ebony: #121315; --bg-carbon: #1A1C20;
+    --silver: #B8BCC2; --silver-bright: #E8ECEF; --silver-deep: #6A7075;
+    --cyan: #3FA2E0; --cyan-bright: #5AB4E8; --cyan-deep: #1E5FA8;
+    --amber: #D4A35A; --coral: #E63946; --green: #10B981;
+    --text-primary: #EAECEE; --text-soft: #8A8F95; --text-muted: #4E5358;
+    --border: rgba(184, 188, 194, 0.15); --border-bright: rgba(184, 188, 194, 0.35);
+  }
+  html[data-theme="light"] {
+    --bg-void: #F8FAFC; --bg-ebony: #FFFFFF; --bg-carbon: #F1F5F9;
+    --text-primary: #0A1628; --text-soft: #475569; --text-muted: #94A3B8;
+    --border: rgba(10, 22, 40, 0.08); --border-bright: rgba(10, 22, 40, 0.2);
+    --silver-bright: #1E5FA8; --silver-deep: #3FA2E0; --silver: #64748B;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Cairo', 'Manrope', sans-serif;
+    background: var(--bg-void); color: var(--text-primary);
+    min-height: 100vh; line-height: 1.5; font-variant-numeric: lining-nums;
+    transition: background 0.3s;
+  }
+  body::before {
+    content: ''; position: fixed; inset: 0; z-index: 0; pointer-events: none;
+    background:
+      radial-gradient(circle at 15% 15%, rgba(63, 162, 224, 0.08) 0%, transparent 40%),
+      radial-gradient(circle at 85% 85%, rgba(16, 185, 129, 0.05) 0%, transparent 40%);
+  }
+
+  nav {
+    position: sticky; top: 0; z-index: 100; padding: 20px 48px;
+    background: rgba(10, 10, 11, 0.85); backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border);
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  html[data-theme="light"] nav { background: rgba(255, 255, 255, 0.85); }
+  .nav-brand { display: flex; align-items: center; gap: 14px; font-size: 20px; font-weight: 600; direction: ltr; }
+  .nav-brand svg { width: 30px; height: 30px; }
+  .nav-brand .r {
+    font-weight: 800;
+    background: linear-gradient(180deg, #7AC7EE 0%, #3FA2E0 50%, #1E5FA8 100%);
+    -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+    filter: drop-shadow(0 0 8px rgba(63, 162, 224, 0.3));
+  }
+  .nav-divider { height: 20px; width: 1px; background: var(--border); margin: 0 4px; }
+  .nav-title { font-family: 'Cairo', sans-serif; font-weight: 600; font-size: 16px; color: var(--text-soft); }
+  .nav-right { display: flex; align-items: center; gap: 10px; }
+  .switcher { display: inline-flex; background: rgba(184, 188, 194, 0.05); border: 1px solid var(--border); border-radius: 100px; padding: 3px; gap: 2px; }
+  .sw-btn { padding: 6px 14px; font-family: 'JetBrains Mono', monospace; font-size: 10px; font-weight: 700; letter-spacing: 2px; color: var(--text-soft); background: transparent; border: none; border-radius: 100px; cursor: pointer; }
+  .sw-btn.active { background: linear-gradient(180deg, var(--silver-bright) 0%, var(--silver) 100%); color: var(--bg-void); }
+
+  main { position: relative; z-index: 2; padding: 40px 48px 80px; max-width: 1200px; margin: 0 auto; }
+
+  /* Progress bar */
+  .progress-steps {
+    display: flex; align-items: center; gap: 0; margin-bottom: 32px;
+    background: var(--bg-ebony); border: 1px solid var(--border); border-radius: 16px; padding: 20px 28px;
+  }
+  .step { display: flex; align-items: center; gap: 12px; flex: 1; position: relative; }
+  .step:not(:last-child)::after {
+    content: ''; position: absolute; right: 20px; left: auto; top: 50%; transform: translateY(-50%);
+    width: calc(100% - 50px); height: 1px; background: var(--border); z-index: 0;
+  }
+  .step.done:not(:last-child)::after { background: var(--green); }
+  .step-circle {
+    width: 34px; height: 34px; border-radius: 50%;
+    background: var(--bg-carbon); border: 1.5px solid var(--border);
+    display: grid; place-items: center;
+    font-family: 'Cormorant Garamond', serif; font-size: 15px; color: var(--silver);
+    position: relative; z-index: 1;
+  }
+  .step.active .step-circle { background: linear-gradient(135deg, var(--cyan-bright), var(--cyan-deep)); border-color: transparent; color: #FFFFFF; box-shadow: 0 0 12px rgba(63, 162, 224, 0.4); }
+  .step.done .step-circle { background: var(--green); border-color: transparent; color: #FFFFFF; }
+  .step-label { font-size: 12px; color: var(--silver); }
+  .step.active .step-label { color: var(--text-primary); font-weight: 600; }
+  .step.done .step-label { color: var(--green); }
+
+  /* Header */
+  .site-header {
+    background: var(--bg-ebony); border: 1px solid var(--border); border-radius: 18px;
+    padding: 32px 36px; margin-bottom: 24px; position: relative; overflow: hidden;
+  }
+  .site-header::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+    background: linear-gradient(90deg, transparent, var(--amber) 30%, var(--coral) 50%, var(--amber) 70%, transparent);
+  }
+  .label { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--amber); letter-spacing: 3px; text-transform: uppercase; margin-bottom: 6px; }
+  .big-title { font-family: 'Cormorant Garamond', serif; font-size: 40px; font-weight: 500; letter-spacing: -1.5px; margin-bottom: 8px; }
+  .big-title em { font-style: italic; background: linear-gradient(180deg, var(--silver-bright), var(--silver-deep)); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+  .sub { color: var(--text-soft); font-size: 15px; }
+
+  /* Grid */
+  .grid { display: grid; grid-template-columns: 1.5fr 1fr; gap: 24px; }
+  .panel { background: var(--bg-ebony); border: 1px solid var(--border); border-radius: 18px; padding: 28px; }
+  .panel-head { display: flex; justify-content: space-between; align-items: center; padding-bottom: 16px; margin-bottom: 20px; border-bottom: 1px solid var(--border); }
+  .panel-title { font-family: 'Cormorant Garamond', serif; font-size: 22px; font-weight: 500; }
+
+  /* Checklist */
+  .checklist { display: flex; flex-direction: column; gap: 8px; }
+  .check-item {
+    display: grid; grid-template-columns: 28px 1fr auto; gap: 14px; align-items: center;
+    padding: 14px 18px; background: rgba(184, 188, 194, 0.03); border: 1px solid var(--border);
+    border-radius: 10px; cursor: pointer; transition: all 0.2s;
+  }
+  .check-item:hover { border-color: var(--cyan); }
+  .check-item.checked { background: linear-gradient(135deg, rgba(16, 185, 129, 0.08), rgba(184, 188, 194, 0.02)); border-color: rgba(16, 185, 129, 0.3); }
+  .check-item.failed { background: linear-gradient(135deg, rgba(230, 57, 70, 0.08), rgba(184, 188, 194, 0.02)); border-color: rgba(230, 57, 70, 0.3); }
+  .check-box {
+    width: 24px; height: 24px; border-radius: 6px; background: var(--bg-carbon);
+    border: 1.5px solid var(--border); display: grid; place-items: center;
+    transition: all 0.2s;
+  }
+  .check-item.checked .check-box { background: var(--green); border-color: var(--green); color: #FFFFFF; }
+  .check-item.failed .check-box { background: var(--coral); border-color: var(--coral); color: #FFFFFF; }
+  .check-box svg { width: 14px; height: 14px; opacity: 0; }
+  .check-item.checked .check-box svg, .check-item.failed .check-box svg { opacity: 1; }
+  .check-text { font-size: 14px; color: var(--text-primary); }
+  .check-item .mini-btn {
+    padding: 4px 10px; font-size: 9px; font-family: 'JetBrains Mono', monospace;
+    background: transparent; border: 1px solid var(--border); color: var(--silver);
+    border-radius: 6px; cursor: pointer; letter-spacing: 1px;
+  }
+  .check-item .mini-btn:hover { border-color: var(--coral); color: var(--coral); }
+
+  /* Photos */
+  .photos-grid {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-top: 16px;
+  }
+  .photo-thumb {
+    aspect-ratio: 1; border-radius: 10px; background: var(--bg-carbon);
+    border: 1px dashed var(--border); display: grid; place-items: center;
+    color: var(--silver); cursor: pointer; transition: all 0.2s; position: relative; overflow: hidden;
+  }
+  .photo-thumb:hover { border-color: var(--cyan); color: var(--cyan); }
+  .photo-thumb.has-photo {
+    background: linear-gradient(135deg, #2a3040, #1a1c20);
+    border: 1px solid rgba(16, 185, 129, 0.3);
+    color: var(--green);
+  }
+  .photo-thumb .ts { position: absolute; bottom: 4px; left: 4px; font-size: 9px; color: rgba(255, 255, 255, 0.6); font-family: monospace; }
+
+  /* Signature */
+  .signature-area {
+    margin-top: 20px; padding: 20px; background: var(--bg-carbon);
+    border: 1px dashed var(--border); border-radius: 12px;
+  }
+  .sig-canvas {
+    width: 100%; height: 140px; background: rgba(255, 255, 255, 0.02);
+    border: 1px solid var(--border); border-radius: 8px; cursor: crosshair;
+  }
+  html[data-theme="light"] .sig-canvas { background: rgba(10, 22, 40, 0.02); }
+
+  /* Right: summary + decision */
+  .decision-card { background: linear-gradient(135deg, rgba(63, 162, 224, 0.08), rgba(184, 188, 194, 0.02)); border: 1px solid var(--border-bright); border-radius: 18px; padding: 28px; }
+  .big-num { font-family: 'Cormorant Garamond', serif; font-size: 72px; font-weight: 400; line-height: 1; background: linear-gradient(180deg, var(--silver-bright), var(--silver-deep)); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; direction: ltr; letter-spacing: -2px; margin: 12px 0; }
+  .big-lbl { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--silver); letter-spacing: 2px; text-transform: uppercase; }
+
+  .decision-actions { display: flex; flex-direction: column; gap: 10px; margin-top: 20px; }
+  .d-btn {
+    padding: 14px 20px; border-radius: 10px; border: 1px solid var(--border);
+    background: var(--bg-carbon); color: var(--text-primary);
+    font-family: inherit; font-size: 14px; font-weight: 600;
+    cursor: pointer; text-align: right; display: flex; justify-content: space-between; align-items: center;
+  }
+  .d-btn.approve { background: linear-gradient(180deg, var(--green), #059669); color: #FFFFFF; border-color: transparent; }
+  .d-btn.reject { background: linear-gradient(180deg, var(--coral), #B52A37); color: #FFFFFF; border-color: transparent; }
+  .d-btn.phase { background: linear-gradient(180deg, var(--amber), #9A7B38); color: #FFFFFF; border-color: transparent; }
+  .d-btn:hover { transform: translateY(-1px); box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2); }
+
+  .warn-box {
+    margin-top: 16px; padding: 14px 18px;
+    background: linear-gradient(135deg, rgba(230, 57, 70, 0.08), rgba(212, 163, 90, 0.04));
+    border: 1px solid rgba(230, 57, 70, 0.25); border-radius: 10px;
+    font-size: 12px; color: var(--coral); line-height: 1.6;
+  }
+
+  .info-row { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid rgba(184, 188, 194, 0.05); font-size: 13px; }
+  .info-row:last-child { border-bottom: none; }
+  .info-lbl { color: var(--silver); font-family: 'Cairo', sans-serif; }
+  .info-val { color: var(--text-primary); font-weight: 600; direction: ltr; }
+
+  @media (max-width: 900px) { .grid { grid-template-columns: 1fr; } .photos-grid { grid-template-columns: repeat(3, 1fr); } }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-brand">
+    <svg viewBox="0 0 80 80">
+      <defs><linearGradient id="nG" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#E8ECEF"/><stop offset="100%" stop-color="#6A7075"/></linearGradient></defs>
+      <g transform="translate(40,40)">
+        <ellipse rx="32" ry="12" fill="none" stroke="url(#nG)" stroke-width="1.8"/>
+        <ellipse rx="32" ry="12" fill="none" stroke="url(#nG)" stroke-width="1.8" transform="rotate(60)"/>
+        <ellipse rx="32" ry="12" fill="none" stroke="url(#nG)" stroke-width="1.8" transform="rotate(-60)"/>
+        <circle r="6" fill="url(#nG)"/>
+      </g>
+    </svg>
+    <span>Nou<span class="r">R</span>ion</span>
+    <div class="nav-divider"></div>
+    <span class="nav-title">جاهزية الموقع · Site Readiness</span>
+  </div>
+  <div class="nav-right">
+    <div class="switcher">
+      <button class="sw-btn active" onclick="document.documentElement.setAttribute('data-theme','dark'); this.classList.add('active'); this.nextElementSibling.classList.remove('active');">🌙</button>
+      <button class="sw-btn" onclick="document.documentElement.setAttribute('data-theme','light'); this.classList.add('active'); this.previousElementSibling.classList.remove('active');">☀️</button>
+    </div>
+    <div class="switcher">
+      <button class="sw-btn active">عربي</button>
+      <button class="sw-btn">EN</button>
+    </div>
+  </div>
+</nav>
+
+<main>
+
+  <!-- Progress -->
+  <div class="progress-steps">
+    <div class="step done">
+      <div class="step-circle">✓</div>
+      <div class="step-label">العقد</div>
+    </div>
+    <div class="step done">
+      <div class="step-circle">✓</div>
+      <div class="step-label">دفعة أولى</div>
+    </div>
+    <div class="step active">
+      <div class="step-circle">3</div>
+      <div class="step-label">جاهزية الموقع</div>
+    </div>
+    <div class="step">
+      <div class="step-circle">4</div>
+      <div class="step-label">رفع مقاسات</div>
+    </div>
+    <div class="step">
+      <div class="step-circle">5</div>
+      <div class="step-label">الإنتاج</div>
+    </div>
+    <div class="step">
+      <div class="step-circle">6</div>
+      <div class="step-label">التركيب</div>
+    </div>
+  </div>
+
+  <!-- Header -->
+  <div class="site-header">
+    <div class="label">Stage 03 · Site Readiness Check</div>
+    <h1 class="big-title">تقرير جاهزية <em>الموقع</em></h1>
+    <div class="sub">زيارة ميدانية مطلوبة قبل إصدار أمر التشغيل — العقد <strong style="color: var(--text-primary);">#CONT-2026-0142</strong> · أحمد الغروي · التحليه</div>
+  </div>
+
+  <div class="grid">
+
+    <!-- LEFT: Checklist + Photos + Signature -->
+    <div>
+
+      <!-- Checklist -->
+      <div class="panel">
+        <div class="panel-head">
+          <div class="panel-title">قائمة الفحص الميداني</div>
+          <div style="font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--silver);"><span id="checked-count">0</span>/8</div>
+        </div>
+
+        <div class="checklist" id="checklist">
+          <div class="check-item" onclick="toggleCheck(this)">
+            <div class="check-box">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+            </div>
+            <div class="check-text">البناء مكتمل في مواقع التركيب</div>
+            <button class="mini-btn" onclick="event.stopPropagation(); markFail(this.parentElement);">رفض</button>
+          </div>
+          <div class="check-item" onclick="toggleCheck(this)">
+            <div class="check-box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
+            <div class="check-text">الفتحات مطابقة للمواصفات (±5mm)</div>
+            <button class="mini-btn" onclick="event.stopPropagation(); markFail(this.parentElement);">رفض</button>
+          </div>
+          <div class="check-item" onclick="toggleCheck(this)">
+            <div class="check-box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
+            <div class="check-text">السلك الكهربائي والسباكة بعيدة عن مسار التركيب</div>
+            <button class="mini-btn" onclick="event.stopPropagation(); markFail(this.parentElement);">رفض</button>
+          </div>
+          <div class="check-item" onclick="toggleCheck(this)">
+            <div class="check-box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
+            <div class="check-text">الأرضية والجدران نظيفة من مخلفات البناء</div>
+            <button class="mini-btn" onclick="event.stopPropagation(); markFail(this.parentElement);">رفض</button>
+          </div>
+          <div class="check-item" onclick="toggleCheck(this)">
+            <div class="check-box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
+            <div class="check-text">يوجد مكان آمن لتخزين المواد أثناء التركيب</div>
+            <button class="mini-btn" onclick="event.stopPropagation(); markFail(this.parentElement);">رفض</button>
+          </div>
+          <div class="check-item" onclick="toggleCheck(this)">
+            <div class="check-box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
+            <div class="check-text">الوصول للموقع متاح لسيارات النقل (رافعة إذا لزم)</div>
+            <button class="mini-btn" onclick="event.stopPropagation(); markFail(this.parentElement);">رفض</button>
+          </div>
+          <div class="check-item" onclick="toggleCheck(this)">
+            <div class="check-box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
+            <div class="check-text">مصدر كهرباء للمعدات (220V) متوفر بالموقع</div>
+            <button class="mini-btn" onclick="event.stopPropagation(); markFail(this.parentElement);">رفض</button>
+          </div>
+          <div class="check-item" onclick="toggleCheck(this)">
+            <div class="check-box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
+            <div class="check-text">التراخيص والموافقات البلدية موجودة (نسخة في ملف العميل)</div>
+            <button class="mini-btn" onclick="event.stopPropagation(); markFail(this.parentElement);">رفض</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Photos -->
+      <div class="panel" style="margin-top: 20px;">
+        <div class="panel-head">
+          <div class="panel-title">صور الموقع</div>
+          <div style="font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--silver);">6 مطلوبة</div>
+        </div>
+        <div class="photos-grid">
+          <div class="photo-thumb has-photo">📸<div class="ts">10:14</div></div>
+          <div class="photo-thumb has-photo">📸<div class="ts">10:16</div></div>
+          <div class="photo-thumb has-photo">📸<div class="ts">10:18</div></div>
+          <div class="photo-thumb has-photo">📸<div class="ts">10:21</div></div>
+          <div class="photo-thumb">+ رفع صورة</div>
+          <div class="photo-thumb">+ رفع صورة</div>
+        </div>
+      </div>
+
+      <!-- Signature -->
+      <div class="panel" style="margin-top: 20px;">
+        <div class="panel-head">
+          <div class="panel-title">توقيع المندوب الميداني</div>
+        </div>
+        <div class="signature-area">
+          <canvas class="sig-canvas" id="sigCanvas"></canvas>
+          <div style="display: flex; justify-content: space-between; margin-top: 10px; font-size: 11px; color: var(--silver);">
+            <span>وقّع هنا بالماوس أو الإصبع</span>
+            <button class="mini-btn" onclick="clearSig()">مسح</button>
+          </div>
+        </div>
+        <div style="margin-top: 16px; padding: 14px 18px; background: rgba(184, 188, 194, 0.03); border-radius: 10px;">
+          <div style="font-size: 13px; color: var(--text-primary);"><strong>خالد المصمم</strong> · EMP-0087 · مندوب معرض الياسمين</div>
+          <div style="font-size: 11px; color: var(--silver); margin-top: 4px; direction: ltr;">2026-04-17 · 10:25 · GPS: 24.7136° N, 46.6753° E</div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- RIGHT: Decision panel -->
+    <div>
+      <div class="decision-card">
+        <div class="big-lbl">نسبة الجاهزية</div>
+        <div class="big-num" id="readinessPct">87%</div>
+
+        <div style="padding-top: 16px; border-top: 1px solid var(--border); margin-top: 16px;">
+          <div class="info-row"><span class="info-lbl">المشروع</span><span class="info-val">CONT-2026-0142</span></div>
+          <div class="info-row"><span class="info-lbl">العميل</span><span class="info-val">أحمد الغروي</span></div>
+          <div class="info-row"><span class="info-lbl">الموقع</span><span class="info-val">التحليه / الغربية</span></div>
+          <div class="info-row"><span class="info-lbl">العنود القطاعات</span><span class="info-val">7 قطاعات</span></div>
+          <div class="info-row"><span class="info-lbl">قيمة العقد</span><span class="info-val">50,645 SAR</span></div>
+          <div class="info-row"><span class="info-lbl">المدة المتوقعة</span><span class="info-val">14 يوم</span></div>
+        </div>
+
+        <div class="decision-actions">
+          <button class="d-btn approve">
+            <span>✓ اعتماد الموقع جاهز</span>
+            <span style="font-family: 'JetBrains Mono', monospace; font-size: 10px; opacity: 0.8;">إصدار أمر التشغيل</span>
+          </button>
+          <button class="d-btn phase">
+            <span>⏸ تقسيم لمراحل</span>
+            <span style="font-family: 'JetBrains Mono', monospace; font-size: 10px; opacity: 0.8;">المرحلة الجاهزة فقط</span>
+          </button>
+          <button class="d-btn reject">
+            <span>✗ الموقع غير جاهز</span>
+            <span style="font-family: 'JetBrains Mono', monospace; font-size: 10px; opacity: 0.8;">تأجيل + إشعار العميل</span>
+          </button>
+        </div>
+
+        <div class="warn-box">
+          <strong>⚠ ملاحظة:</strong> عند الرفض، سيتم إشعار العميل تلقائياً وتجميد الجدول الزمني. يُوصى بترتيب زيارة جديدة بعد 7 أيام.
+        </div>
+      </div>
+    </div>
+
+  </div>
+</main>
+
+<script>
+  function toggleCheck(el) {
+    if (el.classList.contains('failed')) return;
+    el.classList.toggle('checked');
+    updateCount();
+  }
+  function markFail(el) {
+    el.classList.remove('checked');
+    el.classList.add('failed');
+    updateCount();
+  }
+  function updateCount() {
+    const checked = document.querySelectorAll('.check-item.checked').length;
+    const failed = document.querySelectorAll('.check-item.failed').length;
+    const total = document.querySelectorAll('.check-item').length;
+    document.getElementById('checked-count').textContent = checked;
+    const pct = Math.round((checked / total) * 100);
+    document.getElementById('readinessPct').textContent = pct + '%';
+  }
+
+  // Initially check first 7 for demo
+  document.querySelectorAll('.check-item').forEach((el, i) => {
+    if (i < 7) el.classList.add('checked');
+  });
+  updateCount();
+
+  // Signature canvas
+  const canvas = document.getElementById('sigCanvas');
+  const ctx = canvas.getContext('2d');
+  function resizeCanvas() {
+    const rect = canvas.getBoundingClientRect();
+    canvas.width = rect.width * 2;
+    canvas.height = rect.height * 2;
+    ctx.scale(2, 2);
+    ctx.strokeStyle = '#5AB4E8';
+    ctx.lineWidth = 2;
+    ctx.lineCap = 'round';
+  }
+  resizeCanvas();
+  window.addEventListener('resize', resizeCanvas);
+  let drawing = false;
+  canvas.addEventListener('mousedown', (e) => {
+    drawing = true;
+    const rect = canvas.getBoundingClientRect();
+    ctx.beginPath();
+    ctx.moveTo(e.clientX - rect.left, e.clientY - rect.top);
+  });
+  canvas.addEventListener('mousemove', (e) => {
+    if (!drawing) return;
+    const rect = canvas.getBoundingClientRect();
+    ctx.lineTo(e.clientX - rect.left, e.clientY - rect.top);
+    ctx.stroke();
+  });
+  canvas.addEventListener('mouseup', () => { drawing = false; });
+  canvas.addEventListener('mouseleave', () => { drawing = false; });
+  function clearSig() { ctx.clearRect(0, 0, canvas.width, canvas.height); }
+</script>
+
+</body>
+</html>
