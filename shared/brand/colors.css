@@ -1,0 +1,141 @@
+/* ═══════════════════════════════════════════════════════════
+   NouRion — Brand Color System
+   مستوحى من شعار الذرة (Atomic Symbol)
+   ═══════════════════════════════════════════════════════════ */
+
+:root {
+  /* ──── PRIMARY BRAND COLORS ──────────────────────────── */
+  /* الأزرق الرئيسي — مسارات المدارات الخلفية */
+  --nr-navy-900:  #0A1628;
+  --nr-navy-800:  #122338;
+  --nr-navy-700:  #1E3A5F;
+  --nr-navy-600:  #1E5FA8;  /* Primary dark blue */
+  --nr-navy-500:  #2E7DBF;
+  --nr-navy-400:  #4A94CF;
+
+  /* الأزرق الفاتح — المسار الأمامي */
+  --nr-sky-700:   #2D8BC4;
+  --nr-sky-600:   #3FA2E0;  /* Primary light blue */
+  --nr-sky-500:   #5AB4E8;
+  --nr-sky-400:   #7AC7EE;
+  --nr-sky-300:   #A8DCF4;
+  --nr-sky-100:   #E1F2FB;
+
+  /* البرتقالي — الإلكترونات */
+  --nr-amber-700: #C87E0E;
+  --nr-amber-600: #E8951A;
+  --nr-amber-500: #F4A91E;  /* Primary amber */
+  --nr-amber-400: #F7BB4A;
+  --nr-amber-300: #FBD584;
+  --nr-amber-100: #FEF3DA;
+
+  /* الأحمر — النواة */
+  --nr-coral-700: #B52A37;
+  --nr-coral-600: #D03443;
+  --nr-coral-500: #E63946;  /* Primary coral */
+  --nr-coral-400: #EC5967;
+  --nr-coral-300: #F28189;
+  --nr-coral-100: #FBDDE0;
+
+  /* ──── NEUTRAL SCALE ─────────────────────────────────── */
+  --nr-white:     #FFFFFF;
+  --nr-gray-50:   #F8FAFC;
+  --nr-gray-100:  #F1F5F9;
+  --nr-gray-200:  #E2E8F0;
+  --nr-gray-300:  #CBD5E1;
+  --nr-gray-400:  #94A3B8;
+  --nr-gray-500:  #64748B;
+  --nr-gray-600:  #475569;
+  --nr-gray-700:  #334155;
+  --nr-gray-800:  #1E293B;
+  --nr-gray-900:  #0F172A;
+  --nr-black:     #030712;
+
+  /* ──── SEMANTIC COLORS ───────────────────────────────── */
+  --nr-success:   #10B981;
+  --nr-warning:   var(--nr-amber-500);
+  --nr-danger:    var(--nr-coral-500);
+  --nr-info:      var(--nr-sky-600);
+
+  /* ──── GRADIENTS ─────────────────────────────────────── */
+  --nr-gradient-primary:   linear-gradient(135deg, var(--nr-navy-600) 0%, var(--nr-sky-600) 100%);
+  --nr-gradient-sunrise:   linear-gradient(135deg, var(--nr-amber-500) 0%, var(--nr-coral-500) 100%);
+  --nr-gradient-cosmos:    linear-gradient(135deg, var(--nr-navy-900) 0%, var(--nr-navy-700) 50%, var(--nr-sky-600) 100%);
+  --nr-gradient-electron:  radial-gradient(circle, var(--nr-amber-400) 0%, var(--nr-amber-600) 100%);
+  --nr-gradient-nucleus:   radial-gradient(circle at 30% 30%, #FFFFFF 0%, var(--nr-coral-500) 40%, var(--nr-coral-700) 100%);
+
+  /* ──── LIGHT THEME ───────────────────────────────────── */
+  --bg:           var(--nr-white);
+  --bg-alt:       var(--nr-gray-50);
+  --bg-card:      var(--nr-white);
+  --bg-sidebar:   var(--nr-navy-900);
+  --text:         var(--nr-navy-900);
+  --text-muted:   var(--nr-gray-500);
+  --text-invert:  var(--nr-white);
+  --border:       var(--nr-gray-200);
+  --border-strong:var(--nr-gray-300);
+  --accent:       var(--nr-navy-600);
+  --accent-hover: var(--nr-sky-600);
+  --danger:       var(--nr-coral-500);
+  --amber:        var(--nr-amber-500);
+  --success:      var(--nr-success);
+
+  /* ──── SHADOWS ───────────────────────────────────────── */
+  --nr-shadow-sm:    0 1px 2px rgba(10, 22, 40, 0.06);
+  --nr-shadow-md:    0 4px 12px rgba(10, 22, 40, 0.10);
+  --nr-shadow-lg:    0 12px 32px rgba(10, 22, 40, 0.14);
+  --nr-shadow-xl:    0 24px 64px rgba(10, 22, 40, 0.18);
+  --nr-shadow-glow:  0 0 24px rgba(63, 162, 224, 0.4);
+  --nr-shadow-amber: 0 0 20px rgba(244, 169, 30, 0.5);
+
+  /* ──── TYPOGRAPHY ────────────────────────────────────── */
+  --nr-font-ar:   'Cairo', 'Tajawal', 'Segoe UI', sans-serif;
+  --nr-font-en:   'Manrope', 'Inter', -apple-system, sans-serif;
+  --nr-font-display: 'Manrope', 'Inter', -apple-system, sans-serif;
+  --nr-font-mono: 'JetBrains Mono', 'Courier New', monospace;
+
+  /* ──── SPACING SYSTEM (8pt grid) ─────────────────────── */
+  --nr-space-1:  4px;
+  --nr-space-2:  8px;
+  --nr-space-3:  12px;
+  --nr-space-4:  16px;
+  --nr-space-5:  24px;
+  --nr-space-6:  32px;
+  --nr-space-7:  48px;
+  --nr-space-8:  64px;
+  --nr-space-9:  96px;
+
+  /* ──── RADIUS ────────────────────────────────────────── */
+  --nr-radius-sm:  4px;
+  --nr-radius-md:  8px;
+  --nr-radius-lg:  12px;
+  --nr-radius-xl:  20px;
+  --nr-radius-2xl: 32px;
+  --nr-radius-full: 9999px;
+
+  /* ──── TRANSITIONS ───────────────────────────────────── */
+  --nr-ease:      cubic-bezier(0.4, 0, 0.2, 1);
+  --nr-ease-out:  cubic-bezier(0.0, 0, 0.2, 1);
+  --nr-ease-in:   cubic-bezier(0.4, 0, 1, 1);
+  --nr-ease-bouncy: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+/* ──── DARK THEME ──────────────────────────────────────── */
+[data-theme="dark"], .dark {
+  --bg:          var(--nr-navy-900);
+  --bg-alt:      var(--nr-navy-800);
+  --bg-card:     var(--nr-gray-800);
+  --bg-sidebar:  var(--nr-black);
+  --text:        var(--nr-gray-100);
+  --text-muted:  var(--nr-gray-400);
+  --text-invert: var(--nr-navy-900);
+  --border:      rgba(255, 255, 255, 0.08);
+  --border-strong: rgba(255, 255, 255, 0.15);
+  --accent:      var(--nr-sky-600);
+  --accent-hover: var(--nr-sky-400);
+
+  --nr-shadow-sm:  0 1px 2px rgba(0, 0, 0, 0.3);
+  --nr-shadow-md:  0 4px 12px rgba(0, 0, 0, 0.4);
+  --nr-shadow-lg:  0 12px 32px rgba(0, 0, 0, 0.5);
+  --nr-shadow-xl:  0 24px 64px rgba(0, 0, 0, 0.6);
+}

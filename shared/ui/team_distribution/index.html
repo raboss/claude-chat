@@ -1,0 +1,1453 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>NouRion · Daily Team Distribution</title>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&family=Cormorant+Garamond:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&family=Cairo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg-void: #0A0A0B;
+    --bg-ebony: #121315;
+    --bg-carbon: #1A1C20;
+    --silver: #B8BCC2;
+    --silver-bright: #E8ECEF;
+    --silver-deep: #6A7075;
+    --cyan: #3FA2E0;
+    --cyan-bright: #5AB4E8;
+    --cyan-deep: #1E5FA8;
+    --amber: #D4A35A;
+    --coral: #E63946;
+    --green: #10B981;
+    --text-primary: #EAECEE;
+    --text-soft: #8A8F95;
+    --text-muted: #4E5358;
+    --border: rgba(184, 188, 194, 0.15);
+    --border-bright: rgba(184, 188, 194, 0.35);
+  }
+
+  /* Light theme */
+  html[data-theme="light"] {
+    --bg-void: #F8FAFC;
+    --bg-ebony: #FFFFFF;
+    --bg-carbon: #F1F5F9;
+    --text-primary: #0A1628;
+    --text-soft: #475569;
+    --text-muted: #94A3B8;
+    --border: rgba(10, 22, 40, 0.08);
+    --border-bright: rgba(10, 22, 40, 0.2);
+    --silver-bright: #1E5FA8;
+    --silver-deep: #3FA2E0;
+    --silver: #64748B;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Cairo', 'Manrope', sans-serif;
+    background: var(--bg-void);
+    color: var(--text-primary);
+    min-height: 100vh;
+    line-height: 1.5;
+    font-variant-numeric: lining-nums;
+    transition: background 0.3s, color 0.3s;
+  }
+
+  body::before {
+    content: '';
+    position: fixed; inset: 0; z-index: 0; pointer-events: none;
+    background:
+      radial-gradient(circle at 15% 15%, rgba(63, 162, 224, 0.08) 0%, transparent 40%),
+      radial-gradient(circle at 85% 85%, rgba(212, 163, 90, 0.05) 0%, transparent 40%);
+  }
+  html[data-theme="light"] body::before {
+    background:
+      radial-gradient(circle at 15% 15%, rgba(63, 162, 224, 0.06) 0%, transparent 40%),
+      radial-gradient(circle at 85% 85%, rgba(244, 169, 30, 0.04) 0%, transparent 40%);
+  }
+
+  /* NAV */
+  nav {
+    position: sticky; top: 0; z-index: 100;
+    padding: 20px 48px;
+    background: rgba(10, 10, 11, 0.85);
+    backdrop-filter: blur(20px) saturate(1.5);
+    border-bottom: 1px solid var(--border);
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  html[data-theme="light"] nav {
+    background: rgba(255, 255, 255, 0.85);
+  }
+  .nav-brand {
+    display: flex; align-items: center; gap: 14px;
+    font-size: 20px; font-weight: 600;
+    direction: ltr;
+  }
+  .nav-brand svg { width: 30px; height: 30px; }
+  .nav-brand .r {
+    font-weight: 800;
+    background: linear-gradient(180deg, #7AC7EE 0%, #3FA2E0 50%, #1E5FA8 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    filter: drop-shadow(0 0 8px rgba(63, 162, 224, 0.3));
+    padding: 0 2px;
+  }
+  .nav-divider {
+    height: 20px; width: 1px;
+    background: var(--border);
+    margin: 0 4px;
+  }
+  .nav-title {
+    font-family: 'Cairo', sans-serif;
+    font-weight: 600;
+    font-size: 16px;
+    color: var(--text-soft);
+    letter-spacing: -0.3px;
+  }
+  .nav-right { display: flex; align-items: center; gap: 12px; }
+  .lang-switcher, .theme-switcher {
+    display: inline-flex;
+    background: rgba(184, 188, 194, 0.05);
+    border: 1px solid var(--border);
+    border-radius: 100px;
+    padding: 3px; gap: 2px;
+  }
+  .lang-btn, .theme-btn {
+    padding: 6px 14px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; font-weight: 700;
+    letter-spacing: 2px; color: var(--text-soft);
+    background: transparent; border: none;
+    border-radius: 100px; cursor: pointer;
+    transition: all 0.2s;
+  }
+  .lang-btn:hover, .theme-btn:hover { color: var(--text-primary); }
+  .lang-btn.active, .theme-btn.active {
+    background: linear-gradient(180deg, var(--silver-bright) 0%, var(--silver) 100%);
+    color: var(--bg-void);
+  }
+
+  .btn {
+    padding: 10px 18px;
+    border-radius: 100px;
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--text-primary);
+    cursor: pointer;
+    display: inline-flex; align-items: center; gap: 8px;
+    transition: all 0.2s;
+  }
+  .btn:hover { border-color: var(--cyan); background: rgba(63, 162, 224, 0.08); color: var(--cyan); }
+  .btn.primary {
+    background: linear-gradient(180deg, var(--cyan-bright) 0%, var(--cyan-deep) 100%);
+    color: #FFFFFF;
+    border-color: transparent;
+    box-shadow: 0 4px 16px rgba(63, 162, 224, 0.3);
+  }
+  .btn.primary:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 20px rgba(63, 162, 224, 0.5);
+  }
+
+  /* MAIN */
+  main {
+    position: relative; z-index: 2;
+    padding: 40px 48px 80px;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  /* Header card — matches PDF */
+  .dist-header {
+    background: var(--bg-ebony);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 40px 48px;
+    margin-bottom: 32px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .dist-header::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--cyan) 30%, var(--cyan-bright) 50%, var(--cyan) 70%, transparent);
+  }
+  .page-title-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--cyan);
+    letter-spacing: 4px;
+    margin-bottom: 10px;
+    text-transform: uppercase;
+  }
+  .page-title {
+    font-family: 'Cairo', sans-serif;
+    font-size: 38px;
+    font-weight: 800;
+    letter-spacing: -1px;
+    margin-bottom: 8px;
+    color: var(--text-primary);
+  }
+  .page-subtitle {
+    font-family: 'Cairo', sans-serif;
+    font-size: 18px;
+    color: var(--silver);
+    margin-bottom: 24px;
+  }
+
+  /* Date & Code row */
+  .date-code {
+    display: flex; justify-content: center; align-items: center; gap: 24px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border);
+    flex-wrap: wrap;
+  }
+  .date-row {
+    display: inline-flex; align-items: center; gap: 10px;
+    font-family: 'Cairo', sans-serif;
+    font-size: 16px;
+    color: var(--text-primary);
+    font-weight: 600;
+  }
+  .date-row svg { width: 20px; height: 20px; color: var(--cyan); }
+  .code-label {
+    font-family: 'Cairo', sans-serif;
+    font-size: 14px;
+    color: var(--silver);
+  }
+  .code-value {
+    display: inline-flex; align-items: center; justify-content: center;
+    min-width: 80px;
+    padding: 8px 20px;
+    background: linear-gradient(135deg, rgba(244, 169, 30, 0.15), rgba(212, 163, 90, 0.08));
+    border: 1.5px solid var(--amber);
+    border-radius: 10px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--amber);
+    letter-spacing: 4px;
+    direction: ltr;
+    box-shadow: 0 0 20px rgba(212, 163, 90, 0.2);
+  }
+
+  .warning-note {
+    background: linear-gradient(135deg, rgba(244, 169, 30, 0.08), rgba(212, 163, 90, 0.04));
+    border: 1px solid rgba(212, 163, 90, 0.3);
+    border-radius: 12px;
+    padding: 14px 20px;
+    margin-top: 20px;
+    font-family: 'Cairo', sans-serif;
+    font-size: 13px;
+    color: var(--amber);
+    display: flex; align-items: center; gap: 12px;
+    justify-content: center;
+    direction: rtl;
+  }
+  .warning-note svg { flex-shrink: 0; width: 18px; height: 18px; }
+
+  /* Quick actions */
+  .quick-actions {
+    display: flex; gap: 10px; justify-content: center; margin-bottom: 24px;
+    flex-wrap: wrap;
+  }
+
+  /* Teams grid */
+  .teams { display: flex; flex-direction: column; gap: 20px; }
+
+  .team {
+    background: var(--bg-ebony);
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    padding: 28px 32px;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s;
+  }
+  .team:hover {
+    border-color: var(--cyan);
+    box-shadow: 0 12px 32px rgba(0,0,0,0.2), 0 0 20px rgba(63, 162, 224, 0.1);
+  }
+  html[data-theme="light"] .team:hover {
+    box-shadow: 0 12px 32px rgba(10, 22, 40, 0.08), 0 0 20px rgba(63, 162, 224, 0.15);
+  }
+
+  /* Colored left accent bar — different color per team */
+  .team::before {
+    content: '';
+    position: absolute;
+    top: 0; right: 0;
+    width: 4px;
+    height: 100%;
+    background: var(--team-color, var(--cyan));
+    opacity: 0.6;
+  }
+  .team.color-green { --team-color: var(--green); }
+  .team.color-amber { --team-color: var(--amber); }
+  .team.color-cyan { --team-color: var(--cyan); }
+  .team.color-coral { --team-color: var(--coral); }
+
+  /* Team header */
+  .team-head {
+    display: flex; justify-content: space-between; align-items: flex-start;
+    margin-bottom: 20px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--border);
+  }
+  .team-name {
+    font-family: 'Cairo', sans-serif;
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--text-primary);
+    letter-spacing: -0.3px;
+  }
+  .team-vehicle {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--silver);
+    letter-spacing: 1px;
+    padding: 6px 12px;
+    background: rgba(184, 188, 194, 0.06);
+    border: 1px solid var(--border);
+    border-radius: 100px;
+    direction: ltr;
+  }
+  .team-vehicle svg { width: 14px; height: 14px; color: var(--team-color, var(--cyan)); }
+
+  /* Manager + contacts row */
+  .manager-row {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: 20px;
+    align-items: center;
+    padding: 12px 0;
+  }
+  .role-badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 6px 14px;
+    background: linear-gradient(135deg, rgba(63, 162, 224, 0.15), rgba(30, 95, 168, 0.08));
+    border: 1px solid rgba(63, 162, 224, 0.3);
+    border-radius: 100px;
+    font-family: 'Cairo', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--cyan-bright);
+  }
+  .role-badge svg { width: 14px; height: 14px; }
+  .person-name {
+    font-family: 'Cairo', sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text-primary);
+  }
+  .contacts {
+    display: flex; gap: 12px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: var(--silver);
+    direction: ltr;
+    letter-spacing: 0.5px;
+  }
+  .contact-item {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 4px 10px;
+    background: rgba(184, 188, 194, 0.04);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+  }
+  .contact-item svg { width: 12px; height: 12px; color: var(--silver); }
+
+  /* Workers */
+  .workers-row {
+    display: grid; grid-template-columns: auto 1fr;
+    gap: 20px;
+    align-items: center;
+    padding: 12px 0;
+  }
+  .workers-list {
+    font-family: 'Cairo', sans-serif;
+    font-size: 14px;
+    color: var(--text-primary);
+    font-weight: 500;
+  }
+  .workers-list .sep {
+    color: var(--silver);
+    margin: 0 10px;
+  }
+
+  /* Projects section */
+  .projects-row {
+    display: grid; grid-template-columns: auto 1fr;
+    gap: 20px;
+    align-items: flex-start;
+    padding: 12px 0;
+    border-top: 1px solid var(--border);
+    margin-top: 8px;
+    padding-top: 16px;
+  }
+  .project {
+    padding: 14px 18px;
+    background: rgba(184, 188, 194, 0.03);
+    border: 1px solid var(--border);
+    border-right: 3px solid var(--team-color, var(--cyan));
+    border-radius: 10px;
+    margin-bottom: 8px;
+  }
+  .project:last-child { margin-bottom: 0; }
+  .project-header {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 6px;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .project-client {
+    font-family: 'Cairo', sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text-primary);
+  }
+  .project-id {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--cyan);
+    letter-spacing: 1px;
+    direction: ltr;
+  }
+  .project-meta {
+    font-family: 'Cairo', sans-serif;
+    font-size: 13px;
+    color: var(--silver);
+    display: flex; gap: 8px;
+    flex-wrap: wrap;
+  }
+  .project-meta .sep { color: var(--text-muted); }
+
+  .work-type {
+    margin-top: 10px;
+    padding: 10px 16px;
+    background: rgba(63, 162, 224, 0.08);
+    border-right: 3px solid var(--cyan);
+    border-radius: 8px;
+    font-family: 'Cairo', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--cyan-bright);
+  }
+  .team.color-green .work-type { background: rgba(16, 185, 129, 0.08); border-right-color: var(--green); color: #34D399; }
+  .team.color-amber .work-type { background: rgba(212, 163, 90, 0.08); border-right-color: var(--amber); color: var(--amber); }
+  .team.color-coral .work-type { background: rgba(230, 57, 70, 0.08); border-right-color: var(--coral); color: #F28189; }
+
+  .icon-box {
+    width: 28px; height: 28px;
+    border-radius: 8px;
+    background: rgba(63, 162, 224, 0.1);
+    display: inline-grid; place-items: center;
+    flex-shrink: 0;
+  }
+  .icon-box svg {
+    width: 14px; height: 14px;
+    color: var(--cyan);
+  }
+
+  /* Footer with signature */
+  .footer-card {
+    margin-top: 32px;
+    padding: 32px 40px;
+    background: var(--bg-ebony);
+    border: 1px solid var(--border);
+    border-radius: 18px;
+  }
+  .footer-warning {
+    padding: 16px 20px;
+    background: linear-gradient(135deg, rgba(230, 57, 70, 0.08), transparent);
+    border: 1px solid rgba(230, 57, 70, 0.25);
+    border-radius: 12px;
+    font-family: 'Cairo', sans-serif;
+    font-size: 13px;
+    color: var(--coral);
+    display: flex; align-items: center; gap: 12px;
+    direction: rtl;
+    margin-bottom: 24px;
+  }
+  .footer-warning svg { flex-shrink: 0; width: 18px; height: 18px; }
+
+  .signature-block {
+    display: flex; justify-content: flex-end;
+    padding-top: 20px;
+    border-top: 1px solid var(--border);
+  }
+  .signature {
+    text-align: center;
+    font-family: 'Cairo', sans-serif;
+  }
+  .signature-title { font-size: 15px; font-weight: 600; color: var(--text-primary); margin-bottom: 24px; }
+  .signature-line {
+    width: 160px; height: 40px;
+    border-bottom: 1.5px solid var(--silver);
+    position: relative;
+    margin: 0 auto 8px;
+  }
+  .signature-line::after {
+    content: 'M. S';
+    position: absolute;
+    left: 50%;
+    bottom: 10px;
+    transform: translateX(-50%);
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 18px;
+    color: var(--cyan);
+  }
+  .signature-label {
+    font-size: 11px;
+    color: var(--silver);
+    letter-spacing: 0.5px;
+  }
+
+  /* Summary stats row */
+  .summary-stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+  .sum-stat {
+    padding: 16px 18px;
+    background: var(--bg-ebony);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+  }
+  .sum-stat-lbl {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--silver);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+  .sum-stat-val {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 32px;
+    font-weight: 400;
+    line-height: 1;
+    background: linear-gradient(180deg, var(--silver-bright), var(--silver-deep));
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    letter-spacing: -1px;
+  }
+
+  .add-team-card {
+    padding: 24px;
+    background: transparent;
+    border: 2px dashed var(--border-bright);
+    border-radius: 18px;
+    text-align: center;
+    cursor: pointer;
+    color: var(--text-soft);
+    font-family: 'Cairo', sans-serif;
+    font-weight: 500;
+    transition: all 0.2s;
+    margin-top: 20px;
+  }
+  .add-team-card:hover {
+    border-color: var(--cyan);
+    background: rgba(63, 162, 224, 0.05);
+    color: var(--cyan);
+  }
+
+  /* ═══ MODAL for interactive team creation ═══ */
+  .modal-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(3, 7, 18, 0.8);
+    backdrop-filter: blur(8px);
+    z-index: 1000;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+  }
+  .modal-backdrop.active { display: flex; }
+  .modal {
+    background: var(--bg-ebony);
+    border: 1px solid var(--border-bright);
+    border-radius: 20px;
+    padding: 36px 40px;
+    max-width: 640px;
+    width: 100%;
+    max-height: 90vh;
+    overflow-y: auto;
+    position: relative;
+  }
+  .modal::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--cyan) 30%, var(--cyan-bright) 50%, var(--cyan) 70%, transparent);
+    border-radius: 20px 20px 0 0;
+  }
+  .modal-head {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 24px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--border);
+  }
+  .modal-title {
+    font-family: 'Cairo', sans-serif;
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--text-primary);
+  }
+  .modal-title .tag {
+    display: inline-block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--cyan);
+    letter-spacing: 2px;
+    margin-bottom: 6px;
+    text-transform: uppercase;
+  }
+  .modal-close {
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    background: rgba(184, 188, 194, 0.08);
+    border: 1px solid var(--border);
+    display: grid; place-items: center;
+    cursor: pointer;
+    color: var(--silver);
+  }
+  .modal-close:hover { background: rgba(230, 57, 70, 0.15); color: var(--coral); border-color: var(--coral); }
+
+  .form-field { margin-bottom: 20px; }
+  .form-label {
+    display: block;
+    font-family: 'Cairo', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--silver);
+    margin-bottom: 8px;
+    letter-spacing: 0.3px;
+  }
+  .form-label .req { color: var(--coral); margin-right: 4px; }
+  .form-input, .form-select, .form-textarea {
+    width: 100%;
+    padding: 12px 16px;
+    background: var(--bg-carbon);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    color: var(--text-primary);
+    font-family: inherit;
+    font-size: 14px;
+    direction: rtl;
+    transition: all 0.2s;
+  }
+  .form-input:focus, .form-select:focus, .form-textarea:focus {
+    outline: none;
+    border-color: var(--cyan);
+    background: rgba(63, 162, 224, 0.04);
+  }
+  .form-textarea { resize: vertical; min-height: 80px; }
+
+  /* Auto-filled field highlight */
+  .auto-filled {
+    background: rgba(16, 185, 129, 0.08) !important;
+    border-color: rgba(16, 185, 129, 0.3) !important;
+    position: relative;
+  }
+  .auto-badge {
+    display: inline-flex; align-items: center; gap: 4px;
+    padding: 2px 8px;
+    background: rgba(16, 185, 129, 0.15);
+    color: var(--green);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    border-radius: 4px;
+    letter-spacing: 1px;
+    margin-right: 8px;
+    text-transform: uppercase;
+  }
+
+  .workers-checklist {
+    display: flex; flex-direction: column; gap: 6px;
+    padding: 10px 14px;
+    background: var(--bg-carbon);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    min-height: 60px;
+  }
+  .worker-item {
+    display: flex; align-items: center; gap: 10px;
+    padding: 6px 10px;
+    background: rgba(184, 188, 194, 0.03);
+    border-radius: 6px;
+  }
+  .worker-item input[type="checkbox"] {
+    width: 16px; height: 16px;
+    accent-color: var(--cyan);
+  }
+  .worker-item label {
+    font-family: 'Cairo', sans-serif;
+    font-size: 13px;
+    color: var(--text-primary);
+  }
+
+  .modal-footer {
+    display: flex; justify-content: space-between; align-items: center;
+    padding-top: 20px;
+    border-top: 1px solid var(--border);
+    margin-top: 20px;
+  }
+  .form-hint {
+    font-family: 'Cairo', sans-serif;
+    font-size: 12px;
+    color: var(--silver);
+  }
+  .modal-actions { display: flex; gap: 10px; }
+
+  /* Edit button on team cards */
+  .team-actions {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    display: flex; gap: 6px;
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+  .team:hover .team-actions { opacity: 1; }
+  .team-action-btn {
+    width: 30px; height: 30px;
+    border-radius: 8px;
+    background: rgba(184, 188, 194, 0.08);
+    border: 1px solid var(--border);
+    display: grid; place-items: center;
+    cursor: pointer;
+    color: var(--silver);
+  }
+  .team-action-btn:hover { background: rgba(63, 162, 224, 0.15); color: var(--cyan); border-color: var(--cyan); }
+  .team-action-btn.delete:hover { background: rgba(230, 57, 70, 0.15); color: var(--coral); border-color: var(--coral); }
+
+  @media print {
+    nav, .quick-actions, .add-team-card, .theme-switcher, .lang-switcher { display: none; }
+    body { background: white; color: black; }
+    .team { page-break-inside: avoid; }
+  }
+  @media (max-width: 900px) {
+    main { padding: 24px; }
+    .summary-stats { grid-template-columns: repeat(2, 1fr); }
+    .team { padding: 20px; }
+    .manager-row, .workers-row, .projects-row { grid-template-columns: 1fr; gap: 12px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-brand">
+    <svg viewBox="0 0 80 80">
+      <defs>
+        <linearGradient id="navG" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#E8ECEF"/>
+          <stop offset="100%" stop-color="#6A7075"/>
+        </linearGradient>
+      </defs>
+      <g transform="translate(40,40)">
+        <ellipse rx="32" ry="12" fill="none" stroke="url(#navG)" stroke-width="1.8"/>
+        <ellipse rx="32" ry="12" fill="none" stroke="url(#navG)" stroke-width="1.8" transform="rotate(60)"/>
+        <ellipse rx="32" ry="12" fill="none" stroke="url(#navG)" stroke-width="1.8" transform="rotate(-60)"/>
+        <circle r="6" fill="url(#navG)"/>
+      </g>
+    </svg>
+    <span>Nou<span class="r">R</span>ion</span>
+    <div class="nav-divider"></div>
+    <span class="nav-title" data-i18n="nav_title">قسم التركيبات · مصنع ألمنيوم ملهم</span>
+  </div>
+  <div class="nav-right">
+    <button class="btn" onclick="window.print()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+      <span data-i18n="btn_print">طباعة</span>
+    </button>
+    <div class="theme-switcher">
+      <button class="theme-btn active" data-theme="dark">🌙</button>
+      <button class="theme-btn" data-theme="light">☀️</button>
+    </div>
+    <div class="lang-switcher">
+      <button class="lang-btn active" data-lang="ar">عربي</button>
+      <button class="lang-btn" data-lang="en">EN</button>
+    </div>
+  </div>
+</nav>
+
+<!-- MAIN -->
+<main>
+
+  <!-- Summary Stats -->
+  <div class="summary-stats">
+    <div class="sum-stat">
+      <div class="sum-stat-lbl" data-i18n="s_teams">فرق اليوم</div>
+      <div class="sum-stat-val">04</div>
+    </div>
+    <div class="sum-stat">
+      <div class="sum-stat-lbl" data-i18n="s_workers">إجمالي العمال</div>
+      <div class="sum-stat-val">13</div>
+    </div>
+    <div class="sum-stat">
+      <div class="sum-stat-lbl" data-i18n="s_projects">المشاريع النشطة</div>
+      <div class="sum-stat-val">04</div>
+    </div>
+    <div class="sum-stat">
+      <div class="sum-stat-lbl" data-i18n="s_vehicles">السيارات</div>
+      <div class="sum-stat-val">04</div>
+    </div>
+  </div>
+
+  <!-- HEADER CARD -->
+  <div class="dist-header">
+    <div class="page-title-label" data-i18n="page_tag">Daily Team Distribution</div>
+    <h1 class="page-title" data-i18n="page_title">توزيعة قسم التركيبات</h1>
+    <div class="page-subtitle" data-i18n="page_subtitle">مصنع ألمنيوم ملهم</div>
+
+    <div class="date-code">
+      <div class="date-row">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+          <line x1="16" y1="2" x2="16" y2="6"/>
+          <line x1="8" y1="2" x2="8" y2="6"/>
+          <line x1="3" y1="10" x2="21" y2="10"/>
+        </svg>
+        <span data-i18n="date_label">الأربعاء — 15 أبريل 2026</span>
+      </div>
+      <span style="color: var(--silver);">·</span>
+      <div class="date-row">
+        <span class="code-label" data-i18n="code_label">الكود اليومي:</span>
+        <div class="code-value">62</div>
+      </div>
+    </div>
+
+    <div class="warning-note">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+        <line x1="12" y1="9" x2="12" y2="13"/>
+        <line x1="12" y1="17" x2="12.01" y2="17"/>
+      </svg>
+      <span data-i18n="code_warn">يجب ذكر الكود أثناء تصوير الفيديو عند وصول الموقع وذكر اليوم والتاريخ</span>
+    </div>
+  </div>
+
+  <!-- Quick Actions -->
+  <div class="quick-actions">
+    <button class="btn primary">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      <span data-i18n="btn_add_team">إضافة فرقة</span>
+    </button>
+    <button class="btn">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>
+      <span data-i18n="btn_previous">توزيعة الأمس</span>
+    </button>
+    <button class="btn">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+      <span data-i18n="btn_next">توزيعة الغد</span>
+    </button>
+    <button class="btn">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v13M7 8l5-5 5 5M5 21h14"/></svg>
+      <span data-i18n="btn_export">تصدير PDF</span>
+    </button>
+    <button class="btn">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+      <span data-i18n="btn_share">مشاركة</span>
+    </button>
+  </div>
+
+  <!-- TEAMS -->
+  <div class="teams">
+
+    <!-- Team 1: Ahmed Al-Qabbari -->
+    <div class="team color-cyan">
+      <div class="team-head">
+        <div class="team-name" data-i18n="t1_name">فرقة أحمد القباري</div>
+        <div class="team-vehicle">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 3h5v5M4 20L21 3M21 16v5h-5M15 15l6 6M4 4l5 5"/></svg>
+          <span>بيكب — 4431 ب ب د</span>
+        </div>
+      </div>
+
+      <div class="manager-row">
+        <div class="role-badge">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          <span data-i18n="lbl_manager">مدير الفرقة</span>
+        </div>
+        <div class="person-name">أحمد القباري</div>
+        <div class="contacts">
+          <div class="contact-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+            0563379746
+          </div>
+          <div class="contact-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+            2548760384
+          </div>
+        </div>
+      </div>
+
+      <div class="workers-row">
+        <div class="role-badge" style="background: linear-gradient(135deg, rgba(212, 163, 90, 0.12), rgba(244, 169, 30, 0.06)); border-color: rgba(212, 163, 90, 0.3); color: var(--amber);">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          <span data-i18n="lbl_workers">العمال</span>
+        </div>
+        <div class="workers-list">
+          شهادات رياض الدين <span class="sep">—</span> مدحبيب ال رحمن مد
+        </div>
+      </div>
+
+      <div class="projects-row">
+        <div class="role-badge" style="background: linear-gradient(135deg, rgba(16, 185, 129, 0.12), rgba(52, 211, 153, 0.06)); border-color: rgba(16, 185, 129, 0.3); color: var(--green);">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          <span data-i18n="lbl_projects">المشاريع</span>
+        </div>
+        <div style="width: 100%;">
+          <div class="project">
+            <div class="project-header">
+              <div class="project-client">عمل صيانة محمد الشهري + صيانة أعمال هيفاء سويدان</div>
+            </div>
+            <div class="project-meta">
+              <span>معرض الياسمين</span>
+            </div>
+            <div class="work-type">🔧 صيانة متعددة · عميلان في زيارة واحدة</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Team 2: Abdullah Al-Doais -->
+    <div class="team color-green">
+      <div class="team-head">
+        <div class="team-name" data-i18n="t2_name">فرقة عبدالله الدعيس</div>
+        <div class="team-vehicle">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 3h5v5M4 20L21 3M21 16v5h-5M15 15l6 6M4 4l5 5"/></svg>
+          <span>بيكب — 7023 ب ق ب</span>
+        </div>
+      </div>
+
+      <div class="manager-row">
+        <div class="role-badge">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          <span data-i18n="lbl_manager">مدير الفرقة</span>
+        </div>
+        <div class="person-name">عبدالله محمد عبدالله الدعيس</div>
+        <div class="contacts">
+          <div class="contact-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+            0506280538
+          </div>
+          <div class="contact-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+            2579732583
+          </div>
+        </div>
+      </div>
+
+      <div class="workers-row">
+        <div class="role-badge" style="background: linear-gradient(135deg, rgba(212, 163, 90, 0.12), rgba(244, 169, 30, 0.06)); border-color: rgba(212, 163, 90, 0.3); color: var(--amber);">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/></svg>
+          <span data-i18n="lbl_workers">العمال</span>
+        </div>
+        <div class="workers-list">
+          سليمان فارق الحاج يوسف <span class="sep">—</span> اكرام منير أحمد <span class="sep">—</span> امو براكاش سينغ
+        </div>
+      </div>
+
+      <div class="projects-row">
+        <div class="role-badge" style="background: linear-gradient(135deg, rgba(16, 185, 129, 0.12), rgba(52, 211, 153, 0.06)); border-color: rgba(16, 185, 129, 0.3); color: var(--green);">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          <span data-i18n="lbl_projects">المشاريع</span>
+        </div>
+        <div style="width: 100%;">
+          <div class="project">
+            <div class="project-header">
+              <div class="project-client">احمد الغروي</div>
+              <div class="project-id">#250200133</div>
+            </div>
+            <div class="project-meta">
+              <span>شركة الراجحي</span>
+              <span class="sep">·</span>
+              <span>الوسطى / الياسمين</span>
+            </div>
+            <div class="work-type">🪟 تركيب زجاج العميل</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Team 3: Mohammed Shakil -->
+    <div class="team color-amber">
+      <div class="team-head">
+        <div class="team-name" data-i18n="t3_name">فرقة محمد شكيل</div>
+        <div class="team-vehicle">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 3h5v5M4 20L21 3M21 16v5h-5M15 15l6 6M4 4l5 5"/></svg>
+          <span>بيكب — ب ط 196</span>
+        </div>
+      </div>
+
+      <div class="manager-row">
+        <div class="role-badge">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          <span data-i18n="lbl_manager">مدير الفرقة</span>
+        </div>
+        <div class="person-name">مد شكيل شيخ</div>
+        <div class="contacts">
+          <div class="contact-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+            0571792631
+          </div>
+          <div class="contact-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+            2441909757
+          </div>
+        </div>
+      </div>
+
+      <div class="workers-row">
+        <div class="role-badge" style="background: linear-gradient(135deg, rgba(212, 163, 90, 0.12), rgba(244, 169, 30, 0.06)); border-color: rgba(212, 163, 90, 0.3); color: var(--amber);">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/></svg>
+          <span data-i18n="lbl_workers">العمال</span>
+        </div>
+        <div class="workers-list">
+          محمد سيهل <span class="sep">—</span> ابرار احمد
+        </div>
+      </div>
+
+      <div class="projects-row">
+        <div class="role-badge" style="background: linear-gradient(135deg, rgba(16, 185, 129, 0.12), rgba(52, 211, 153, 0.06)); border-color: rgba(16, 185, 129, 0.3); color: var(--green);">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          <span data-i18n="lbl_projects">المشاريع</span>
+        </div>
+        <div style="width: 100%;">
+          <div class="project">
+            <div class="project-header">
+              <div class="project-client">اسعد عبد العزيز مشرف</div>
+              <div class="project-id">#250900046</div>
+            </div>
+            <div class="project-meta">
+              <span>شركة الراجحي</span>
+              <span class="sep">·</span>
+              <span>الغربية / التحليه</span>
+            </div>
+            <div class="work-type">✨ تشطيب الموقع</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Team 4: Mohammed Ibrahim (Central) -->
+    <div class="team color-coral">
+      <div class="team-head">
+        <div class="team-name" data-i18n="t4_name">فرقة الوسطي — فرقة محمد إبراهيم</div>
+        <div class="team-vehicle">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 3h5v5M4 20L21 3M21 16v5h-5M15 15l6 6M4 4l5 5"/></svg>
+          <span>بيكب — ب ق ب 7024</span>
+        </div>
+      </div>
+
+      <div class="manager-row">
+        <div class="role-badge">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          <span data-i18n="lbl_manager">مدير الفرقة</span>
+        </div>
+        <div class="person-name">محمد إبراهيم</div>
+        <div class="contacts">
+          <div class="contact-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+            0577393931
+          </div>
+          <div class="contact-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+            7049928562
+          </div>
+        </div>
+      </div>
+
+      <div class="workers-row">
+        <div class="role-badge" style="background: linear-gradient(135deg, rgba(212, 163, 90, 0.12), rgba(244, 169, 30, 0.06)); border-color: rgba(212, 163, 90, 0.3); color: var(--amber);">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/></svg>
+          <span data-i18n="lbl_workers">العمال</span>
+        </div>
+        <div class="workers-list">
+          محمد اياز عتيق الرحمان <span class="sep">—</span> محمد تايزم تسليم أحمد
+        </div>
+      </div>
+
+      <div class="projects-row">
+        <div class="role-badge" style="background: linear-gradient(135deg, rgba(16, 185, 129, 0.12), rgba(52, 211, 153, 0.06)); border-color: rgba(16, 185, 129, 0.3); color: var(--green);">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          <span data-i18n="lbl_projects">المشاريع</span>
+        </div>
+        <div style="width: 100%;">
+          <div class="project">
+            <div class="project-header">
+              <div class="project-client">طارق خالد المطيري</div>
+              <div class="project-id">#240200093</div>
+            </div>
+            <div class="project-meta">
+              <span>شركة الراجحي</span>
+              <span class="sep">·</span>
+              <span>الوسطى / الياسمين</span>
+            </div>
+            <div class="work-type">🏗️ تركيب أعمال ألمنيوم + المركز المالي + تمتير أعمال طارق المتبري ورفع مقاسات الزجاج</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Add team card (opens interactive modal) -->
+  <div class="add-team-card" onclick="openTeamModal()">
+    + <span data-i18n="btn_add_new">إضافة فرقة جديدة — مرتبط بالموظفين والعهدة</span>
+  </div>
+
+  <!-- ═══ INTERACTIVE MODAL — ADD/EDIT TEAM ═══ -->
+  <div class="modal-backdrop" id="teamModal">
+    <div class="modal">
+      <div class="modal-head">
+        <div>
+          <div class="modal-title">
+            <div class="tag" data-i18n="mod_tag">Team Distribution Builder</div>
+            <div data-i18n="mod_title">إضافة فرقة لتوزيعة اليوم</div>
+          </div>
+        </div>
+        <div class="modal-close" onclick="closeTeamModal()">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </div>
+      </div>
+
+      <!-- Step 1: Manager -->
+      <div class="form-field">
+        <label class="form-label">
+          <span class="req">*</span>
+          <span data-i18n="f_manager">1. اختار مدير الفرقة</span>
+          <span style="font-size: 10px; color: var(--silver); font-weight: normal; margin-right: 6px;" data-i18n="f_manager_hint">— من قائمة الموظفين (قسم الموارد البشرية)</span>
+        </label>
+        <select class="form-select" id="managerSelect" onchange="onManagerChange()">
+          <option value="">-- اختار مدير فرقة --</option>
+          <option value="qabbari">أحمد القباري — EMP-0142 · مدير تركيبات</option>
+          <option value="doais">عبدالله محمد الدعيس — EMP-0087 · مدير تركيبات</option>
+          <option value="shakil">محمد شكيل شيخ — EMP-0203 · مدير تركيبات</option>
+          <option value="ibrahim">محمد إبراهيم — EMP-0156 · مدير تركيبات أول</option>
+          <option value="new">+ إضافة مدير جديد (HR)</option>
+        </select>
+      </div>
+
+      <!-- Auto-filled: Vehicle -->
+      <div class="form-field">
+        <label class="form-label">
+          <span class="auto-badge">
+            <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+            AUTO
+          </span>
+          <span data-i18n="f_vehicle">2. السيارة (من قسم العهدة)</span>
+        </label>
+        <input type="text" class="form-input" id="vehicleField" placeholder="ستظهر تلقائياً بعد اختيار المدير" readonly>
+      </div>
+
+      <!-- Auto-filled: Workers checklist -->
+      <div class="form-field">
+        <label class="form-label">
+          <span class="auto-badge">
+            <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+            AUTO
+          </span>
+          <span data-i18n="f_workers">3. العمال (يظهروا تلقائياً من المدير)</span>
+        </label>
+        <div class="workers-checklist" id="workersList">
+          <div style="color: var(--silver); font-size: 13px; text-align: center; padding: 14px;">
+            اختار مدير فرقة أولاً لعرض العمال المرتبطين به
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 2: Client/Project -->
+      <div class="form-field">
+        <label class="form-label">
+          <span class="req">*</span>
+          <span data-i18n="f_project">4. المشروع / العميل</span>
+          <span style="font-size: 10px; color: var(--silver); font-weight: normal; margin-right: 6px;" data-i18n="f_project_hint">— من المشاريع النشطة</span>
+        </label>
+        <select class="form-select">
+          <option>-- اختار مشروع --</option>
+          <option>أحمد الغروي #250200133 · شركة الراجحي · الوسطى / الياسمين</option>
+          <option>اسعد عبد العزيز مشرف #250900046 · الراجحي · الغربية / التحليه</option>
+          <option>طارق خالد المطيري #240200093 · الراجحي · الوسطى / الياسمين</option>
+          <option>محمد الشهري #260100012 · السلطان · الرياض / النخيل</option>
+          <option>+ بحث عن مشروع آخر</option>
+        </select>
+      </div>
+
+      <!-- Notes / work type -->
+      <div class="form-field">
+        <label class="form-label">
+          <span data-i18n="f_notes">5. نوع العمل / الملاحظات</span>
+        </label>
+        <textarea class="form-textarea" placeholder="مثال: تركيب زجاج العميل + تشطيب الموقع + رفع مقاسات الزجاج..."></textarea>
+      </div>
+
+      <!-- Daily code — auto-generated from date -->
+      <div class="form-field">
+        <label class="form-label">
+          <span class="auto-badge">
+            <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+            AUTO
+          </span>
+          <span data-i18n="f_code">الكود اليومي (يتولّد تلقائياً)</span>
+        </label>
+        <input type="text" class="form-input auto-filled" value="62" readonly style="direction: ltr; font-family: 'JetBrains Mono', monospace; font-size: 20px; font-weight: 700; color: var(--amber); text-align: center; letter-spacing: 4px;">
+      </div>
+
+      <div class="modal-footer">
+        <div class="form-hint" data-i18n="mod_hint">🔗 مرتبط بـ: الموظفين · العهدة · المشاريع النشطة</div>
+        <div class="modal-actions">
+          <button class="btn" onclick="closeTeamModal()" data-i18n="btn_cancel">إلغاء</button>
+          <button class="btn primary" onclick="saveTeam()">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+            <span data-i18n="btn_save">حفظ الفرقة</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer-card">
+    <div class="footer-warning">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      <span data-i18n="footer_warn"><strong>ملاحظة مهمة:</strong> الالتزام بإرسال التقرير اليومي لسير العمل نهاية اليوم مع تصوير الأعمال التي تم تنفيذها.</span>
+    </div>
+
+    <div class="signature-block">
+      <div class="signature">
+        <div class="signature-title" data-i18n="sig_title">مدير المكتب الفني</div>
+        <div class="signature-line"></div>
+        <div class="signature-label" data-i18n="sig_label">الاسم / التوقيع</div>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<script>
+  // ═══ i18n ═══
+  const translations = {
+    ar: {
+      nav_title: 'قسم التركيبات · مصنع ألمنيوم ملهم',
+      btn_print: 'طباعة',
+      s_teams: 'فرق اليوم',
+      s_workers: 'إجمالي العمال',
+      s_projects: 'المشاريع النشطة',
+      s_vehicles: 'السيارات',
+      page_tag: 'Daily Team Distribution',
+      page_title: 'توزيعة قسم التركيبات',
+      page_subtitle: 'مصنع ألمنيوم ملهم',
+      date_label: 'الأربعاء — 15 أبريل 2026',
+      code_label: 'الكود اليومي:',
+      code_warn: 'يجب ذكر الكود أثناء تصوير الفيديو عند وصول الموقع وذكر اليوم والتاريخ',
+      btn_add_team: 'إضافة فرقة',
+      btn_previous: 'توزيعة الأمس',
+      btn_next: 'توزيعة الغد',
+      btn_export: 'تصدير PDF',
+      btn_share: 'مشاركة',
+      t1_name: 'فرقة أحمد القباري',
+      t2_name: 'فرقة عبدالله الدعيس',
+      t3_name: 'فرقة محمد شكيل',
+      t4_name: 'فرقة الوسطي — فرقة محمد إبراهيم',
+      lbl_manager: 'مدير الفرقة',
+      lbl_workers: 'العمال',
+      lbl_projects: 'المشاريع',
+      btn_add_new: 'إضافة فرقة جديدة',
+      footer_warn: 'ملاحظة مهمة: الالتزام بإرسال التقرير اليومي لسير العمل نهاية اليوم مع تصوير الأعمال التي تم تنفيذها.',
+      sig_title: 'مدير المكتب الفني',
+      sig_label: 'الاسم / التوقيع'
+    },
+    en: {
+      nav_title: 'Installations Dept · Molham Aluminum Factory',
+      btn_print: 'Print',
+      s_teams: "Today's Teams",
+      s_workers: 'Total Workers',
+      s_projects: 'Active Projects',
+      s_vehicles: 'Vehicles',
+      page_tag: 'Daily Team Distribution',
+      page_title: 'Installations Daily Distribution',
+      page_subtitle: 'Molham Aluminum Factory',
+      date_label: 'Wednesday — April 15, 2026',
+      code_label: 'Daily Code:',
+      code_warn: 'Mention the code while recording video on site arrival, along with day and date',
+      btn_add_team: 'Add Team',
+      btn_previous: "Yesterday's Distribution",
+      btn_next: "Tomorrow's Distribution",
+      btn_export: 'Export PDF',
+      btn_share: 'Share',
+      t1_name: "Ahmed Al-Qabbari's Team",
+      t2_name: "Abdullah Al-Doais's Team",
+      t3_name: "Mohammed Shakil's Team",
+      t4_name: "Central Team — Mohammed Ibrahim's Team",
+      lbl_manager: 'Team Manager',
+      lbl_workers: 'Workers',
+      lbl_projects: 'Projects',
+      btn_add_new: 'Add New Team',
+      footer_warn: 'Important: Commit to sending the daily work progress report at end of day along with photos of completed work.',
+      sig_title: 'Technical Office Manager',
+      sig_label: 'Name / Signature'
+    }
+  };
+
+  function applyLanguage(lang) {
+    const dict = translations[lang];
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+      const key = el.dataset.i18n;
+      if (dict[key]) el.textContent = dict[key];
+    });
+    document.querySelectorAll('.lang-btn').forEach(b => b.classList.toggle('active', b.dataset.lang === lang));
+    localStorage.setItem('nr_lang', lang);
+  }
+  document.querySelectorAll('.lang-btn').forEach(btn => {
+    btn.addEventListener('click', () => applyLanguage(btn.dataset.lang));
+  });
+  applyLanguage(localStorage.getItem('nr_lang') || 'ar');
+
+  // ═══ Theme toggle ═══
+  function applyTheme(theme) {
+    document.documentElement.setAttribute('data-theme', theme);
+    document.querySelectorAll('.theme-btn').forEach(b => b.classList.toggle('active', b.dataset.theme === theme));
+    localStorage.setItem('nr_theme', theme);
+  }
+  document.querySelectorAll('.theme-btn').forEach(btn => {
+    btn.addEventListener('click', () => applyTheme(btn.dataset.theme));
+  });
+  applyTheme(localStorage.getItem('nr_theme') || 'dark');
+
+  // ═══ INTERACTIVE TEAM BUILDER ═══
+  // Data simulating HR + Custody departments (would come from /api/employees & /api/custody)
+  const managersData = {
+    qabbari: {
+      name: 'أحمد القباري',
+      empId: 'EMP-0142',
+      phone: '0563379746',
+      iqama: '2548760384',
+      vehicle: 'بيكب — 4431 ب ب د (عهدة: CUST-V-0042)',
+      workers: [
+        { id: 'EMP-0321', name: 'شهادات رياض الدين', role: 'عامل تركيب' },
+        { id: 'EMP-0355', name: 'مدحبيب ال رحمن مد', role: 'عامل تركيب' },
+        { id: 'EMP-0389', name: 'علي مرتضى الحسيني', role: 'عامل مساعد' },
+        { id: 'EMP-0402', name: 'خالد يعقوب نصر', role: 'عامل مساعد' }
+      ]
+    },
+    doais: {
+      name: 'عبدالله محمد عبدالله الدعيس',
+      empId: 'EMP-0087',
+      phone: '0506280538',
+      iqama: '2579732583',
+      vehicle: 'بيكب — 7023 ب ق ب (عهدة: CUST-V-0018)',
+      workers: [
+        { id: 'EMP-0244', name: 'سليمان فارق الحاج يوسف', role: 'عامل تركيب' },
+        { id: 'EMP-0267', name: 'اكرام منير أحمد', role: 'عامل تركيب' },
+        { id: 'EMP-0298', name: 'امو براكاش سينغ', role: 'عامل زجاج' },
+        { id: 'EMP-0301', name: 'ياسر عطية فتحي', role: 'عامل مساعد' }
+      ]
+    },
+    shakil: {
+      name: 'محمد شكيل شيخ',
+      empId: 'EMP-0203',
+      phone: '0571792631',
+      iqama: '2441909757',
+      vehicle: 'بيكب — ب ط 196 (عهدة: CUST-V-0051)',
+      workers: [
+        { id: 'EMP-0412', name: 'محمد سيهل', role: 'عامل تركيب' },
+        { id: 'EMP-0428', name: 'ابرار احمد', role: 'عامل تركيب' },
+        { id: 'EMP-0445', name: 'راجيش كومار بات', role: 'عامل تشطيب' },
+        { id: 'EMP-0458', name: 'موسى سيد حسن', role: 'عامل تشطيب' }
+      ]
+    },
+    ibrahim: {
+      name: 'محمد إبراهيم',
+      empId: 'EMP-0156',
+      phone: '0577393931',
+      iqama: '7049928562',
+      vehicle: 'بيكب — ب ق ب 7024 (عهدة: CUST-V-0033)',
+      workers: [
+        { id: 'EMP-0512', name: 'محمد اياز عتيق الرحمان', role: 'عامل تركيب' },
+        { id: 'EMP-0524', name: 'محمد تايزم تسليم احمد', role: 'عامل تركيب' },
+        { id: 'EMP-0536', name: 'سجاد علي مصطفى', role: 'عامل قياس' },
+        { id: 'EMP-0548', name: 'نور الدين باقر', role: 'عامل مساعد' }
+      ]
+    }
+  };
+
+  function openTeamModal() {
+    document.getElementById('teamModal').classList.add('active');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeTeamModal() {
+    document.getElementById('teamModal').classList.remove('active');
+    document.body.style.overflow = '';
+  }
+
+  function onManagerChange() {
+    const key = document.getElementById('managerSelect').value;
+    const vehicleField = document.getElementById('vehicleField');
+    const workersList = document.getElementById('workersList');
+
+    if (!key || key === 'new' || !managersData[key]) {
+      vehicleField.value = '';
+      vehicleField.classList.remove('auto-filled');
+      workersList.innerHTML = '<div style="color: var(--silver); font-size: 13px; text-align: center; padding: 14px;">اختار مدير فرقة أولاً لعرض العمال المرتبطين به</div>';
+      return;
+    }
+
+    const data = managersData[key];
+
+    // Auto-fill vehicle
+    vehicleField.value = data.vehicle;
+    vehicleField.classList.add('auto-filled');
+
+    // Auto-fill workers (with checkboxes)
+    workersList.innerHTML = data.workers.map((w, i) => `
+      <div class="worker-item">
+        <input type="checkbox" id="w_${w.id}" checked>
+        <label for="w_${w.id}">
+          <strong>${w.name}</strong>
+          <span style="color: var(--silver); font-size: 11px; margin-right: 8px;">· ${w.role}</span>
+          <span style="color: var(--text-muted); font-family: 'JetBrains Mono', monospace; font-size: 10px;">${w.id}</span>
+        </label>
+      </div>
+    `).join('');
+  }
+
+  function saveTeam() {
+    const manager = document.getElementById('managerSelect').value;
+    if (!manager || manager === 'new') {
+      alert('اختار مدير فرقة أولاً');
+      return;
+    }
+    alert('✓ تم إضافة الفرقة لتوزيعة اليوم\n(في النسخة الحقيقية ستُحفظ في /api/team-distribution/today)');
+    closeTeamModal();
+  }
+
+  // Close modal on backdrop click
+  document.getElementById('teamModal').addEventListener('click', (e) => {
+    if (e.target.id === 'teamModal') closeTeamModal();
+  });
+  // ESC to close
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closeTeamModal();
+  });
+</script>
+
+</body>
+</html>

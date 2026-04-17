@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 560 140" width="560" height="140">
+  <defs>
+    <linearGradient id="rGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%"   stop-color="#5AB4E8"/>
+      <stop offset="50%"  stop-color="#3FA2E0"/>
+      <stop offset="100%" stop-color="#2E7DBF"/>
+    </linearGradient>
+    <radialGradient id="nucleusGrad" cx="35%" cy="35%" r="65%">
+      <stop offset="0%"   stop-color="#FFFFFF"/>
+      <stop offset="30%"  stop-color="#F28189"/>
+      <stop offset="80%"  stop-color="#E63946"/>
+      <stop offset="100%" stop-color="#B52A37"/>
+    </radialGradient>
+    <radialGradient id="electronGrad" cx="30%" cy="30%" r="70%">
+      <stop offset="0%"   stop-color="#FBD584"/>
+      <stop offset="50%"  stop-color="#F4A91E"/>
+      <stop offset="100%" stop-color="#E8951A"/>
+    </radialGradient>
+    <filter id="rGlow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="1.4" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="softGlow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="1" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@700;800&amp;display=swap');
+      .brand-text { font-family: 'Manrope', 'Segoe UI', system-ui, sans-serif; letter-spacing: -2.5px; }
+    </style>
+  </defs>
+
+  <!-- ═══ WORDMARK ═══ -->
+  <g class="brand-text">
+    <!-- "Nou" -->
+    <text x="30" y="95" font-size="84" font-weight="700" fill="#0A1628">Nou</text>
+    <!-- "R" hero letter — blue gradient + subtle glow -->
+    <text x="198" y="98" font-size="92" font-weight="800" fill="url(#rGrad)" filter="url(#rGlow)">R</text>
+    <!-- "ion" -->
+    <text x="262" y="95" font-size="84" font-weight="700" fill="#0A1628">ion</text>
+  </g>
+
+  <!-- ═══ ATOM SYMBOL ═══ -->
+  <g transform="translate(470, 70)">
+    <!-- 3 elliptical orbits, two dark + one light -->
+    <ellipse cx="0" cy="0" rx="54" ry="20" fill="none" stroke="#1E5FA8" stroke-width="3" transform="rotate(0)"/>
+    <ellipse cx="0" cy="0" rx="54" ry="20" fill="none" stroke="#1E5FA8" stroke-width="3" transform="rotate(60)"/>
+    <ellipse cx="0" cy="0" rx="54" ry="20" fill="none" stroke="#3FA2E0" stroke-width="3" transform="rotate(-60)"/>
+
+    <!-- Electrons (amber) -->
+    <circle cx="54" cy="0" r="4.5" fill="url(#electronGrad)" filter="url(#softGlow)"/>
+    <circle cx="-27" cy="-46.77" r="4.5" fill="url(#electronGrad)" filter="url(#softGlow)"/>
+    <circle cx="27" cy="46.77" r="4.5" fill="url(#electronGrad)" filter="url(#softGlow)"/>
+    <circle cx="-54" cy="0" r="4.5" fill="url(#electronGrad)" filter="url(#softGlow)"/>
+
+    <!-- Nucleus (coral/red) -->
+    <circle cx="0" cy="0" r="10" fill="url(#nucleusGrad)" filter="url(#softGlow)"/>
+  </g>
+</svg>

@@ -1,0 +1,754 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>NouRion · Quotations / عروض الأسعار</title>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200;300;400;500;600;700;800&family=Cormorant+Garamond:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500&family=Cairo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg-void:       #0A0A0B;
+    --bg-ebony:      #121315;
+    --bg-carbon:     #1A1C20;
+    --bg-ink:        #22252A;
+    --silver:        #B8BCC2;
+    --silver-bright: #E8ECEF;
+    --silver-deep:   #6A7075;
+    --cyan:          #3FA2E0;
+    --amber:         #D4A35A;
+    --coral:         #E63946;
+    --green:         #10B981;
+    --text-primary:  #EAECEE;
+    --text-soft:     #8A8F95;
+    --text-muted:    #4E5358;
+    --border:        rgba(184, 188, 194, 0.15);
+    --border-bright: rgba(184, 188, 194, 0.32);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'Manrope', system-ui, sans-serif;
+    background: var(--bg-void);
+    color: var(--text-primary);
+    min-height: 100vh;
+    font-variant-numeric: lining-nums;
+    font-feature-settings: "lnum" 1;
+    position: relative;
+  }
+  /* Blueprint grid overlay */
+  body::after {
+    content: ''; position: fixed; inset: 0; z-index: 0; pointer-events: none;
+    background-image:
+      linear-gradient(rgba(184,188,194,0.025) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(184,188,194,0.025) 1px, transparent 1px),
+      linear-gradient(rgba(184,188,194,0.015) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(184,188,194,0.015) 1px, transparent 1px);
+    background-size: 80px 80px, 80px 80px, 20px 20px, 20px 20px;
+    mask-image: radial-gradient(ellipse at center, black 20%, transparent 85%);
+    -webkit-mask-image: radial-gradient(ellipse at center, black 20%, transparent 85%);
+  }
+  body::before {
+    content: ''; position: fixed; inset: 0; z-index: 0; pointer-events: none;
+    background:
+      radial-gradient(ellipse 900px 600px at 15% 0%, rgba(184,188,194,0.06) 0%, transparent 50%),
+      radial-gradient(ellipse 700px 500px at 100% 100%, rgba(63,162,224,0.04) 0%, transparent 55%);
+  }
+  main, nav, .modal-bg { position: relative; z-index: 2; }
+
+  /* Navbar */
+  nav {
+    position: sticky; top: 0; z-index: 50;
+    padding: 18px 40px;
+    display: flex; justify-content: space-between; align-items: center;
+    background: rgba(10,10,11,0.78);
+    backdrop-filter: blur(20px) saturate(1.4);
+    border-bottom: 1px solid var(--border);
+  }
+  .nav-brand {
+    display: flex; align-items: center; gap: 14px;
+    font-size: 18px; font-weight: 300; letter-spacing: 2px;
+    direction: ltr;
+  }
+  .nav-brand svg { width: 30px; height: 30px; }
+  .nav-brand .name-text { font-weight: 500; letter-spacing: 0.5px; }
+  .nav-brand .r {
+    font-weight: 600;
+    background: linear-gradient(180deg, var(--silver-bright) 0%, var(--silver-deep) 100%);
+    -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+  }
+  .nav-divider { width: 1px; height: 18px; background: var(--border); margin: 0 10px; }
+  .nav-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; color: var(--text-soft);
+    letter-spacing: 2.5px; text-transform: uppercase;
+  }
+  .tabs { display: flex; gap: 6px; align-items: center; }
+  .tabs a {
+    font-family: 'JetBrains Mono', monospace;
+    color: var(--text-soft); text-decoration: none;
+    padding: 8px 14px; border-radius: 8px;
+    font-size: 10.5px; font-weight: 500;
+    letter-spacing: 2px; text-transform: uppercase;
+    transition: .2s;
+  }
+  .tabs a:hover { color: var(--silver-bright); background: rgba(184,188,194,0.04); }
+  .tabs a.active {
+    color: var(--silver-bright);
+    background: rgba(184,188,194,0.06);
+    border: 1px solid var(--border);
+  }
+  .nav-right { display: flex; align-items: center; gap: 16px; }
+  .lang-switcher {
+    display: inline-flex; background: rgba(184,188,194,0.04);
+    border: 1px solid var(--border); border-radius: 100px; padding: 3px; gap: 2px;
+  }
+  .lang-btn {
+    padding: 6px 14px; font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; font-weight: 700; letter-spacing: 2px;
+    color: var(--text-soft); background: transparent; border: none;
+    border-radius: 100px; cursor: pointer; transition: all .2s;
+  }
+  .lang-btn:hover { color: var(--text-primary); }
+  .lang-btn.active {
+    background: linear-gradient(180deg, var(--silver-bright) 0%, var(--silver) 100%);
+    color: var(--bg-void);
+  }
+
+  /* Layout */
+  main { max-width: 1320px; margin: 0 auto; padding: 40px 32px 80px; }
+  .page-head { margin-bottom: 28px; }
+  .section-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; letter-spacing: 3px; text-transform: uppercase;
+    color: var(--silver); display: inline-flex; align-items: center; gap: 14px;
+    margin-bottom: 14px;
+  }
+  .section-label .line { width: 40px; height: 1px; background: linear-gradient(90deg, var(--silver), transparent); }
+  .page-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 44px; font-weight: 400; line-height: 1;
+    letter-spacing: -1px; margin-bottom: 10px; color: var(--text-primary);
+  }
+  .page-title em {
+    font-style: italic; font-weight: 500;
+    background: linear-gradient(180deg, var(--silver-bright) 0%, var(--silver) 55%, var(--silver-deep) 100%);
+    -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+  }
+  .page-sub {
+    color: var(--text-soft); font-size: 14px; font-weight: 300;
+    max-width: 700px; line-height: 1.6;
+  }
+
+  /* Toolbar */
+  .toolbar {
+    display: flex; gap: 10px; flex-wrap: wrap; align-items: center;
+    margin-bottom: 20px;
+    background: var(--bg-ebony); padding: 16px; border-radius: 14px;
+    border: 1px solid var(--border);
+  }
+  .toolbar input, .toolbar select, input, select, textarea {
+    padding: 10px 14px; border: 1px solid var(--border); border-radius: 8px;
+    font-family: 'Manrope', sans-serif; font-size: 13px;
+    background: var(--bg-carbon); color: var(--text-primary);
+    min-width: 160px; transition: .2s;
+  }
+  .toolbar input:focus, .toolbar select:focus, input:focus, select:focus, textarea:focus {
+    outline: none; border-color: var(--silver); background: var(--bg-ink);
+  }
+  input::placeholder, textarea::placeholder { color: var(--text-muted); }
+  .count-pill {
+    font-family: 'JetBrains Mono', monospace;
+    color: var(--text-soft); font-size: 11px; letter-spacing: 1.5px;
+    padding: 6px 14px; border: 1px solid var(--border); border-radius: 100px;
+  }
+
+  /* Buttons */
+  .btn {
+    padding: 10px 20px;
+    background: linear-gradient(180deg, var(--silver-bright) 0%, var(--silver) 55%, var(--silver-deep) 100%);
+    color: var(--bg-void);
+    font-family: 'Manrope', sans-serif;
+    font-size: 12px; font-weight: 700; letter-spacing: 1.5px;
+    text-transform: uppercase; border: none; border-radius: 8px;
+    cursor: pointer; transition: all .3s;
+    position: relative; overflow: hidden;
+    display: inline-flex; align-items: center; gap: 8px;
+  }
+  .btn:hover { box-shadow: 0 0 24px rgba(184,188,194,0.35); transform: translateY(-1px); }
+  .btn-ghost {
+    background: transparent; color: var(--text-primary);
+    border: 1px solid var(--border);
+    font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 1.5px;
+  }
+  .btn-ghost:hover {
+    border-color: var(--silver); color: var(--silver-bright);
+    background: rgba(184,188,194,0.05); box-shadow: none;
+  }
+  .btn-outline {
+    background: transparent; color: var(--silver-bright);
+    border: 1px solid var(--silver-deep);
+  }
+  .btn-outline:hover { border-color: var(--silver); background: rgba(184,188,194,0.05); box-shadow: none; }
+  .btn-danger {
+    background: transparent; color: var(--coral);
+    border: 1px solid rgba(230,57,70,0.35);
+  }
+  .btn-danger:hover { background: rgba(230,57,70,0.1); box-shadow: 0 0 12px rgba(230,57,70,0.25); }
+  .btn-success {
+    background: linear-gradient(180deg, #34D399 0%, var(--green) 100%);
+    color: var(--bg-void);
+  }
+  .btn-success:hover { box-shadow: 0 0 20px rgba(16,185,129,0.35); }
+  .btn-sm { padding: 6px 12px; font-size: 10.5px; letter-spacing: 1px; }
+
+  /* Card + table */
+  .card {
+    background: var(--bg-ebony); border: 1px solid var(--border);
+    border-radius: 14px; overflow: hidden;
+  }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  th {
+    background: var(--bg-carbon);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; font-weight: 500;
+    letter-spacing: 2px; text-transform: uppercase;
+    text-align: start; padding: 14px;
+    color: var(--text-soft);
+    border-bottom: 1px solid var(--border);
+  }
+  td { padding: 14px; border-bottom: 1px solid var(--border); color: var(--text-primary); }
+  tbody tr { transition: background .2s; }
+  tbody tr:hover { background: rgba(184,188,194,0.03); }
+  tbody tr:last-child td { border-bottom: none; }
+
+  .badge {
+    display: inline-block; padding: 4px 11px; border-radius: 999px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; font-weight: 700;
+    letter-spacing: 1.5px; text-transform: uppercase;
+    border: 1px solid transparent;
+  }
+  .b-draft    { background: rgba(138,143,149,0.12); color: var(--text-soft); border-color: var(--border); }
+  .b-sent     { background: rgba(63,162,224,0.12); color: var(--cyan); border-color: rgba(63,162,224,0.3); }
+  .b-approved { background: rgba(16,185,129,0.12); color: var(--green); border-color: rgba(16,185,129,0.3); }
+  .b-rejected { background: rgba(230,57,70,0.12); color: var(--coral); border-color: rgba(230,57,70,0.3); }
+  .b-converted{ background: rgba(212,163,90,0.12); color: var(--amber); border-color: rgba(212,163,90,0.3); }
+
+  /* Modal */
+  .modal-bg {
+    position: fixed; inset: 0; background: rgba(10,10,11,0.82);
+    backdrop-filter: blur(8px);
+    display: none; align-items: flex-start; justify-content: center;
+    padding: 48px 20px; z-index: 200; overflow-y: auto;
+  }
+  .modal-bg.open { display: flex; }
+  .modal {
+    background: var(--bg-ebony); border: 1px solid var(--border);
+    border-radius: 16px; max-width: 880px; width: 100%; padding: 32px;
+    box-shadow: 0 30px 90px rgba(0,0,0,.6);
+  }
+  .modal h2 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 28px; font-weight: 400; letter-spacing: -0.5px;
+    margin-bottom: 18px; color: var(--silver-bright);
+  }
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; font-weight: 500; letter-spacing: 2px; text-transform: uppercase;
+    color: var(--text-soft); display: block; margin-bottom: 6px; margin-top: 12px;
+  }
+  input, select, textarea {
+    width: 100%;
+  }
+  textarea { resize: vertical; min-height: 70px; }
+
+  .items-tbl { width: 100%; margin-top: 10px; font-size: 12px; border-collapse: collapse; }
+  .items-tbl th, .items-tbl td { padding: 8px; border: 1px solid var(--border); background: var(--bg-carbon); }
+  .items-tbl input { padding: 6px 8px; font-size: 12px; min-width: 0; }
+
+  .totals {
+    margin-top: 16px; text-align: end; font-size: 13px;
+    padding: 14px; background: var(--bg-carbon); border-radius: 10px;
+    border: 1px solid var(--border);
+  }
+  .totals div { padding: 4px 0; color: var(--text-soft); font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 1px; }
+  .totals .g {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 28px; font-weight: 400; letter-spacing: -1px;
+    padding-top: 12px; margin-top: 6px;
+    border-top: 1px solid var(--border);
+    background: linear-gradient(180deg, var(--silver-bright) 0%, var(--silver-deep) 100%);
+    -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+  }
+  .modal-actions {
+    display: flex; gap: 10px; justify-content: flex-end;
+    margin-top: 24px; flex-wrap: wrap;
+    padding-top: 20px; border-top: 1px solid var(--border);
+  }
+
+  /* Print preview */
+  .preview {
+    background: #fff; color: #0A0A0B;
+    padding: 40px; font-family: 'Manrope','Cairo',sans-serif;
+    border-radius: 10px;
+  }
+  .preview h1 {
+    font-family: 'Cormorant Garamond', serif;
+    color: #0A0A0B; font-weight: 500; margin-bottom: 6px; font-size: 32px;
+  }
+  .preview .meta {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 30px;
+    margin: 20px 0; padding: 20px; background: #f6f6f7; border-radius: 8px;
+  }
+  .preview .meta h4 { color: #6A7075; font-size: 11px; text-transform: uppercase; margin-bottom: 6px; letter-spacing: 2px; font-family: 'JetBrains Mono', monospace; }
+  .preview table { width: 100%; margin-top: 10px; color: #0A0A0B; }
+  .preview th { background: #f0f0f1; color: #4E5358; }
+  .preview td { border-bottom: 1px solid #e5e5e6; }
+  .preview .totals { background: transparent; border: none; padding: 0; }
+  .preview .totals .g {
+    -webkit-text-fill-color: #0A0A0B; color: #0A0A0B; background: none;
+  }
+  @media print {
+    nav, .toolbar, .modal-actions { display: none; }
+    .modal-bg { position: static; background: #fff; padding: 0; backdrop-filter: none; }
+    .modal { box-shadow: none; max-width: 100%; background: #fff; border: none; }
+  }
+
+  .empty {
+    text-align: center; padding: 72px 20px; color: var(--text-muted);
+    font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 2px; text-transform: uppercase;
+  }
+  .num {
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 500; font-variant-numeric: tabular-nums;
+    direction: ltr !important; unicode-bidi: isolate;
+  }
+
+  /* Arabic font when lang=ar */
+  body.lang-ar, body.lang-ar .modal,
+  body.lang-ar .page-title, body.lang-ar .page-sub,
+  body.lang-ar .tabs a, body.lang-ar .nav-label,
+  body.lang-ar label, body.lang-ar .btn, body.lang-ar .btn-ghost,
+  body.lang-ar .badge, body.lang-ar th, body.lang-ar td,
+  body.lang-ar .empty, body.lang-ar .section-label,
+  body.lang-ar .totals, body.lang-ar input, body.lang-ar select, body.lang-ar textarea {
+    font-family: 'Cairo','Manrope', sans-serif;
+  }
+  body.lang-ar .page-title, body.lang-ar .page-sub,
+  body.lang-ar .modal h2, body.lang-ar label {
+    direction: rtl; unicode-bidi: isolate;
+  }
+  body.lang-ar .num { direction: ltr !important; font-family: 'JetBrains Mono', monospace; }
+
+  @media (max-width: 900px) {
+    .tabs { display: none; }
+    main { padding: 24px 16px 60px; }
+    .grid-2 { grid-template-columns: 1fr; }
+    nav { padding: 14px 20px; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-brand">
+    <span class="name-text">Nou<span class="r">R</span>ion</span>
+    <svg viewBox="0 0 80 80">
+      <defs>
+        <linearGradient id="silGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#E8ECEF"/>
+          <stop offset="100%" stop-color="#6A7075"/>
+        </linearGradient>
+        <radialGradient id="nuc"><stop offset="0%" stop-color="#FFFFFF"/><stop offset="50%" stop-color="#E8ECEF"/><stop offset="100%" stop-color="#6A7075"/></radialGradient>
+      </defs>
+      <g transform="translate(40,40)">
+        <ellipse rx="32" ry="12" fill="none" stroke="url(#silGrad)" stroke-width="1.5" opacity="0.8"/>
+        <ellipse rx="32" ry="12" fill="none" stroke="url(#silGrad)" stroke-width="1.5" opacity="0.8" transform="rotate(60)"/>
+        <ellipse rx="32" ry="12" fill="none" stroke="url(#silGrad)" stroke-width="1.5" opacity="0.8" transform="rotate(-60)"/>
+        <circle cx="32" cy="0" r="2" fill="#E8ECEF"/>
+        <circle cx="-16" cy="-27.7" r="2" fill="#E8ECEF"/>
+        <circle cx="16" cy="27.7" r="2" fill="#E8ECEF"/>
+        <circle r="5" fill="url(#nuc)"/>
+      </g>
+    </svg>
+    <div class="nav-divider"></div>
+    <span class="nav-label" data-i18n="nav_module">Quotations Module</span>
+  </div>
+  <div class="tabs">
+    <a href="../../../brand/landing.html" data-i18n="nav_home">Home</a>
+    <a href="./ui.html" class="active" data-i18n="nav_quotes">Quotations</a>
+    <a href="../contracts/ui.html" data-i18n="nav_contracts">Contracts</a>
+    <a href="../inventory/ui.html" data-i18n="nav_inventory">Inventory</a>
+    <a href="../orders/ui.html" data-i18n="nav_orders">Orders</a>
+  </div>
+  <div class="nav-right">
+    <div class="lang-switcher">
+      <button class="lang-btn" data-lang="ar">عربي</button>
+      <button class="lang-btn active" data-lang="en">EN</button>
+    </div>
+  </div>
+</nav>
+
+<main>
+  <div class="page-head">
+    <div class="section-label"><span class="line"></span><span data-i18n="page_label">I · Commerce</span></div>
+    <h1 class="page-title" data-i18n="page_title_html">Quotations <em>&amp; Proposals</em></h1>
+    <p class="page-sub" data-i18n="page_sub">Compose, send, and convert professional quotes into contracts. Every proposal forged with engineering precision.</p>
+  </div>
+
+  <div class="toolbar">
+    <input id="fSearch" data-i18n-placeholder="ph_search" placeholder="Search customer…" dir="auto">
+    <select id="fStatus">
+      <option value="" data-i18n="opt_all">All statuses</option>
+      <option value="draft">Draft</option>
+      <option value="sent">Sent</option>
+      <option value="approved">Approved</option>
+      <option value="rejected">Rejected</option>
+      <option value="converted">Converted</option>
+    </select>
+    <input id="fFrom" type="date" title="From">
+    <input id="fTo"   type="date" title="To">
+    <button class="btn" onclick="openModal()"><span data-i18n="btn_new">+ New Quote</span></button>
+    <span style="flex:1"></span>
+    <span id="count" class="count-pill"></span>
+  </div>
+
+  <div class="card">
+    <table>
+      <thead>
+        <tr>
+          <th data-i18n="th_num">#</th>
+          <th data-i18n="th_customer">Customer</th>
+          <th data-i18n="th_date">Date</th>
+          <th data-i18n="th_items">Items</th>
+          <th data-i18n="th_total">Total (SAR)</th>
+          <th data-i18n="th_status">Status</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody id="rows"><tr><td colspan="7" class="empty">Loading…</td></tr></tbody>
+    </table>
+  </div>
+</main>
+
+<!-- Edit / Create modal -->
+<div class="modal-bg" id="mEdit">
+  <div class="modal">
+    <h2 id="mTitle">New Quote</h2>
+    <div class="grid-2">
+      <div>
+        <label data-i18n="lbl_customer">Customer name *</label><input id="cName" dir="auto">
+        <label data-i18n="lbl_company">Company</label><input id="cCompany" dir="auto">
+        <label data-i18n="lbl_phone">Phone</label><input id="cPhone" dir="auto">
+      </div>
+      <div>
+        <label data-i18n="lbl_qnum">Quote number</label><input id="qNumber" readonly>
+        <label data-i18n="lbl_validity">Validity (days)</label><input id="qValidity" type="number" value="30">
+        <label data-i18n="lbl_project">Project ID (optional)</label><input id="qProject" dir="auto">
+      </div>
+    </div>
+
+    <label data-i18n="lbl_items">Items</label>
+    <table class="items-tbl" id="itemsTbl">
+      <thead><tr><th>Profile / Description</th><th>Qty</th><th>Length</th><th>Unit Price</th><th>Disc %</th><th>Total</th><th></th></tr></thead>
+      <tbody></tbody>
+    </table>
+    <button class="btn btn-ghost btn-sm" onclick="addItem()" style="margin-top:10px" data-i18n="btn_add_item">+ Item</button>
+
+    <label style="margin-top:14px" data-i18n="lbl_terms">Terms</label>
+    <textarea id="qTerms" dir="auto">Prices include manufacturing and installation. Delivery within 30 business days of contract signing.</textarea>
+    <label data-i18n="lbl_notes">Notes</label>
+    <textarea id="qNotes" dir="auto"></textarea>
+
+    <div class="totals">
+      <div>Subtotal: <span class="num" id="tSub">0.00</span></div>
+      <div>Discount: <span class="num" id="tDisc">0.00</span></div>
+      <div>Net: <span class="num" id="tNet">0.00</span></div>
+      <div>VAT (15%): <span class="num" id="tVat">0.00</span></div>
+      <div class="g">Total: <span class="num" id="tTotal">0.00</span> SAR</div>
+    </div>
+
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeModal()" data-i18n="btn_cancel">Cancel</button>
+      <button class="btn btn-outline" onclick="preview()" data-i18n="btn_preview">Preview</button>
+      <button class="btn" onclick="saveQuote('draft')" data-i18n="btn_save_draft">Save Draft</button>
+      <button class="btn btn-success" onclick="saveQuote('sent')" data-i18n="btn_save_send">Save &amp; Send</button>
+    </div>
+  </div>
+</div>
+
+<!-- Print preview modal -->
+<div class="modal-bg" id="mPreview">
+  <div class="modal" style="max-width:900px">
+    <div class="preview" id="pv"></div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="document.getElementById('mPreview').classList.remove('open')" data-i18n="btn_close">Close</button>
+      <button class="btn" onclick="window.print()" data-i18n="btn_print">Print / PDF</button>
+    </div>
+  </div>
+</div>
+
+<script src="./model.js"></script>
+<script>
+const API = (localStorage.getItem('SRV_PROXY') || 'http://localhost:3001') + '/api/quotations';
+const M   = window.NRQuotationsModel;
+const LS_KEY = 'pm_quotations';
+
+const SEED = [{
+  id:'quote_seed1', number:'Q-0001', status:'sent',
+  customer:{name:'شركة الفجر للمقاولات', phone:'0551234567', email:'info@alfajr.sa'},
+  company:{name:'NouRion Aluminum', vat:'310000000000003'},
+  projectId:null,
+  items:[
+    {id:'i1', profile:'SAPA 2060', qty:24, length:3.2, unit_price:185, discount_pct:5},
+    {id:'i2', profile:'Glass 6mm Clear', qty:18, unit_price:220, discount_pct:0},
+  ],
+  terms:'Valid for 30 days. Delivery within 4 weeks.',
+  notes:'Initial proposal, open to discussion.',
+  vat_rate:0.15, validity_days:30,
+  createdAt:'2026-04-10T08:00:00.000Z', updatedAt:'2026-04-10T08:00:00.000Z',
+}];
+SEED[0].totals = M.computeTotals(SEED[0]);
+
+let STATE = { list: [], editing: null };
+
+async function loadList(){
+  try {
+    const r = await fetch(API);
+    if (r.ok) { STATE.list = await r.json(); }
+    else throw new Error('offline');
+  } catch(_) {
+    const s = localStorage.getItem(LS_KEY);
+    STATE.list = s ? JSON.parse(s) : SEED.slice();
+  }
+  if (!STATE.list.length) STATE.list = SEED.slice();
+  render();
+}
+
+function render(){
+  const tbody = document.getElementById('rows');
+  const f = {
+    s: document.getElementById('fSearch').value.toLowerCase(),
+    st: document.getElementById('fStatus').value,
+    from: document.getElementById('fFrom').value,
+    to: document.getElementById('fTo').value,
+  };
+  const rows = STATE.list.filter(q => {
+    if (f.st && q.status !== f.st) return false;
+    if (f.s && !(q.customer?.name||'').toLowerCase().includes(f.s)) return false;
+    if (f.from && (q.createdAt||'') < f.from) return false;
+    if (f.to && (q.createdAt||'').slice(0,10) > f.to) return false;
+    return true;
+  });
+  document.getElementById('count').textContent = `${rows.length} / ${STATE.list.length}`;
+  if (!rows.length) { tbody.innerHTML = '<tr><td colspan="7" class="empty">No quotes</td></tr>'; return; }
+  tbody.innerHTML = rows.map(q => `
+    <tr>
+      <td class="num">${q.number||''}</td>
+      <td>${esc(q.customer?.name||'—')}</td>
+      <td class="num">${(q.createdAt||'').slice(0,10)}</td>
+      <td class="num">${(q.items||[]).length}</td>
+      <td class="num">${(q.totals?.total||0).toLocaleString()}</td>
+      <td><span class="badge b-${q.status}">${q.status}</span></td>
+      <td style="white-space:nowrap">
+        <button class="btn btn-ghost btn-sm" onclick="previewRow('${q.id}')" title="Preview">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+        </button>
+        <button class="btn btn-ghost btn-sm" onclick="editRow('${q.id}')" title="Edit">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+        </button>
+        ${q.status==='approved' ? `<button class="btn btn-success btn-sm" onclick="convert('${q.id}')">→ Contract</button>`:''}
+        <button class="btn btn-danger btn-sm" onclick="del('${q.id}')" title="Delete">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/></svg>
+        </button>
+      </td>
+    </tr>`).join('');
+}
+
+const esc = s => String(s==null?'':s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+function openModal(q){
+  STATE.editing = q ? JSON.parse(JSON.stringify(q)) : M.normalize({}, String(STATE.list.length+1).padStart(4,'0'));
+  const e = STATE.editing;
+  document.getElementById('mTitle').textContent = q ? 'Edit Quote ' + (e.number||'') : 'New Quote';
+  document.getElementById('cName').value    = e.customer?.name||'';
+  document.getElementById('cCompany').value = e.company?.name||'';
+  document.getElementById('cPhone').value   = e.customer?.phone||'';
+  document.getElementById('qNumber').value  = e.number||'';
+  document.getElementById('qValidity').value= e.validity_days||30;
+  document.getElementById('qProject').value = e.projectId||'';
+  document.getElementById('qTerms').value   = e.terms||'';
+  document.getElementById('qNotes').value   = e.notes||'';
+  if (!e.items.length) e.items = [{profile:'', qty:1, length:0, unit_price:0, discount_pct:0}];
+  renderItems();
+  document.getElementById('mEdit').classList.add('open');
+}
+function closeModal(){ document.getElementById('mEdit').classList.remove('open'); }
+
+function renderItems(){
+  const tb = document.querySelector('#itemsTbl tbody');
+  tb.innerHTML = STATE.editing.items.map((it,i) => `
+    <tr>
+      <td><input value="${esc(it.profile||'')}" oninput="editItem(${i},'profile',this.value)" dir="auto"></td>
+      <td><input type="number" step="0.01" value="${it.qty||0}" oninput="editItem(${i},'qty',this.value)"></td>
+      <td><input type="number" step="0.01" value="${it.length||0}" oninput="editItem(${i},'length',this.value)"></td>
+      <td><input type="number" step="0.01" value="${it.unit_price||0}" oninput="editItem(${i},'unit_price',this.value)"></td>
+      <td><input type="number" step="0.01" value="${it.discount_pct||0}" oninput="editItem(${i},'discount_pct',this.value)"></td>
+      <td class="num">${M.lineNet(it).toFixed(2)}</td>
+      <td><button class="btn btn-ghost btn-sm" onclick="rmItem(${i})">×</button></td>
+    </tr>`).join('');
+  const t = M.computeTotals(STATE.editing);
+  document.getElementById('tSub').textContent   = t.subtotal.toFixed(2);
+  document.getElementById('tDisc').textContent  = t.discount.toFixed(2);
+  document.getElementById('tNet').textContent   = t.net.toFixed(2);
+  document.getElementById('tVat').textContent   = t.vat.toFixed(2);
+  document.getElementById('tTotal').textContent = t.total.toFixed(2);
+}
+function editItem(i,k,v){ STATE.editing.items[i][k] = (k==='profile'?v:Number(v)||0); renderItems(); }
+function addItem(){ STATE.editing.items.push({profile:'', qty:1, length:0, unit_price:0, discount_pct:0}); renderItems(); }
+function rmItem(i){ STATE.editing.items.splice(i,1); renderItems(); }
+
+function collect(){
+  const e = STATE.editing;
+  e.customer = { name: document.getElementById('cName').value, phone: document.getElementById('cPhone').value };
+  e.company  = { name: document.getElementById('cCompany').value };
+  e.validity_days = +document.getElementById('qValidity').value || 30;
+  e.projectId = document.getElementById('qProject').value || null;
+  e.terms = document.getElementById('qTerms').value;
+  e.notes = document.getElementById('qNotes').value;
+  e.totals = M.computeTotals(e);
+  return e;
+}
+
+async function saveQuote(status){
+  const e = collect();
+  e.status = status;
+  const v = M.validate(e);
+  if (!v.ok) { alert('Data error:\n' + v.errors.join('\n')); return; }
+  try {
+    let saved;
+    if (e.id && e.id.startsWith('quote_') && !e.id.endsWith('_seed1')) {
+      const r = await fetch(`${API}/${e.id}`, { method:'PATCH', headers:{'Content-Type':'application/json'}, body: JSON.stringify(e) });
+      saved = await r.json();
+      const i = STATE.list.findIndex(x=>x.id===saved.id); if(i>=0) STATE.list[i]=saved;
+    } else {
+      const r = await fetch(API, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(e) });
+      saved = await r.json();
+      STATE.list.push(saved);
+    }
+  } catch(_) {
+    if (!e.id) e.id = 'quote_' + Date.now();
+    if (!e.createdAt) e.createdAt = new Date().toISOString();
+    const i = STATE.list.findIndex(x=>x.id===e.id); if(i>=0) STATE.list[i]=e; else STATE.list.push(e);
+    localStorage.setItem(LS_KEY, JSON.stringify(STATE.list));
+  }
+  closeModal(); render();
+}
+
+function editRow(id){ const q = STATE.list.find(x=>x.id===id); if(q) openModal(q); }
+async function del(id){
+  if (!confirm('Delete this quote?')) return;
+  try { await fetch(`${API}/${id}`, { method:'DELETE' }); } catch(_){}
+  STATE.list = STATE.list.filter(x=>x.id!==id);
+  localStorage.setItem(LS_KEY, JSON.stringify(STATE.list));
+  render();
+}
+async function convert(id){
+  if (!confirm('Convert to contract?')) return;
+  try {
+    const r = await fetch(`${API}/${id}/convert-to-contract`, { method:'POST', headers:{'Content-Type':'application/json'}, body:'{}' });
+    const out = await r.json();
+    if (out.contract) alert('Contract created: ' + out.contract.number);
+  } catch(e) { alert('Connection failed — try via server.'); }
+  loadList();
+}
+
+function previewRow(id){ const q = STATE.list.find(x=>x.id===id); if(q){ STATE.editing = q; preview(); } }
+function preview(){
+  const e = STATE.editing || collect();
+  const t = e.totals = M.computeTotals(e);
+  document.getElementById('pv').innerHTML = `
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;padding-bottom:20px;border-bottom:2px solid #0A0A0B">
+      <div>
+        <h1>Quotation / عرض سعر</h1>
+        <div class="num" style="color:#6A7075;font-size:14px;letter-spacing:2px">${e.number||''}</div>
+      </div>
+      <div style="text-align:end">
+        <strong style="font-family:'Cormorant Garamond',serif;font-size:22px;color:#0A0A0B">NouRion</strong><br>
+        <small style="color:#6A7075;letter-spacing:1px">Intelligent Aluminum Platform</small>
+      </div>
+    </div>
+    <div class="meta">
+      <div><h4>Customer</h4><strong>${esc(e.customer?.name||'')}</strong><br>${esc(e.customer?.phone||'')}</div>
+      <div><h4>Date</h4>${(e.createdAt||new Date().toISOString()).slice(0,10)}<br><h4 style="margin-top:6px">Validity</h4>${e.validity_days} days</div>
+    </div>
+    <table>
+      <thead><tr><th>#</th><th>Item</th><th>Qty</th><th>Price</th><th>Disc</th><th>Total</th></tr></thead>
+      <tbody>${(e.items||[]).map((it,i)=>`<tr><td>${i+1}</td><td>${esc(it.profile||'')}</td><td class="num">${it.qty}</td><td class="num">${(it.unit_price||0).toFixed(2)}</td><td class="num">${it.discount_pct||0}%</td><td class="num">${M.lineNet(it).toFixed(2)}</td></tr>`).join('')}</tbody>
+    </table>
+    <div class="totals" style="text-align:end">
+      <div>Subtotal: <span class="num">${t.subtotal.toFixed(2)}</span></div>
+      <div>Discount: <span class="num">${t.discount.toFixed(2)}</span></div>
+      <div>Net: <span class="num">${t.net.toFixed(2)}</span></div>
+      <div>VAT 15%: <span class="num">${t.vat.toFixed(2)}</span></div>
+      <div class="g">Total: <span class="num">${t.total.toFixed(2)}</span> SAR</div>
+    </div>
+    <div style="margin-top:22px;padding-top:18px;border-top:1px solid #e5e5e6">
+      <h4 style="color:#6A7075;font-size:11px;letter-spacing:2px;text-transform:uppercase;font-family:'JetBrains Mono',monospace">Terms</h4>
+      <p style="white-space:pre-wrap;font-size:13px;color:#4E5358;margin-top:8px">${esc(e.terms||'')}</p>
+    </div>`;
+  document.getElementById('mPreview').classList.add('open');
+}
+
+['fSearch','fStatus','fFrom','fTo'].forEach(id => document.getElementById(id).addEventListener('input', render));
+
+/* ─── i18n ─── */
+const I18N = {
+  en: {
+    nav_module:'Quotations Module', nav_home:'Home', nav_quotes:'Quotations', nav_contracts:'Contracts',
+    nav_inventory:'Inventory', nav_orders:'Orders',
+    page_label:'I · Commerce', page_title_html:'Quotations <em>&amp; Proposals</em>',
+    page_sub:'Compose, send, and convert professional quotes into contracts. Every proposal forged with engineering precision.',
+    ph_search:'Search customer…', opt_all:'All statuses',
+    th_num:'#', th_customer:'Customer', th_date:'Date', th_items:'Items', th_total:'Total (SAR)', th_status:'Status',
+    btn_new:'+ New Quote', btn_cancel:'Cancel', btn_preview:'Preview', btn_save_draft:'Save Draft', btn_save_send:'Save & Send',
+    btn_close:'Close', btn_print:'Print / PDF', btn_add_item:'+ Item',
+    lbl_customer:'Customer name *', lbl_company:'Company', lbl_phone:'Phone',
+    lbl_qnum:'Quote number', lbl_validity:'Validity (days)', lbl_project:'Project ID (optional)',
+    lbl_items:'Items', lbl_terms:'Terms', lbl_notes:'Notes'
+  },
+  ar: {
+    nav_module:'وحدة عروض الأسعار', nav_home:'الرئيسية', nav_quotes:'عروض الأسعار', nav_contracts:'العقود',
+    nav_inventory:'المخزون', nav_orders:'الأوامر',
+    page_label:'١ · التجارة', page_title_html:'عروض <em>الأسعار</em>',
+    page_sub:'إنشاء وإرسال عروض احترافية وتحويلها إلى عقود — بدقة هندسية في كل تفصيلة.',
+    ph_search:'بحث باسم العميل…', opt_all:'كل الحالات',
+    th_num:'رقم', th_customer:'العميل', th_date:'التاريخ', th_items:'البنود', th_total:'الإجمالي (ر.س)', th_status:'الحالة',
+    btn_new:'+ عرض جديد', btn_cancel:'إلغاء', btn_preview:'معاينة', btn_save_draft:'حفظ مسودة', btn_save_send:'حفظ وإرسال',
+    btn_close:'إغلاق', btn_print:'طباعة / PDF', btn_add_item:'+ بند',
+    lbl_customer:'اسم العميل *', lbl_company:'الشركة', lbl_phone:'الهاتف',
+    lbl_qnum:'رقم العرض', lbl_validity:'مدة السريان (أيام)', lbl_project:'ID المشروع (اختياري)',
+    lbl_items:'البنود', lbl_terms:'الشروط', lbl_notes:'ملاحظات'
+  }
+};
+function applyLanguage(lang){
+  const d = I18N[lang]; if(!d) return;
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const k = el.dataset.i18n; if(!d[k]) return;
+    if (k.endsWith('_html')) el.innerHTML = d[k]; else el.textContent = d[k];
+  });
+  document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+    const k = el.dataset.i18nPlaceholder; if(d[k]) el.setAttribute('placeholder', d[k]);
+  });
+  document.body.classList.toggle('lang-ar', lang==='ar');
+  localStorage.setItem('nr_lang', lang);
+  document.querySelectorAll('.lang-btn').forEach(b => b.classList.toggle('active', b.dataset.lang===lang));
+}
+document.querySelectorAll('.lang-btn').forEach(b => b.addEventListener('click', () => applyLanguage(b.dataset.lang)));
+applyLanguage(localStorage.getItem('nr_lang') || 'en');
+
+loadList();
+</script>
+</body>
+</html>
