@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>NouRion · Shortages · النواقص</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&family=Cormorant+Garamond:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg-void: #0A0A0B; --bg-ebony: #121315; --bg-carbon: #1A1C20;
+    --silver: #B8BCC2; --silver-bright: #E8ECEF; --silver-deep: #6A7075;
+    --cyan: #3FA2E0; --cyan-bright: #5AB4E8; --cyan-deep: #1E5FA8;
+    --amber: #D4A35A; --coral: #E63946; --green: #10B981;
+    --text-primary: #EAECEE; --text-soft: #8A8F95; --text-muted: #4E5358;
+    --border: rgba(184, 188, 194, 0.15);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Cairo', sans-serif;
+    background: var(--bg-void); color: var(--text-primary);
+    min-height: 100vh; line-height: 1.5; font-variant-numeric: lining-nums;
+  }
+  body::before {
+    content: ''; position: fixed; inset: 0; z-index: 0; pointer-events: none;
+    background:
+      radial-gradient(circle at 15% 15%, rgba(230, 57, 70, 0.08) 0%, transparent 40%),
+      radial-gradient(circle at 85% 85%, rgba(212, 163, 90, 0.05) 0%, transparent 40%);
+  }
+
+  nav {
+    position: sticky; top: 0; z-index: 100; padding: 18px 32px;
+    background: rgba(10, 10, 11, 0.85); backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border);
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .nav-brand { display: flex; align-items: center; gap: 12px; font-weight: 700; direction: ltr; }
+  .nav-brand svg { width: 28px; height: 28px; }
+  .nav-brand .r {
+    background: linear-gradient(180deg, #7AC7EE, #3FA2E0, #1E5FA8);
+    -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+  }
+  .nav-title { font-size: 15px; color: var(--text-soft); margin-right: 12px; padding-right: 12px; border-right: 1px solid var(--border); }
+
+  main { max-width: 1300px; margin: 0 auto; padding: 28px; position: relative; z-index: 2; }
+
+  /* Header */
+  .page-head {
+    display: flex; justify-content: space-between; align-items: flex-start;
+    margin-bottom: 24px;
+  }
+  .label {
+    font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--coral);
+    letter-spacing: 3px; text-transform: uppercase; margin-bottom: 8px;
+  }
+  .big-title {
+    font-family: 'Cormorant Garamond', serif; font-size: 40px;
+    font-weight: 500; letter-spacing: -1px;
+  }
+  .big-title em {
+    font-style: italic;
+    background: linear-gradient(180deg, var(--silver-bright), var(--silver-deep));
+    -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+  }
+  .page-sub { color: var(--text-soft); margin-top: 6px; }
+
+  .btn-primary {
+    padding: 14px 24px;
+    background: linear-gradient(180deg, var(--coral), #B52A37);
+    color: #FFFFFF; border: none; border-radius: 12px;
+    font-family: inherit; font-weight: 700; font-size: 13px;
+    cursor: pointer; display: inline-flex; align-items: center; gap: 8px;
+    box-shadow: 0 6px 20px rgba(230, 57, 70, 0.25);
+  }
+  .btn-primary:hover { transform: translateY(-1px); }
+
+  /* Stats */
+  .stats-row {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px;
+    margin-bottom: 28px;
+  }
+  .stat {
+    padding: 18px 20px;
+    background: var(--bg-ebony); border: 1px solid var(--border);
+    border-radius: 14px; position: relative; overflow: hidden;
+  }
+  .stat.urgent { border-color: rgba(230, 57, 70, 0.3); background: linear-gradient(135deg, rgba(230, 57, 70, 0.08), rgba(184, 188, 194, 0.02)); }
+  .stat.warning { border-color: rgba(212, 163, 90, 0.3); }
+  .stat.success { border-color: rgba(16, 185, 129, 0.3); }
+  .stat-lbl { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--silver); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 6px; }
+  .stat-val {
+    font-family: 'Cormorant Garamond', serif; font-size: 40px; font-weight: 400; line-height: 1;
+    background: linear-gradient(180deg, var(--silver-bright), var(--silver-deep));
+    -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+  }
+  .stat.urgent .stat-val { background: linear-gradient(180deg, #F28189, var(--coral)); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+  .stat-note { font-size: 12px; color: var(--text-soft); margin-top: 6px; }
+
+  /* Kanban-like */
+  .board {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px;
+    margin-top: 8px;
+  }
+  .column {
+    background: var(--bg-ebony); border: 1px solid var(--border);
+    border-radius: 14px; padding: 16px;
+    min-height: 500px;
+  }
+  .col-head {
+    display: flex; justify-content: space-between; align-items: center;
+    padding-bottom: 12px; margin-bottom: 12px; border-bottom: 2px solid var(--border);
+  }
+  .col-head.col-new { border-bottom-color: var(--coral); }
+  .col-head.col-progress { border-bottom-color: var(--amber); }
+  .col-head.col-approved { border-bottom-color: var(--cyan); }
+  .col-head.col-done { border-bottom-color: var(--green); }
+  .col-title { font-weight: 700; font-size: 14px; }
+  .col-count {
+    font-family: 'JetBrains Mono', monospace; font-size: 11px;
+    padding: 2px 10px; border-radius: 100px;
+    background: rgba(184, 188, 194, 0.1); color: var(--silver);
+  }
+
+  .card {
+    background: var(--bg-carbon); border: 1px solid var(--border);
+    border-radius: 10px; padding: 14px; margin-bottom: 10px;
+    cursor: grab; transition: all 0.2s;
+    border-right: 3px solid var(--silver);
+  }
+  .card.high { border-right-color: var(--coral); }
+  .card.medium { border-right-color: var(--amber); }
+  .card.low { border-right-color: var(--cyan); }
+  .card:hover { transform: translateY(-1px); border-color: var(--cyan); }
+
+  .card-head {
+    display: flex; justify-content: space-between; align-items: flex-start;
+    margin-bottom: 8px;
+  }
+  .card-id { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--silver); }
+  .priority {
+    padding: 2px 8px; border-radius: 4px; font-family: 'JetBrains Mono', monospace;
+    font-size: 9px; letter-spacing: 1px; font-weight: 700;
+  }
+  .priority.high { background: rgba(230, 57, 70, 0.15); color: var(--coral); }
+  .priority.medium { background: rgba(212, 163, 90, 0.15); color: var(--amber); }
+  .priority.low { background: rgba(63, 162, 224, 0.15); color: var(--cyan); }
+
+  .card-client { font-weight: 600; font-size: 14px; margin-bottom: 4px; }
+  .card-site { font-size: 11px; color: var(--silver); margin-bottom: 8px; }
+  .card-type {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 3px 10px; background: rgba(184, 188, 194, 0.06);
+    border-radius: 6px; font-size: 11px; color: var(--text-soft);
+    margin-bottom: 8px;
+  }
+  .card-items { font-size: 12px; color: var(--text-primary); margin-bottom: 8px; line-height: 1.6; }
+  .card-items strong { color: var(--cyan-bright); }
+  .card-meta {
+    display: flex; justify-content: space-between; align-items: center;
+    padding-top: 8px; border-top: 1px solid var(--border);
+    font-size: 10px; color: var(--silver); font-family: 'JetBrains Mono', monospace; direction: ltr;
+  }
+  .card-photos {
+    display: flex; gap: 4px; margin: 6px 0;
+  }
+  .thumb {
+    width: 28px; height: 28px; border-radius: 4px;
+    background: linear-gradient(135deg, #1a2030, #0a0a0b);
+    display: grid; place-items: center; font-size: 12px;
+    color: var(--silver);
+  }
+
+  .detail-modal {
+    position: fixed; inset: 0; background: rgba(10, 10, 11, 0.85);
+    backdrop-filter: blur(8px); z-index: 200;
+    display: none; align-items: center; justify-content: center;
+    padding: 24px;
+  }
+  .detail-modal.active { display: flex; }
+  .detail-card {
+    width: 100%; max-width: 640px;
+    background: var(--bg-ebony); border: 1px solid var(--border);
+    border-radius: 18px; padding: 32px;
+    max-height: 85vh; overflow-y: auto;
+  }
+
+  .notify-list {
+    display: flex; flex-direction: column; gap: 10px; margin-top: 16px;
+  }
+  .notify-item {
+    display: flex; align-items: center; gap: 12px;
+    padding: 12px 16px; background: var(--bg-carbon);
+    border: 1px solid var(--border); border-radius: 10px;
+  }
+  .notify-icon {
+    width: 36px; height: 36px; border-radius: 10px;
+    background: linear-gradient(135deg, var(--cyan-bright), var(--cyan-deep));
+    display: grid; place-items: center; color: #FFFFFF; font-size: 16px;
+  }
+  .notify-item.delivered .notify-icon { background: linear-gradient(135deg, var(--green), #059669); }
+
+  @media (max-width: 1000px) {
+    .board { grid-template-columns: 1fr; }
+    .stats-row { grid-template-columns: repeat(2, 1fr); }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div style="display: flex; align-items: center; gap: 12px;">
+    <div class="nav-brand">
+      <svg viewBox="0 0 80 80">
+        <defs><linearGradient id="nG" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#E8ECEF"/><stop offset="100%" stop-color="#6A7075"/></linearGradient></defs>
+        <g transform="translate(40,40)">
+          <ellipse rx="32" ry="12" fill="none" stroke="url(#nG)" stroke-width="1.8"/>
+          <ellipse rx="32" ry="12" fill="none" stroke="url(#nG)" stroke-width="1.8" transform="rotate(60)"/>
+          <ellipse rx="32" ry="12" fill="none" stroke="url(#nG)" stroke-width="1.8" transform="rotate(-60)"/>
+          <circle r="6" fill="url(#nG)"/>
+        </g>
+      </svg>
+      <span>Nou<span class="r">R</span>ion</span>
+    </div>
+    <span class="nav-title">قسم النواقص · Shortages</span>
+  </div>
+  <button class="btn-primary">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+    <span>إنشاء طلب نواقص</span>
+  </button>
+</nav>
+
+<main>
+
+  <!-- Header -->
+  <div class="page-head">
+    <div>
+      <div class="label">Section 12 · Shortages Management</div>
+      <h1 class="big-title">طلبات <em>النواقص</em></h1>
+      <div class="page-sub">إدارة الكسر والنقص الذي يحدث أثناء التركيب — إشعار فوري للإدارة وتأمين المواد</div>
+    </div>
+  </div>
+
+  <!-- Stats -->
+  <div class="stats-row">
+    <div class="stat urgent">
+      <div class="stat-lbl">عاجل الآن</div>
+      <div class="stat-val">3</div>
+      <div class="stat-note">طلبات بانتظار الاعتماد</div>
+    </div>
+    <div class="stat warning">
+      <div class="stat-lbl">قيد التأمين</div>
+      <div class="stat-val">7</div>
+      <div class="stat-note">جاري شراء المواد</div>
+    </div>
+    <div class="stat">
+      <div class="stat-lbl">معتمد</div>
+      <div class="stat-val">12</div>
+      <div class="stat-note">بانتظار التوريد للموقع</div>
+    </div>
+    <div class="stat success">
+      <div class="stat-lbl">مغلقة (الشهر)</div>
+      <div class="stat-val">48</div>
+      <div class="stat-note">✓ تم إنهاء الموقع</div>
+    </div>
+  </div>
+
+  <!-- Kanban Board -->
+  <div class="board">
+
+    <!-- Column 1: New -->
+    <div class="column">
+      <div class="col-head col-new">
+        <div class="col-title">🔴 طلبات جديدة</div>
+        <div class="col-count">3</div>
+      </div>
+
+      <div class="card high" onclick="showDetail()">
+        <div class="card-head">
+          <span class="card-id">#SHRT-0142</span>
+          <span class="priority high">URGENT</span>
+        </div>
+        <div class="card-client">أحمد الغروي</div>
+        <div class="card-site">التحليه / الياسمين · فرقة الدعيس</div>
+        <div class="card-type">🪟 زجاج · كسر أثناء التركيب</div>
+        <div class="card-items"><strong>1×</strong> زجاج 1200×1800mm شفاف مزدوج (كسر زاوية)</div>
+        <div class="card-photos">
+          <div class="thumb">📸</div>
+          <div class="thumb">📸</div>
+          <div class="thumb">📸</div>
+        </div>
+        <div class="card-meta">
+          <span>18/4 · 14:30</span>
+          <span style="color: var(--coral);">● منذ 5 دقائق</span>
+        </div>
+      </div>
+
+      <div class="card high">
+        <div class="card-head">
+          <span class="card-id">#SHRT-0141</span>
+          <span class="priority high">URGENT</span>
+        </div>
+        <div class="card-client">طارق المطيري</div>
+        <div class="card-site">الوسطى / التحليه · فرقة إبراهيم</div>
+        <div class="card-type">🔧 إكسسوارات · نقص</div>
+        <div class="card-items"><strong>4×</strong> مفصلات للأبواب + <strong>2×</strong> قفل رئيسي</div>
+        <div class="card-photos">
+          <div class="thumb">📸</div>
+          <div class="thumb">📸</div>
+        </div>
+        <div class="card-meta">
+          <span>18/4 · 13:15</span>
+          <span>منذ 1 ساعة</span>
+        </div>
+      </div>
+
+      <div class="card medium">
+        <div class="card-head">
+          <span class="card-id">#SHRT-0140</span>
+          <span class="priority medium">MEDIUM</span>
+        </div>
+        <div class="card-client">اسعد مشرف</div>
+        <div class="card-site">الغربية / التحليه · فرقة شكيل</div>
+        <div class="card-type">🏗️ ألمنيوم · مقطع قصير</div>
+        <div class="card-items"><strong>1×</strong> قطاع CF-50 بطول 3200mm (الموجود 2800mm)</div>
+        <div class="card-photos">
+          <div class="thumb">📸</div>
+        </div>
+        <div class="card-meta">
+          <span>18/4 · 11:00</span>
+          <span>منذ 4 ساعات</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Column 2: In Progress -->
+    <div class="column">
+      <div class="col-head col-progress">
+        <div class="col-title">🟠 قيد التأمين</div>
+        <div class="col-count">7</div>
+      </div>
+
+      <div class="card high">
+        <div class="card-head">
+          <span class="card-id">#SHRT-0139</span>
+          <span class="priority high">URGENT</span>
+        </div>
+        <div class="card-client">فيصل العتيبي</div>
+        <div class="card-site">الشرقية / الدمام</div>
+        <div class="card-type">🔩 إكسسوارات · نقص</div>
+        <div class="card-items"><strong>6×</strong> مسامير خاصة للواجهة الزجاجية</div>
+        <div class="card-meta">
+          <span>17/4 · 16:20</span>
+          <span style="color: var(--amber);">جارٍ الشراء</span>
+        </div>
+      </div>
+
+      <div class="card medium">
+        <div class="card-head">
+          <span class="card-id">#SHRT-0138</span>
+          <span class="priority medium">MEDIUM</span>
+        </div>
+        <div class="card-client">خالد الشهري</div>
+        <div class="card-site">الشمالية / حائل</div>
+        <div class="card-type">🪟 زجاج · عيب مصنعي</div>
+        <div class="card-items"><strong>1×</strong> زجاج 800×1200mm مقسّى — استبدال</div>
+        <div class="card-meta">
+          <span>17/4 · 10:00</span>
+          <span>الطلب مع المورد</span>
+        </div>
+      </div>
+
+      <div class="card low">
+        <div class="card-head">
+          <span class="card-id">#SHRT-0137</span>
+          <span class="priority low">LOW</span>
+        </div>
+        <div class="card-client">محمد الشهري</div>
+        <div class="card-site">الرياض / النخيل</div>
+        <div class="card-type">🎨 ألوان · خدش</div>
+        <div class="card-items"><strong>2×</strong> قطاعات CS-45 أسود — خدش سطحي</div>
+        <div class="card-meta">
+          <span>16/4</span>
+          <span>إصلاح في الموقع</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Column 3: Approved / Ready -->
+    <div class="column">
+      <div class="col-head col-approved">
+        <div class="col-title">🔵 معتمد — جاهز للتوريد</div>
+        <div class="col-count">12</div>
+      </div>
+
+      <div class="card">
+        <div class="card-head">
+          <span class="card-id">#SHRT-0136</span>
+          <span class="priority medium">MEDIUM</span>
+        </div>
+        <div class="card-client">عمر الحازمي</div>
+        <div class="card-site">التحليه / الياسمين</div>
+        <div class="card-type">🔧 إكسسوارات</div>
+        <div class="card-items"><strong>3×</strong> مقابض ألومنيوم مقاوم للصدأ</div>
+        <div class="card-meta">
+          <span>15/4</span>
+          <span style="color: var(--cyan);">✓ وصلت المواد</span>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-head">
+          <span class="card-id">#SHRT-0135</span>
+          <span class="priority low">LOW</span>
+        </div>
+        <div class="card-client">سعد الغامدي</div>
+        <div class="card-site">الوسطى / الياسمين</div>
+        <div class="card-type">🪟 زجاج</div>
+        <div class="card-items"><strong>1×</strong> زجاج 1000×1500mm مزدوج</div>
+        <div class="card-meta">
+          <span>15/4</span>
+          <span style="color: var(--cyan);">بانتظار الفرقة</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Column 4: Done -->
+    <div class="column">
+      <div class="col-head col-done">
+        <div class="col-title">🟢 مُنهى</div>
+        <div class="col-count">48</div>
+      </div>
+
+      <div class="card low" style="opacity: 0.7;">
+        <div class="card-head">
+          <span class="card-id">#SHRT-0134</span>
+          <span class="priority low">LOW</span>
+        </div>
+        <div class="card-client">أحمد السويدي</div>
+        <div class="card-site">التحليه</div>
+        <div class="card-type">🔩 إكسسوارات</div>
+        <div class="card-items">استبدال قفل + مفصلة</div>
+        <div class="card-meta">
+          <span>14/4</span>
+          <span style="color: var(--green);">✓ تم الإنهاء</span>
+        </div>
+      </div>
+
+      <div class="card medium" style="opacity: 0.7;">
+        <div class="card-head">
+          <span class="card-id">#SHRT-0133</span>
+          <span class="priority medium">MEDIUM</span>
+        </div>
+        <div class="card-client">بدر القحطاني</div>
+        <div class="card-site">الغربية</div>
+        <div class="card-type">🪟 زجاج</div>
+        <div class="card-items">زجاج مقسى 1200×1000mm</div>
+        <div class="card-meta">
+          <span>13/4</span>
+          <span style="color: var(--green);">✓ تم الإنهاء</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Notification targets -->
+  <div style="margin-top: 32px; padding: 24px; background: var(--bg-ebony); border: 1px solid var(--border); border-radius: 16px;">
+    <h3 style="font-family: 'Cormorant Garamond', serif; font-size: 22px; font-weight: 500; margin-bottom: 8px;">الإشعارات الآلية عند أي طلب نواقص</h3>
+    <p style="color: var(--silver); font-size: 13px; margin-bottom: 16px;">عند إنشاء طلب نواقص، يصل إشعار فوري إلى الجهات التالية حسب نوع النقص.</p>
+    <div class="notify-list">
+      <div class="notify-item delivered">
+        <div class="notify-icon">🏭</div>
+        <div style="flex: 1;"><strong>مدير المصنع</strong><div style="font-size: 11px; color: var(--silver);">عبدالعزيز السلمي</div></div>
+        <div style="font-size: 10px; font-family: 'JetBrains Mono', monospace; color: var(--green);">✓ مستلم</div>
+      </div>
+      <div class="notify-item delivered">
+        <div class="notify-icon">🔧</div>
+        <div style="flex: 1;"><strong>مدير التركيبات</strong><div style="font-size: 11px; color: var(--silver);">فهد الحربي</div></div>
+        <div style="font-size: 10px; font-family: 'JetBrains Mono', monospace; color: var(--green);">✓ مستلم</div>
+      </div>
+      <div class="notify-item delivered">
+        <div class="notify-icon">⚙️</div>
+        <div style="flex: 1;"><strong>مدير الإنتاج</strong><div style="font-size: 11px; color: var(--silver);">صالح الدوسري</div></div>
+        <div style="font-size: 10px; font-family: 'JetBrains Mono', monospace; color: var(--green);">✓ مستلم</div>
+      </div>
+      <div class="notify-item">
+        <div class="notify-icon">📋</div>
+        <div style="flex: 1;"><strong>المتابع</strong><div style="font-size: 11px; color: var(--silver);">محمد الزهراني</div></div>
+        <div style="font-size: 10px; font-family: 'JetBrains Mono', monospace; color: var(--amber);">⏱ مُرسل — بانتظار القراءة</div>
+      </div>
+      <div class="notify-item delivered">
+        <div class="notify-icon">💳</div>
+        <div style="flex: 1;"><strong>المشتريات</strong><div style="font-size: 11px; color: var(--silver);">قسم المشتريات</div></div>
+        <div style="font-size: 10px; font-family: 'JetBrains Mono', monospace; color: var(--green);">✓ مستلم</div>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<!-- Detail Modal -->
+<div class="detail-modal" id="detailModal">
+  <div class="detail-card">
+    <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px; padding-bottom: 16px; border-bottom: 1px solid var(--border);">
+      <div>
+        <div style="font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--cyan); letter-spacing: 2px;">SHORTAGE #SHRT-0142</div>
+        <h2 style="font-family: 'Cormorant Garamond', serif; font-size: 26px; margin-top: 4px;">أحمد الغروي — كسر زجاج</h2>
+        <div style="color: var(--silver); font-size: 13px; margin-top: 4px;">التحليه / الياسمين · فرقة عبدالله الدعيس</div>
+      </div>
+      <button onclick="document.getElementById('detailModal').classList.remove('active');" style="width: 32px; height: 32px; border-radius: 50%; background: rgba(184, 188, 194, 0.08); border: 1px solid var(--border); color: var(--silver); cursor: pointer;">✕</button>
+    </div>
+
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px;">
+      <div style="padding: 10px 14px; background: var(--bg-carbon); border-radius: 8px;">
+        <div style="font-size: 10px; color: var(--silver); letter-spacing: 1px; font-family: 'JetBrains Mono', monospace;">النوع</div>
+        <div style="font-weight: 600; margin-top: 2px;">🪟 زجاج</div>
+      </div>
+      <div style="padding: 10px 14px; background: var(--bg-carbon); border-radius: 8px;">
+        <div style="font-size: 10px; color: var(--silver); letter-spacing: 1px; font-family: 'JetBrains Mono', monospace;">الأولوية</div>
+        <div style="font-weight: 600; color: var(--coral); margin-top: 2px;">عاجل</div>
+      </div>
+    </div>
+
+    <div style="margin-bottom: 20px;">
+      <div style="font-size: 12px; color: var(--silver); margin-bottom: 8px;">الوصف</div>
+      <div style="padding: 14px; background: var(--bg-carbon); border-radius: 10px; line-height: 1.7;">
+        أثناء تركيب النافذة الرئيسية في غرفة الجلوس، انكسر زجاج مزدوج 1200×1800mm شفاف من الزاوية السفلية. السبب: ضغط غير متوقع أثناء التثبيت. يحتاج استبدال فوري حتى لا يتأخر التركيب.
+      </div>
+    </div>
+
+    <div style="margin-bottom: 20px;">
+      <div style="font-size: 12px; color: var(--silver); margin-bottom: 8px;">صور الكسر (3)</div>
+      <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px;">
+        <div style="aspect-ratio: 1; background: linear-gradient(135deg, #2a1014, #0a0a0b); border-radius: 8px; display: grid; place-items: center; color: var(--coral); font-size: 24px;">📸</div>
+        <div style="aspect-ratio: 1; background: linear-gradient(135deg, #2a1014, #0a0a0b); border-radius: 8px; display: grid; place-items: center; color: var(--coral); font-size: 24px;">📸</div>
+        <div style="aspect-ratio: 1; background: linear-gradient(135deg, #2a1014, #0a0a0b); border-radius: 8px; display: grid; place-items: center; color: var(--coral); font-size: 24px;">📸</div>
+      </div>
+    </div>
+
+    <div style="display: flex; gap: 10px; padding-top: 16px; border-top: 1px solid var(--border);">
+      <button style="flex: 1; padding: 12px; background: linear-gradient(180deg, var(--green), #059669); color: #FFFFFF; border: none; border-radius: 10px; font-weight: 700; cursor: pointer; font-family: inherit;">✓ اعتماد وتأمين المواد</button>
+      <button style="padding: 12px 20px; background: transparent; border: 1px solid var(--border); color: var(--text-primary); border-radius: 10px; cursor: pointer; font-family: inherit;">تعديل</button>
+      <button style="padding: 12px 20px; background: transparent; border: 1px solid rgba(230, 57, 70, 0.3); color: var(--coral); border-radius: 10px; cursor: pointer; font-family: inherit;">رفض</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  function showDetail() {
+    document.getElementById('detailModal').classList.add('active');
+  }
+</script>
+
+</body>
+</html>
