@@ -1,0 +1,235 @@
+<!doctype html>
+<html lang="ar" dir="rtl" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>NouRion — استمارة التصنيع</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&family=IBM+Plex+Sans+Arabic:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="assets/css/nourion-tokens.css">
+  <link rel="stylesheet" href="assets/css/nourion-base.css">
+  <link rel="stylesheet" href="assets/css/nourion-components.css">
+
+  <script src="assets/js/nourion-theme.js"></script>
+  <script src="../src/modules/form-types/form-types.logic.js"></script>
+  <script src="../src/modules/forms/forms.logic.js"></script>
+  <script src="../src/modules/forms/forms.view.js"></script>
+
+  <link rel="icon" type="image/svg+xml" href="assets/img/logo.svg">
+</head>
+<body>
+
+<div class="nr-app">
+
+  <aside class="nr-sidebar">
+    <div class="nr-sidebar__brand">
+      <img src="assets/img/logo.svg" alt="NouRion" style="height:32px;">
+    </div>
+    <nav class="nr-sidebar__nav">
+      <div class="nr-nav-section">
+        <div class="nr-nav-section__title">الرئيسية</div>
+        <a class="nr-nav-item" href="index.html"><span class="nr-nav-item__icon">◇</span> Design System</a>
+        <a class="nr-nav-item" href="projects.html"><span class="nr-nav-item__icon">◈</span> المشاريع</a>
+        <a class="nr-nav-item" href="reports.html"><span class="nr-nav-item__icon">📊</span> التقارير</a>
+      </div>
+      <div class="nr-nav-section">
+        <div class="nr-nav-section__title">التصنيع</div>
+        <a class="nr-nav-item" href="form-types.html"><span class="nr-nav-item__icon">◎</span> القطاعات</a>
+        <a class="nr-nav-item is-active"><span class="nr-nav-item__icon">📋</span> الاستمارة</a>
+        <a class="nr-nav-item" href="measurements.html"><span class="nr-nav-item__icon">◎</span> المقاسات</a>
+        <a class="nr-nav-item" href="documents.html"><span class="nr-nav-item__icon">📄</span> المستندات</a>
+      </div>
+      <div class="nr-nav-section">
+        <div class="nr-nav-section__title">الإدارة</div>
+        <a class="nr-nav-item" href="hr.html"><span class="nr-nav-item__icon">👥</span> الموظفون</a>
+        <a class="nr-nav-item" href="custody.html"><span class="nr-nav-item__icon">💰</span> العهدة</a>
+        <a class="nr-nav-item" href="settings.html"><span class="nr-nav-item__icon">⚙</span> الإعدادات</a>
+      </div>
+    </nav>
+  </aside>
+
+  <main class="nr-app__main">
+
+    <header class="nr-topbar">
+      <div class="nr-topbar__title">استمارة التصنيع · Manufacturing Form</div>
+      <div class="nr-topbar__actions">
+        <select class="nr-select" id="projectSelect" style="width: 280px; height: 36px;"></select>
+        <button class="nr-btn nr-btn--ghost nr-btn--sm" data-nr-theme-toggle>
+          <span data-nr-theme-icon>☀</span>
+          <span data-nr-theme-label>الوضع الفاتح</span>
+        </button>
+      </div>
+    </header>
+
+    <div class="nr-app__content">
+
+      <div class="nr-alert nr-alert--info" style="margin-bottom: var(--nr-sp-8);">
+        <span class="nr-alert__icon">ⓘ</span>
+        <div class="nr-alert__body">
+          <div class="nr-alert__title">Phase 2.5 · forms POC</div>
+          <div class="nr-alert__msg">
+            استمارة التصنيع الكاملة: توليد المواد من عرض الأسعار + حساب الأجور والمصارف
+            التلقائي + دراسة المشروع الكاملة (costs + margin). كل الحسابات pure.
+            <strong>56 اختبار</strong> ناجح يغطّي حسابات VAT والأجور والدراسة.
+          </div>
+        </div>
+      </div>
+
+      <section style="margin-bottom: var(--nr-sp-8);">
+        <h1 style="font-size: var(--nr-fs-3xl); font-weight: 300;">
+          استمارة <span style="color: var(--nr-accent); font-weight: 500;">التصنيع</span>
+        </h1>
+        <p style="max-width: 720px;">
+          بدّل المشروع أعلى الصفحة لرؤية كل الحسابات تُولَّد تلقائياً من أنواع القطاعات
+          + عرض الأسعار. عدّل سعر الكيلو والأجور والعمال لرؤية الدراسة تتحدّث فوراً.
+        </p>
+      </section>
+
+      <!-- Extract values -->
+      <section style="margin-bottom: var(--nr-sp-6);">
+        <h6 class="nr-section-title">قيمة المستخلص</h6>
+        <div id="extractHost"></div>
+      </section>
+
+      <!-- Install allocations -->
+      <section style="margin-bottom: var(--nr-sp-6);">
+        <h6 class="nr-section-title">الأجور التلقائية</h6>
+        <div id="allocationsHost"></div>
+      </section>
+
+      <!-- Materials tables -->
+      <section style="margin-bottom: var(--nr-sp-6);">
+        <h6 class="nr-section-title">البنود</h6>
+        <div class="nr-stack" id="materialsHost"></div>
+      </section>
+
+      <!-- Study -->
+      <section style="margin-bottom: var(--nr-sp-10);">
+        <h6 class="nr-section-title">دراسة المشروع</h6>
+        <div id="studyHost"></div>
+      </section>
+
+      <footer style="padding-top: var(--nr-sp-8); border-top: 1px solid var(--nr-border-subtle);">
+        <div class="nr-row-between">
+          <small>Module: forms · 56 tests · 9 logic functions · wages + study + margin</small>
+          <small style="font-family: var(--nr-font-mono);">Phase 2.5 · POC #10</small>
+        </div>
+      </footer>
+
+    </div>
+  </main>
+</div>
+
+
+<script>
+  var FL = NouRion.FormsLogic;
+  var FV = NouRion.FormsView;
+  var FTL = NouRion.FormTypesLogic;
+
+  /* Sample projects */
+  var SAMPLE_PROJECTS = [
+    { id: 'p1', name: 'فيلا الخالدية',  company: 'الراجحي',    contractValue: '285000', extractValue: '320000' },
+    { id: 'p2', name: 'برج الأعمال',    company: 'السلطان',    contractValue: '940000', extractValue: '' },
+    { id: 'p3', name: 'فندق النخبة',    company: 'الراجحي',    contractValue: '1420000', extractValue: '1350000' },
+    { id: 'p4', name: 'مبنى تجاري',     company: 'عالم المعادن', contractValue: '38000', extractValue: '' }
+  ];
+
+  /* Sample priceList rows per project */
+  var PRICE_LISTS = {
+    p1: [
+      { sectionName: 'نوافذ سحاب قلف 12 سم', count: 8, pricePerM2: 450, totalBefore: 280000 },
+      { sectionName: 'نوافذ سحاب سرايا 10 سم', count: 4, pricePerM2: 380 }
+    ],
+    p2: [
+      { sectionName: 'نوافذ سحاب قلف 12 سم', count: 20, pricePerM2: 450 },
+      { sectionName: 'واجهات استركشر SG50', count: 5, pricePerM2: 720 }
+    ],
+    p3: [
+      { sectionName: 'نوافذ سحاب قلف 12 سم', count: 40, pricePerM2: 450 },
+      { sectionName: 'نوافذ سحاب سرايا 10 سم', count: 15, pricePerM2: 380 },
+      { sectionName: 'واجهات استركشر SG50', count: 10, pricePerM2: 720 }
+    ],
+    p4: [
+      { sectionName: 'نوافذ سحاب سرايا 10 سم', count: 3, pricePerM2: 380 }
+    ]
+  };
+
+  /* state */
+  var currentId = SAMPLE_PROJECTS[0].id;
+  var editedRates = {};
+
+  var projectSelect  = document.getElementById('projectSelect');
+  var extractHost    = document.getElementById('extractHost');
+  var allocationsHost= document.getElementById('allocationsHost');
+  var materialsHost  = document.getElementById('materialsHost');
+  var studyHost      = document.getElementById('studyHost');
+
+  SAMPLE_PROJECTS.forEach(function (p) {
+    var opt = document.createElement('option');
+    opt.value = p.id;
+    opt.textContent = p.name + ' — ' + p.company;
+    projectSelect.appendChild(opt);
+  });
+
+  function getProject() {
+    return SAMPLE_PROJECTS.find(function (p) { return p.id === currentId; });
+  }
+
+  function buildForm() {
+    var proj = getProject();
+    var plRows = PRICE_LISTS[proj.id] || [];
+    var types = FTL.getDefaultTypes();
+    var formData = FL.buildFormData(proj, plRows, types, FTL.DEFAULT_KG_PRICE);
+
+    // Apply edited rates
+    formData.rates = Object.assign({}, formData.rates, editedRates);
+
+    // Auto-compute wages + fixed
+    var ev = FL.computeExtractValues(proj, plRows);
+    var alloc = FL.computeInstallAllocations(proj, ev.before, formData.rates);
+    var auto = FL.buildAutoWagesAndFixed(alloc, ev.before);
+    formData.wages = auto.wages;
+    formData.fixed = auto.fixed;
+
+    return { project: proj, plRows: plRows, formData: formData };
+  }
+
+  function renderAll() {
+    var ctx = buildForm();
+    var proj = ctx.project;
+    var plRows = ctx.plRows;
+    var fd = ctx.formData;
+    var ev = FL.computeExtractValues(proj, plRows);
+
+    extractHost.innerHTML = '';
+    extractHost.appendChild(FV.renderExtractValues(proj, plRows));
+
+    allocationsHost.innerHTML = '';
+    allocationsHost.appendChild(FV.renderInstallAllocations(proj, ev.before, fd.rates, function (key, value) {
+      editedRates[key] = value;
+      renderAll();
+    }));
+
+    materialsHost.innerHTML = '';
+    materialsHost.appendChild(FV.renderMaterialsTable('🔩 خامات الألمنيوم', fd.aluminum, 'لا توجد قطاعات.'));
+    materialsHost.appendChild(FV.renderMaterialsTable('🔧 الأكسسوارات', fd.accessories, 'لا توجد إكسسوارات.'));
+    materialsHost.appendChild(FV.renderMaterialsTable('🔨 مواد التركيب', fd.installation, 'لا توجد مواد تركيب.'));
+
+    studyHost.innerHTML = '';
+    studyHost.appendChild(FV.renderProjectStudy(fd, proj, plRows));
+  }
+
+  projectSelect.addEventListener('change', function () {
+    currentId = projectSelect.value;
+    editedRates = {};
+    renderAll();
+  });
+
+  renderAll();
+</script>
+
+</body>
+</html>

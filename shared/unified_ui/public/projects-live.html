@@ -1,0 +1,238 @@
+<!doctype html>
+<html lang="ar" dir="rtl" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>NouRion — المشاريع (Live)</title>
+  <meta name="description" content="Phase 7 — real projects page wired to repository + service + backend">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&family=IBM+Plex+Sans+Arabic:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="assets/css/nourion-tokens.css">
+  <link rel="stylesheet" href="assets/css/nourion-base.css">
+  <link rel="stylesheet" href="assets/css/nourion-components.css">
+
+  <script src="assets/js/nourion-theme.js"></script>
+  <script src="assets/js/nourion-i18n.js"></script>
+
+  <!-- Phase 5 — data layer -->
+  <script src="../src/services/repository.js"></script>
+  <!-- Phase 6 — services layer -->
+  <script src="../src/services/project-service.js"></script>
+  <!-- Phase 7 — page controller -->
+  <script src="assets/js/projects-page.js" defer></script>
+
+  <link rel="icon" type="image/svg+xml" href="assets/img/logo.svg">
+</head>
+<body>
+
+<div class="nr-app">
+
+  <!-- ============ SIDEBAR ============ -->
+  <aside class="nr-sidebar">
+    <div class="nr-sidebar__brand">
+      <img src="assets/img/logo.svg" alt="NouRion" style="height:32px;">
+    </div>
+    <nav class="nr-sidebar__nav">
+      <div class="nr-nav-section">
+        <div class="nr-nav-section__title">الرئيسية</div>
+        <a class="nr-nav-item" href="index.html"><span class="nr-nav-item__icon">◇</span> Design System</a>
+        <a class="nr-nav-item is-active" href="projects-live.html"><span class="nr-nav-item__icon">◈</span> المشاريع (Live)</a>
+        <a class="nr-nav-item" href="projects.html"><span class="nr-nav-item__icon">◇</span> POC (Phase 2.5)</a>
+      </div>
+      <div class="nr-nav-section">
+        <div class="nr-nav-section__title">النظام</div>
+        <a class="nr-nav-item" href="login.html"><span class="nr-nav-item__icon">⎆</span> تسجيل الدخول</a>
+      </div>
+    </nav>
+  </aside>
+
+
+  <!-- ============ MAIN ============ -->
+  <main class="nr-app__main">
+
+    <header class="nr-topbar">
+      <div class="nr-topbar__title">المشاريع · Projects <span style="color:var(--nr-accent); font-family: var(--nr-font-mono); font-size: var(--nr-fs-xs);">· Phase 7 Live</span></div>
+      <div class="nr-topbar__actions">
+        <button class="nr-btn nr-btn--ghost nr-btn--sm" data-nr-theme-toggle>
+          <span data-nr-theme-icon>☀</span>
+          <span data-nr-theme-label>الوضع الفاتح</span>
+        </button>
+        <button class="nr-btn nr-btn--primary nr-btn--sm" id="newProjectBtn">+ مشروع جديد</button>
+      </div>
+    </header>
+
+
+    <div class="nr-app__content">
+
+      <!-- Hero + stack note -->
+      <div class="nr-alert nr-alert--info" style="margin-bottom: var(--nr-sp-6);">
+        <span class="nr-alert__icon">ⓘ</span>
+        <div class="nr-alert__body">
+          <div class="nr-alert__title">Phase 7 · Live wired page</div>
+          <div class="nr-alert__msg">
+            هذه الصفحة تعمل فعلياً عبر كامل الـ stack الجديد:
+            <code>HttpTransport</code> → <code>Repository</code> → <code>ProjectService</code> → UI.
+            كل تغيير يُحفظ على السيرفر عبر <code>POST /api/data/pm_projects</code> ويتزامن تلقائياً.
+          </div>
+        </div>
+      </div>
+
+      <!-- KPI Stats -->
+      <section style="margin-bottom: var(--nr-sp-8);">
+        <h6 class="nr-section-title">Overview · نظرة عامة</h6>
+        <div class="nr-grid-4">
+          <div class="nr-stat">
+            <div class="nr-stat__label">Total Projects</div>
+            <div class="nr-stat__value" id="statTotal">—</div>
+            <div class="nr-stat__trend">إجمالي المشاريع</div>
+          </div>
+          <div class="nr-stat">
+            <div class="nr-stat__label">Active</div>
+            <div class="nr-stat__value" id="statActive">—</div>
+            <div class="nr-stat__trend nr-stat__trend--up">قيد التنفيذ</div>
+          </div>
+          <div class="nr-stat">
+            <div class="nr-stat__label">Finished</div>
+            <div class="nr-stat__value" id="statFinished">—</div>
+            <div class="nr-stat__trend">مُسلَّمة / مؤرشفة</div>
+          </div>
+          <div class="nr-stat">
+            <div class="nr-stat__label">Total Value (SAR)</div>
+            <div class="nr-stat__value" id="statValue">—</div>
+            <div class="nr-stat__trend">قيمة العقود</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Filters -->
+      <section style="margin-bottom: var(--nr-sp-6);">
+        <div class="nr-card">
+          <div class="nr-card__body">
+            <div class="nr-grid-4" style="align-items: end;">
+              <div class="nr-field">
+                <label class="nr-label">بحث</label>
+                <input class="nr-input" id="filterSearch" type="text" placeholder="اسم / شركة / معرّف…">
+              </div>
+              <div class="nr-field">
+                <label class="nr-label">الشركة</label>
+                <select class="nr-select" id="filterCompany">
+                  <option value="">كل الشركات</option>
+                </select>
+              </div>
+              <div class="nr-field">
+                <label class="nr-label">المرحلة</label>
+                <select class="nr-select" id="filterStage">
+                  <option value="">كل المراحل</option>
+                  <option value="draft">مسودة</option>
+                  <option value="measured">مقاسات</option>
+                  <option value="quoted">عرض سعر</option>
+                  <option value="approved">موافقة</option>
+                  <option value="manufacturing">تصنيع</option>
+                  <option value="installed">تركيب</option>
+                  <option value="delivered">تسليم</option>
+                  <option value="archived">أرشيف</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Projects Table -->
+      <section style="margin-bottom: var(--nr-sp-10);">
+        <h6 class="nr-section-title">Projects · قائمة المشاريع</h6>
+        <div class="nr-table-wrap">
+          <table class="nr-table">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>المشروع</th>
+                <th>الشركة</th>
+                <th>المساحة (m²)</th>
+                <th>القيمة</th>
+                <th>الحالة</th>
+                <th>التقدّم</th>
+                <th>إجراءات</th>
+              </tr>
+            </thead>
+            <tbody id="projectsTbody">
+              <tr><td colspan="8" style="text-align:center; padding:var(--nr-sp-8); color:var(--nr-text-muted);">جارٍ التحميل…</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+
+      <footer style="padding-top: var(--nr-sp-8); border-top: 1px solid var(--nr-border-subtle);">
+        <div class="nr-row-between">
+          <small>NouRion · Phase 7 · Live page</small>
+          <small style="font-family: var(--nr-font-mono);">repository + service + http transport</small>
+        </div>
+      </footer>
+
+    </div>
+  </main>
+</div>
+
+
+<!-- ============ MODAL: create / edit project ============ -->
+<div class="nr-modal-overlay" id="projectModal">
+  <div class="nr-modal" role="dialog" aria-labelledby="modalTitle">
+    <div class="nr-modal__header">
+      <div class="nr-modal__title" id="modalTitle">مشروع جديد</div>
+      <button class="nr-modal__close" data-close-modal aria-label="إغلاق">×</button>
+    </div>
+    <form id="projectForm" autocomplete="off" novalidate>
+      <div class="nr-modal__body">
+        <input type="hidden" id="pf-id">
+
+        <div class="nr-alert nr-alert--danger" id="pf-err" style="display:none; margin-bottom: var(--nr-sp-4);"></div>
+
+        <div class="nr-grid-2">
+          <div class="nr-field" style="grid-column: 1 / -1;">
+            <label class="nr-label" for="pf-name">اسم المشروع <span class="nr-label__required">*</span></label>
+            <input class="nr-input" id="pf-name" type="text" required placeholder="فيلا الخالدية A12">
+          </div>
+          <div class="nr-field">
+            <label class="nr-label" for="pf-company">الشركة</label>
+            <input class="nr-input" id="pf-company" type="text" placeholder="شركة النور">
+          </div>
+          <div class="nr-field">
+            <label class="nr-label" for="pf-region">المنطقة</label>
+            <input class="nr-input" id="pf-region" type="text" placeholder="الرياض">
+          </div>
+          <div class="nr-field">
+            <label class="nr-label" for="pf-area">المساحة (m²)</label>
+            <input class="nr-input" id="pf-area" type="number" min="0" step="0.01" placeholder="0">
+          </div>
+          <div class="nr-field">
+            <label class="nr-label" for="pf-value">القيمة (SAR)</label>
+            <input class="nr-input" id="pf-value" type="number" min="0" step="0.01" placeholder="0">
+          </div>
+        </div>
+      </div>
+      <div class="nr-modal__footer">
+        <button type="button" class="nr-btn nr-btn--ghost" data-close-modal>إلغاء</button>
+        <button type="submit" class="nr-btn nr-btn--primary">حفظ</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+
+<script>
+  // Bootstrap after scripts load
+  document.addEventListener('DOMContentLoaded', function () {
+    if (window.NouRionProjectsPage && typeof window.NouRionProjectsPage.bootstrap === 'function') {
+      window.NouRionProjectsPage.bootstrap().catch(function (err) {
+        console.error('[projects-live] bootstrap failed:', err);
+      });
+    }
+  });
+</script>
+
+</body>
+</html>

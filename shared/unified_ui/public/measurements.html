@@ -1,0 +1,228 @@
+<!doctype html>
+<html lang="ar" dir="rtl" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>NouRion — المقاسات</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&family=IBM+Plex+Sans+Arabic:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="assets/css/nourion-tokens.css">
+  <link rel="stylesheet" href="assets/css/nourion-base.css">
+  <link rel="stylesheet" href="assets/css/nourion-components.css">
+
+  <script src="assets/js/nourion-theme.js"></script>
+
+  <!-- Measurements depends on ProjectsLogic + SavedLogic -->
+  <script src="../src/modules/projects/projects.logic.js"></script>
+  <script src="../src/modules/saved/saved.logic.js"></script>
+  <script src="../src/modules/measurements/measurements.logic.js"></script>
+  <script src="../src/modules/measurements/measurements.view.js"></script>
+
+  <link rel="icon" type="image/svg+xml" href="assets/img/logo.svg">
+</head>
+<body>
+
+<div class="nr-app">
+
+  <aside class="nr-sidebar">
+    <div class="nr-sidebar__brand">
+      <img src="assets/img/logo.svg" alt="NouRion" style="height:32px;">
+    </div>
+    <nav class="nr-sidebar__nav">
+      <div class="nr-nav-section">
+        <div class="nr-nav-section__title">الرئيسية</div>
+        <a class="nr-nav-item" href="index.html"><span class="nr-nav-item__icon">◇</span> Design System</a>
+        <a class="nr-nav-item" href="projects.html"><span class="nr-nav-item__icon">◈</span> المشاريع</a>
+        <a class="nr-nav-item is-active"><span class="nr-nav-item__icon">◎</span> المقاسات</a>
+        <a class="nr-nav-item" href="saved.html"><span class="nr-nav-item__icon">◇</span> التقارير المحفوظة</a>
+      </div>
+      <div class="nr-nav-section">
+        <div class="nr-nav-section__title">التصنيع</div>
+        <a class="nr-nav-item" href="form-types.html"><span class="nr-nav-item__icon">◎</span> القطاعات</a>
+      </div>
+      <div class="nr-nav-section">
+        <div class="nr-nav-section__title">الإدارة</div>
+        <a class="nr-nav-item" href="settings.html"><span class="nr-nav-item__icon">⚙</span> الإعدادات</a>
+      </div>
+    </nav>
+  </aside>
+
+  <main class="nr-app__main">
+
+    <header class="nr-topbar">
+      <div class="nr-topbar__title">المقاسات · Measurements</div>
+      <div class="nr-topbar__actions">
+        <button class="nr-btn nr-btn--ghost nr-btn--sm" id="addRowBtn">+ صف</button>
+        <button class="nr-btn nr-btn--ghost nr-btn--sm" id="reset15Btn">↺ إعادة 15</button>
+        <button class="nr-btn nr-btn--ghost nr-btn--sm" data-nr-theme-toggle>
+          <span data-nr-theme-icon>☀</span>
+          <span data-nr-theme-label>الوضع الفاتح</span>
+        </button>
+      </div>
+    </header>
+
+    <div class="nr-app__content">
+
+      <div class="nr-alert nr-alert--info" style="margin-bottom: var(--nr-sp-8);">
+        <span class="nr-alert__icon">ⓘ</span>
+        <div class="nr-alert__body">
+          <div class="nr-alert__title">Phase 2.5 · measurements POC</div>
+          <div class="nr-alert__msg">
+            جدول المقاسات الجديد بدون <strong>أي inline event handlers</strong>
+            (الأصل كان فيه آلاف من <code>onchange="mUpd(...)"</code> في كل صف).
+            كل تعديل يمرّ عبر <code>addEventListener</code> + state pure من
+            <code>NouRion.MeasurementsLogic</code>. <strong>61 اختبار</strong> ناجح.
+          </div>
+        </div>
+      </div>
+
+      <section style="margin-bottom: var(--nr-sp-8);">
+        <h1 style="font-size: var(--nr-fs-3xl); font-weight: 300;">
+          جدول <span style="color: var(--nr-accent); font-weight: 500;">المقاسات</span>
+        </h1>
+        <p style="max-width: 720px;">
+          أدخل الأبعاد بالملم — المساحة تُحسب تلقائياً (m²). يمكنك إضافة صفوف،
+          حذف صفوف، أو إعادة الجدول إلى 15 صف فارغ. كل التحديثات تستخدم event listeners
+          نظيفة (لا inline handlers).
+        </p>
+      </section>
+
+      <!-- Summary KPIs -->
+      <section style="margin-bottom: var(--nr-sp-8);">
+        <h6 class="nr-section-title">Summary</h6>
+        <div id="summaryHost"></div>
+      </section>
+
+      <!-- Editable table -->
+      <section style="margin-bottom: var(--nr-sp-10);">
+        <h6 class="nr-section-title">Editable Measurements Table</h6>
+        <div id="tableHost"></div>
+      </section>
+
+      <!-- Excel parser demo -->
+      <section style="margin-bottom: var(--nr-sp-10);">
+        <h6 class="nr-section-title">Excel Import Parser (Pure Logic Demo)</h6>
+        <div class="nr-card">
+          <div class="nr-card__body">
+            <div class="nr-field">
+              <label class="nr-label">CSV-style data (paste raw):</label>
+              <textarea class="nr-textarea" id="excelInput" style="font-family: var(--nr-font-mono); font-size: var(--nr-fs-xs);">العرض,الارتفاع,القطاع,الوصف
+1200,1800,سحاب قلف 12 سم,نافذة كبيرة
+800,2000,سحاب سرايا 10 سم,باب
+1500,2200,سحاب قلف 12 سم,واجهة
+600,1200,سرايا 10 سم,حمام</textarea>
+              <small class="nr-help">يُستخدم نفس <code>parseExcelData</code> الذي يُستخدم لاستيراد ملفات Excel الحقيقية.</small>
+            </div>
+          </div>
+        </div>
+        <div id="excelPreview" style="margin-top: var(--nr-sp-4);"></div>
+      </section>
+
+      <!-- Region report -->
+      <section style="margin-bottom: var(--nr-sp-10);">
+        <h6 class="nr-section-title">Region Report (Aggregated)</h6>
+        <div id="regionHost"></div>
+      </section>
+
+      <footer style="padding-top: var(--nr-sp-8); border-top: 1px solid var(--nr-border-subtle);">
+        <div class="nr-row-between">
+          <small>Module: measurements · 61 tests · 20 logic functions · 0 inline handlers</small>
+          <small style="font-family: var(--nr-font-mono);">Phase 2.5 · POC #5</small>
+        </div>
+      </footer>
+
+    </div>
+  </main>
+</div>
+
+
+<script>
+  var L = NouRion.MeasurementsLogic;
+  var V = NouRion.MeasurementsView;
+
+  /* state — pure object, all updates go through these */
+  var state = {
+    rows: L.ensureMinRows([
+      { code: 'W01', width: 1200, height: 1800, sectionName: 'سحاب قلف 12 سم', description: 'نافذة', notes: '' },
+      { code: 'W02', width: 800,  height: 2000, sectionName: 'سرايا 10 سم',    description: 'باب',   notes: 'مع زجاج دبل' },
+      { code: 'W03', width: 1500, height: 2200, sectionName: 'استركشر SG50',   description: 'واجهة', notes: '', serverPhoto: '/uploads/x.jpg' }
+    ], 8)
+  };
+
+  /* sample projects for region report */
+  var SAMPLE_PROJECTS = [
+    { name: 'فيلا الخالدية',  region: 'الوسطى',  contractValue: '285000', extractValue: '320000', downPayment: '60000',  progress: '60' },
+    { name: 'برج الأعمال',    region: 'الشرقية', contractValue: '940000',                          downPayment: '150000', progress: '32' },
+    { name: 'معرض السيارات',  region: 'الغربية', contractValue: '510000', extractValue: '530000', downPayment: '100000', progress: '94' },
+    { name: 'فيلا الرياض',     region: 'الوسطى',  contractValue: '198500',                          downPayment: '40000',  progress: '15' },
+    { name: 'فندق النخبة',    region: 'الوسطى',  contractValue: '1420000', extractValue: '1350000', downPayment: '200000', progress: '70' },
+    { name: 'مبنى تجاري',     region: 'الشرقية', contractValue: '650000',                          downPayment: '80000',  progress: '45' }
+  ];
+
+  var summaryHost = document.getElementById('summaryHost');
+  var tableHost   = document.getElementById('tableHost');
+  var regionHost  = document.getElementById('regionHost');
+  var excelInput  = document.getElementById('excelInput');
+  var excelPreview= document.getElementById('excelPreview');
+  var addRowBtn   = document.getElementById('addRowBtn');
+  var reset15Btn  = document.getElementById('reset15Btn');
+
+  function renderTable() {
+    summaryHost.innerHTML = '';
+    summaryHost.appendChild(V.renderSummary(state.rows));
+
+    tableHost.innerHTML = '';
+    tableHost.appendChild(V.renderEditableTable(state.rows, function (idx, field, value) {
+      if (field === '__delete__') {
+        state.rows = L.delRow(state.rows, idx);
+      } else {
+        // mutate field on the row (pure: clone first)
+        var newRows = state.rows.slice();
+        newRows[idx] = Object.assign({}, newRows[idx]);
+        newRows[idx][field] = value;
+        state.rows = newRows;
+      }
+      renderTable();
+    }));
+  }
+
+  function renderRegions() {
+    regionHost.innerHTML = '';
+    regionHost.appendChild(V.renderRegionReport(SAMPLE_PROJECTS));
+  }
+
+  function parseExcel() {
+    var raw = excelInput.value.trim();
+    if (!raw) { excelPreview.innerHTML = ''; return; }
+    var aoa = raw.split('\n').map(function (line) { return line.split(','); });
+    var rows = L.parseExcelData(aoa, { sections: [
+      { name: 'سحاب قلف 12 سم' },
+      { name: 'سرايا 10 سم' },
+      { name: 'سحاب سرايا 10 سم' }
+    ]});
+    excelPreview.innerHTML = '';
+    excelPreview.appendChild(V.renderExcelPreview(rows));
+  }
+
+  addRowBtn.addEventListener('click', function () {
+    state.rows = L.addRow(state.rows);
+    renderTable();
+  });
+
+  reset15Btn.addEventListener('click', function () {
+    state.rows = L.ensureMinRows([], 15);
+    renderTable();
+  });
+
+  excelInput.addEventListener('input', parseExcel);
+
+  renderTable();
+  renderRegions();
+  parseExcel();
+</script>
+
+</body>
+</html>

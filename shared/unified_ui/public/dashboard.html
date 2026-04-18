@@ -1,0 +1,315 @@
+<!doctype html>
+<html lang="ar" dir="rtl" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>NouRion — لوحة التحكّم</title>
+  <meta name="description" content="NouRion — لوحة التحكّم الرئيسيّة">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&family=IBM+Plex+Sans+Arabic:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="assets/css/nourion-tokens.css">
+  <link rel="stylesheet" href="assets/css/nourion-base.css">
+  <link rel="stylesheet" href="assets/css/nourion-components.css">
+
+  <script src="assets/js/nourion-theme.js"></script>
+  <script src="assets/js/nourion-i18n.js"></script>
+  <script src="../src/services/repository.js"></script>
+  <script src="../src/services/crud-service.js"></script>
+  <script src="../src/services/project-service.js"></script>
+
+  <link rel="icon" type="image/svg+xml" href="assets/img/logo.svg">
+
+  <style>
+    .nr-hero {
+      padding: var(--nr-sp-8);
+      border-radius: var(--nr-radius-lg);
+      background:
+        radial-gradient(ellipse at 20% 20%, rgba(0,153,255,0.12), transparent 55%),
+        radial-gradient(ellipse at 80% 80%, rgba(77,212,255,0.08), transparent 60%),
+        var(--nr-bg-1);
+      border: 1px solid var(--nr-border-subtle);
+      margin-bottom: var(--nr-sp-8);
+    }
+    .nr-hero h1 {
+      font-size: var(--nr-fs-4xl);
+      font-weight: 300;
+      letter-spacing: -0.03em;
+      margin-bottom: var(--nr-sp-3);
+    }
+    .nr-hero p { max-width: 640px; color: var(--nr-text-muted); }
+
+    .nr-tile {
+      display: block;
+      padding: var(--nr-sp-6);
+      background: var(--nr-bg-2);
+      border: 1px solid var(--nr-border-subtle);
+      border-radius: var(--nr-radius-md);
+      text-decoration: none;
+      color: inherit;
+      transition: all .2s;
+      position: relative;
+      overflow: hidden;
+    }
+    .nr-tile:hover {
+      transform: translateY(-2px);
+      border-color: var(--nr-accent);
+      box-shadow: 0 10px 30px rgba(0,153,255,0.12);
+    }
+    .nr-tile__icon {
+      font-size: 28px;
+      color: var(--nr-accent);
+      margin-bottom: var(--nr-sp-3);
+    }
+    .nr-tile__title {
+      font-size: var(--nr-fs-lg);
+      font-weight: 500;
+      color: var(--nr-text-primary);
+      margin-bottom: var(--nr-sp-1);
+    }
+    .nr-tile__sub {
+      font-size: var(--nr-fs-sm);
+      color: var(--nr-text-muted);
+      margin-bottom: var(--nr-sp-3);
+    }
+    .nr-tile__meta {
+      font-family: var(--nr-font-mono);
+      font-size: var(--nr-fs-xs);
+      color: var(--nr-accent);
+    }
+  </style>
+</head>
+<body>
+
+<div class="nr-app">
+
+  <!-- ============ SIDEBAR ============ -->
+  <aside class="nr-sidebar">
+    <div class="nr-sidebar__brand">
+      <img src="assets/img/logo.svg" alt="NouRion" style="height:32px;">
+    </div>
+    <nav class="nr-sidebar__nav">
+      <div class="nr-nav-section">
+        <div class="nr-nav-section__title" data-i18n="nav.main">الرئيسية</div>
+        <a class="nr-nav-item is-active" href="dashboard.html"><span class="nr-nav-item__icon">◇</span> <span data-i18n="nav.dashboard">لوحة التحكّم</span></a>
+        <a class="nr-nav-item" href="projects-live.html"><span class="nr-nav-item__icon">◈</span> <span data-i18n="nav.projects">المشاريع</span></a>
+        <a class="nr-nav-item" href="customers-live.html"><span class="nr-nav-item__icon">◇</span> <span data-i18n="nav.customers">العملاء</span></a>
+        <a class="nr-nav-item" href="employees-live.html"><span class="nr-nav-item__icon">◆</span> <span data-i18n="nav.employees">الموظفون</span></a>
+        <a class="nr-nav-item" href="form-types-live.html"><span class="nr-nav-item__icon">◉</span> <span data-i18n="nav.form_types">أنواع النماذج</span></a>
+      </div>
+      <div class="nr-nav-section">
+        <div class="nr-nav-section__title" data-i18n="nav.system">النظام</div>
+        <a class="nr-nav-item" href="index.html"><span class="nr-nav-item__icon">◇</span> <span data-i18n="nav.design_system">نظام التصميم</span></a>
+        <a class="nr-nav-item" href="login.html"><span class="nr-nav-item__icon">⎆</span> <span data-i18n="nav.login">تسجيل الدخول</span></a>
+      </div>
+    </nav>
+  </aside>
+
+
+  <!-- ============ MAIN ============ -->
+  <main class="nr-app__main">
+
+    <header class="nr-topbar">
+      <div class="nr-topbar__title"><span data-i18n="nav.dashboard">لوحة التحكّم</span></div>
+      <div class="nr-topbar__actions">
+        <button class="nr-btn nr-btn--ghost nr-btn--sm" data-i18n-toggle onclick="if(window.NouRionI18n)NouRionI18n.toggleLang();" title="Switch Language">EN</button>
+        <button class="nr-btn nr-btn--ghost nr-btn--sm" data-nr-theme-toggle>
+          <span data-nr-theme-icon>☀</span>
+          <span data-nr-theme-label data-i18n="ui.light_mode">الوضع الفاتح</span>
+        </button>
+        <span class="nr-badge nr-badge--primary nr-badge--dot" id="serverStatus" data-i18n="dash.checking">جارٍ الفحص…</span>
+      </div>
+    </header>
+
+    <div class="nr-app__content">
+
+      <!-- HERO -->
+      <section class="nr-hero">
+        <span class="nr-badge nr-badge--primary nr-badge--dot" style="margin-bottom: var(--nr-sp-3);">v0.4 · Phase 8</span>
+        <h1>
+          <span data-i18n="dash.welcome">أهلاً بك في</span>
+          <span style="color: var(--nr-accent); font-weight: 500;">NouRion</span>
+        </h1>
+        <p data-i18n="dash.subtitle">
+          منصّة صناعية ذكية لإدارة مصنع الألمنيوم — من التصميم والمقاسات والعقود
+          حتى التصنيع والتركيب والتسليم. كل البيانات تُحفظ فعلياً على السيرفر.
+        </p>
+      </section>
+
+      <!-- OVERVIEW STATS -->
+      <section style="margin-bottom: var(--nr-sp-10);">
+        <h6 class="nr-section-title" data-i18n="ui.overview">نظرة عامة</h6>
+        <div class="nr-grid-4" id="overviewStats">
+          <div class="nr-stat">
+            <div class="nr-stat__label">Projects</div>
+            <div class="nr-stat__value" id="kpiProjects">—</div>
+            <div class="nr-stat__trend">مشاريع مسجّلة</div>
+          </div>
+          <div class="nr-stat">
+            <div class="nr-stat__label">Customers</div>
+            <div class="nr-stat__value" id="kpiCustomers">—</div>
+            <div class="nr-stat__trend">عملاء نشطون</div>
+          </div>
+          <div class="nr-stat">
+            <div class="nr-stat__label">Employees</div>
+            <div class="nr-stat__value" id="kpiEmployees">—</div>
+            <div class="nr-stat__trend">فريق العمل</div>
+          </div>
+          <div class="nr-stat">
+            <div class="nr-stat__label">Form Types</div>
+            <div class="nr-stat__value" id="kpiForms">—</div>
+            <div class="nr-stat__trend">نماذج معرّفة</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- QUICK ACCESS TILES -->
+      <section style="margin-bottom: var(--nr-sp-10);">
+        <h6 class="nr-section-title" data-i18n="dash.quick_access">وصول سريع</h6>
+        <div class="nr-grid-4">
+          <a href="projects-live.html" class="nr-tile">
+            <div class="nr-tile__icon">◈</div>
+            <div class="nr-tile__title">المشاريع</div>
+            <div class="nr-tile__sub">عقود، مراحل، إحصائيات</div>
+            <div class="nr-tile__meta">ProjectService · 8 stages</div>
+          </a>
+          <a href="customers-live.html" class="nr-tile">
+            <div class="nr-tile__icon">◇</div>
+            <div class="nr-tile__title">العملاء</div>
+            <div class="nr-tile__sub">إدارة قاعدة العملاء</div>
+            <div class="nr-tile__meta">CustomerService · CRUD</div>
+          </a>
+          <a href="employees-live.html" class="nr-tile">
+            <div class="nr-tile__icon">◆</div>
+            <div class="nr-tile__title">الموظفون</div>
+            <div class="nr-tile__sub">فريق العمل والأقسام</div>
+            <div class="nr-tile__meta">EmployeeService · CRUD</div>
+          </a>
+          <a href="form-types-live.html" class="nr-tile">
+            <div class="nr-tile__icon">◉</div>
+            <div class="nr-tile__title">أنواع النماذج</div>
+            <div class="nr-tile__sub">قوالب المقاسات والتسليم</div>
+            <div class="nr-tile__meta">FormTypeService · CRUD</div>
+          </a>
+        </div>
+      </section>
+
+      <!-- SYSTEM STATUS -->
+      <section style="margin-bottom: var(--nr-sp-10);">
+        <h6 class="nr-section-title" data-i18n="dash.system">حالة النظام</h6>
+        <div class="nr-grid-2">
+          <div class="nr-card">
+            <div class="nr-card__header">
+              <div>
+                <div class="nr-card__title">Backend Status</div>
+                <div class="nr-card__subtitle">من <code>/api/health</code></div>
+              </div>
+            </div>
+            <div class="nr-card__body" id="healthBody">
+              <small style="color: var(--nr-text-muted);">جارٍ الفحص…</small>
+            </div>
+          </div>
+          <div class="nr-card">
+            <div class="nr-card__header">
+              <div>
+                <div class="nr-card__title" data-i18n="dash.phases">تقدّم المشروع</div>
+                <div class="nr-card__subtitle">10 / 11</div>
+              </div>
+            </div>
+            <div class="nr-card__body">
+              <div class="nr-stack-sm">
+                <div class="nr-row-between"><small>Phase 1 · Audit</small><span class="nr-badge nr-badge--success nr-badge--dot" data-i18n="dash.completed">مكتمل</span></div>
+                <div class="nr-row-between"><small>Phase 2 · Restructure</small><span class="nr-badge nr-badge--success nr-badge--dot" data-i18n="dash.completed">مكتمل</span></div>
+                <div class="nr-row-between"><small>Phase 3 · Branding</small><span class="nr-badge nr-badge--success nr-badge--dot" data-i18n="dash.completed">مكتمل</span></div>
+                <div class="nr-row-between"><small>Phase 4 · Auth</small><span class="nr-badge nr-badge--success nr-badge--dot" data-i18n="dash.completed">مكتمل</span></div>
+                <div class="nr-row-between"><small>Phase 5 · Data Layer</small><span class="nr-badge nr-badge--success nr-badge--dot" data-i18n="dash.completed">مكتمل</span></div>
+                <div class="nr-row-between"><small>Phase 6 · Services</small><span class="nr-badge nr-badge--success nr-badge--dot" data-i18n="dash.completed">مكتمل</span></div>
+                <div class="nr-row-between"><small>Phase 7 · Live UI</small><span class="nr-badge nr-badge--success nr-badge--dot" data-i18n="dash.completed">مكتمل</span></div>
+                <div class="nr-row-between"><small>Phase 8 · Generic CRUD</small><span class="nr-badge nr-badge--success nr-badge--dot" data-i18n="dash.completed">مكتمل</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+
+      <footer style="padding-top: var(--nr-sp-8); border-top: 1px solid var(--nr-border-subtle);">
+        <div class="nr-row-between">
+          <small>NouRion · Smart Industrial Platform</small>
+          <small style="font-family: var(--nr-font-mono);">© 2026 · v0.4 · Phase 8</small>
+        </div>
+      </footer>
+
+    </div>
+  </main>
+</div>
+
+
+<script>
+  (function () {
+    var Repo    = window.NouRionRepo;
+    var ProjSvc = window.NouRionProjectService;
+    var Crud    = window.NouRionCrudService;
+
+    async function loadCount(key, ServiceClass) {
+      try {
+        var t = new Repo.HttpTransport({ credentials: 'same-origin' });
+        var repo = new Repo.Repository({ key: key, transport: t, store: localStorage });
+        var svc = new ServiceClass(repo);
+        await svc.load();
+        return svc.list().length;
+      } catch (e) { return 0; }
+    }
+
+    async function refreshKPIs() {
+      var [pc, cc, ec, fc] = await Promise.all([
+        loadCount('pm_nourion_projects',    ProjSvc.ProjectService),
+        loadCount('pm_nourion_customers',   Crud.CustomerService),
+        loadCount('pm_nourion_employees',   Crud.EmployeeService),
+        loadCount('pm_nourion_form_types',  Crud.FormTypeService)
+      ]);
+      document.getElementById('kpiProjects').textContent  = pc;
+      document.getElementById('kpiCustomers').textContent = cc;
+      document.getElementById('kpiEmployees').textContent = ec;
+      document.getElementById('kpiForms').textContent     = fc;
+    }
+
+    async function refreshHealth() {
+      try {
+        var r = await fetch('/api/health');
+        var j = await r.json();
+        var status = document.getElementById('serverStatus');
+        if (j && j.ok) {
+          status.textContent = 'السيرفر متصل';
+          status.className = 'nr-badge nr-badge--success nr-badge--dot';
+        } else {
+          status.textContent = 'مشكلة في السيرفر';
+          status.className = 'nr-badge nr-badge--danger nr-badge--dot';
+        }
+        var body = document.getElementById('healthBody');
+        body.innerHTML =
+          '<div class="nr-stack-sm">' +
+            '<div class="nr-row-between"><small>الخدمة</small><small style="font-family:var(--nr-font-mono); color:var(--nr-accent);">' + (j.service || '—') + '</small></div>' +
+            '<div class="nr-row-between"><small>الإصدار</small><small style="font-family:var(--nr-font-mono); color:var(--nr-accent);">' + (j.version || '—') + '</small></div>' +
+            '<div class="nr-row-between"><small>البيئة</small><small style="font-family:var(--nr-font-mono); color:var(--nr-accent);">' + (j.env || '—') + '</small></div>' +
+            '<div class="nr-row-between"><small>زمن التشغيل</small><small style="font-family:var(--nr-font-mono); color:var(--nr-accent);">' + (j.uptime ? Math.round(j.uptime) + 's' : '—') + '</small></div>' +
+          '</div>';
+      } catch (e) {
+        var status = document.getElementById('serverStatus');
+        status.textContent = 'السيرفر غير متصل';
+        status.className = 'nr-badge nr-badge--danger nr-badge--dot';
+        document.getElementById('healthBody').innerHTML = '<small style="color:var(--nr-danger);">تعذّر الاتصال بـ /api/health</small>';
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+      refreshHealth();
+      refreshKPIs();
+    });
+  })();
+</script>
+
+</body>
+</html>

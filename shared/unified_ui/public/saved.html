@@ -1,0 +1,227 @@
+<!doctype html>
+<html lang="ar" dir="rtl" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>NouRion — التقارير المحفوظة</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&family=IBM+Plex+Sans+Arabic:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="assets/css/nourion-tokens.css">
+  <link rel="stylesheet" href="assets/css/nourion-base.css">
+  <link rel="stylesheet" href="assets/css/nourion-components.css">
+
+  <script src="assets/js/nourion-theme.js"></script>
+
+  <!-- Saved depends on ProjectsLogic (reuses calcStatusFromStage + calcSmartDeliveryDate) -->
+  <script src="../src/modules/projects/projects.logic.js"></script>
+  <script src="../src/modules/saved/saved.logic.js"></script>
+  <script src="../src/modules/saved/saved.view.js"></script>
+
+  <link rel="icon" type="image/svg+xml" href="assets/img/logo.svg">
+</head>
+<body>
+
+<div class="nr-app">
+
+  <aside class="nr-sidebar">
+    <div class="nr-sidebar__brand">
+      <img src="assets/img/logo.svg" alt="NouRion" style="height:32px;">
+    </div>
+    <nav class="nr-sidebar__nav">
+      <div class="nr-nav-section">
+        <div class="nr-nav-section__title">الرئيسية</div>
+        <a class="nr-nav-item" href="index.html"><span class="nr-nav-item__icon">◇</span> Design System</a>
+        <a class="nr-nav-item" href="projects.html"><span class="nr-nav-item__icon">◈</span> المشاريع</a>
+        <a class="nr-nav-item is-active"><span class="nr-nav-item__icon">◇</span> التقارير المحفوظة</a>
+      </div>
+      <div class="nr-nav-section">
+        <div class="nr-nav-section__title">التصنيع</div>
+        <a class="nr-nav-item" href="form-types.html"><span class="nr-nav-item__icon">◎</span> القطاعات</a>
+      </div>
+    </nav>
+  </aside>
+
+  <main class="nr-app__main">
+
+    <header class="nr-topbar">
+      <div class="nr-topbar__title">التقارير المحفوظة · Saved Reports</div>
+      <div class="nr-topbar__actions">
+        <button class="nr-btn nr-btn--ghost nr-btn--sm" data-nr-theme-toggle>
+          <span data-nr-theme-icon>☀</span>
+          <span data-nr-theme-label>الوضع الفاتح</span>
+        </button>
+      </div>
+    </header>
+
+    <div class="nr-app__content">
+
+      <div class="nr-alert nr-alert--info" style="margin-bottom: var(--nr-sp-8);">
+        <span class="nr-alert__icon">ⓘ</span>
+        <div class="nr-alert__body">
+          <div class="nr-alert__title">Phase 2.5 · saved POC</div>
+          <div class="nr-alert__msg">
+            يعرض هذا الصفحة: تقارير الإنتاج الشهري محسوبة من <code>productionLog</code> +
+            migration preview للحقول القديمة (المناطق → region). 42 اختبار ناجح. يُعيد استخدام
+            <code>NouRion.ProjectsLogic</code> بدل تكرار منطق التواريخ.
+          </div>
+        </div>
+      </div>
+
+      <section style="margin-bottom: var(--nr-sp-8);">
+        <h1 style="font-size: var(--nr-fs-3xl); font-weight: 300;">
+          تقارير <span style="color: var(--nr-accent); font-weight: 500;">الإنتاج المحفوظة</span>
+        </h1>
+        <p style="max-width: 720px;">
+          النظام يتتبّع نسبة إنجاز كل مشروع شهرياً في <code>productionLog</code>. من هذه السجلّات
+          يمكن حساب الإنتاج الفعلي = (قيمة العقد) × (Δ النسبة) / 100. هذه الصفحة تعرض حسابات live
+          على عيّنة تجريبية فيها بيانات قديمة (مفتاح "المناطق") لاختبار الـ migration.
+        </p>
+      </section>
+
+      <!-- Overview KPIs -->
+      <section style="margin-bottom: var(--nr-sp-10);">
+        <h6 class="nr-section-title">Overview</h6>
+        <div id="overviewHost"></div>
+      </section>
+
+      <!-- Months + Selected -->
+      <section style="margin-bottom: var(--nr-sp-10);">
+        <h6 class="nr-section-title">Monthly Production</h6>
+        <div class="nr-grid-2" style="grid-template-columns: 280px 1fr;">
+          <div>
+            <div class="nr-card" style="margin-bottom: var(--nr-sp-3);">
+              <div class="nr-card__header">
+                <div class="nr-card__title" style="font-size: var(--nr-fs-sm);">الأشهر المسجّلة</div>
+              </div>
+            </div>
+            <div id="monthsHost"></div>
+          </div>
+          <div id="reportHost"></div>
+        </div>
+      </section>
+
+      <!-- Migration Preview -->
+      <section style="margin-bottom: var(--nr-sp-10);">
+        <h6 class="nr-section-title">Data Migration</h6>
+        <div id="migrationHost"></div>
+      </section>
+
+      <footer style="padding-top: var(--nr-sp-8); border-top: 1px solid var(--nr-border-subtle);">
+        <div class="nr-row-between">
+          <small>Module: saved · 42 tests · reuses ProjectsLogic (no duplication)</small>
+          <small style="font-family: var(--nr-font-mono);">Phase 2.5 · POC #3</small>
+        </div>
+      </footer>
+
+    </div>
+  </main>
+</div>
+
+
+<script>
+  /* Sample projects: mix of clean data + legacy keys + productionLog */
+  var SAMPLE = [
+    {
+      id: 'p1',
+      name: 'فيلا الخالدية',
+      company: 'الراجحي',
+      region: 'الوسطى',
+      contractValue: '285000',
+      extractValue: '320000',
+      stage: 'دهان الخامات',
+      productionLog: [
+        { year: 2026, month: 1, progress: 20 },
+        { year: 2026, month: 2, progress: 45 },
+        { year: 2026, month: 3, progress: 60 }
+      ]
+    },
+    {
+      id: 'p2',
+      name: 'برج الأعمال',
+      company: 'السلطان',
+      'المناطق': 'الشرقية',  /* legacy key — should trigger migration */
+      contractValue: '940000',
+      stage: 'أمر تركيب',
+      productionLog: [
+        { year: 2026, month: 2, progress: 50 },
+        { year: 2026, month: 3, progress: 80 }
+      ]
+    },
+    {
+      id: 'p3',
+      name: 'معرض السيارات',
+      company: 'عالم المعادن',
+      region: 'الغربية',
+      contractValue: '510000',
+      'رقم العقد': '240500001',  /* legacy key */
+      stage: 'تسليم الموقع',
+      productionLog: [
+        { year: 2026, month: 1, progress: 40 },
+        { year: 2026, month: 2, progress: 75 },
+        { year: 2026, month: 3, progress: 100 }
+      ]
+    },
+    {
+      id: 'p4',
+      name: 'فيلا الرياض (بدون تتبع)',
+      company: 'الفوزان',
+      region: 'الوسطى',
+      contractValue: '198500',
+      stage: 'رفع مقاسات',
+      productionLog: []
+    },
+    {
+      id: 'p5',
+      name: 'فندق النخبة',
+      company: 'الراجحي',
+      region: 'الوسطى',
+      contractValue: '1420000',
+      extractValue: '1350000',
+      contractDuration: '120',
+      approvalDate: '2025-12-01',
+      stage: 'البدء بالتصنيع',
+      productionLog: [
+        { year: 2025, month: 12, progress: 10 },
+        { year: 2026, month: 1, progress: 25 },
+        { year: 2026, month: 2, progress: 40 },
+        { year: 2026, month: 3, progress: 55 }
+      ]
+    }
+  ];
+
+  var L = NouRion.SavedLogic;
+  var V = NouRion.SavedView;
+
+  var overviewHost  = document.getElementById('overviewHost');
+  var monthsHost    = document.getElementById('monthsHost');
+  var reportHost    = document.getElementById('reportHost');
+  var migrationHost = document.getElementById('migrationHost');
+
+  function renderReportFor(year, month) {
+    reportHost.innerHTML = '';
+    reportHost.appendChild(V.renderMonthlyReport(SAMPLE, year, month));
+  }
+
+  function renderAll() {
+    overviewHost.innerHTML = '';
+    overviewHost.appendChild(V.renderOverview(SAMPLE));
+
+    monthsHost.innerHTML = '';
+    monthsHost.appendChild(V.renderMonthsList(SAMPLE, renderReportFor));
+
+    migrationHost.innerHTML = '';
+    migrationHost.appendChild(V.renderMigrationReport(SAMPLE));
+
+    // initial month — show latest
+    var months = L.computeAllMonths(SAMPLE);
+    if (months.length) renderReportFor(months[0].year, months[0].month);
+  }
+
+  renderAll();
+</script>
+
+</body>
+</html>

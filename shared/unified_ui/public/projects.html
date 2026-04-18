@@ -1,0 +1,288 @@
+<!doctype html>
+<html lang="ar" dir="rtl" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>NouRion — المشاريع</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&family=IBM+Plex+Sans+Arabic:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="assets/css/nourion-tokens.css">
+  <link rel="stylesheet" href="assets/css/nourion-base.css">
+  <link rel="stylesheet" href="assets/css/nourion-components.css">
+
+  <script src="assets/js/nourion-theme.js"></script>
+
+  <!-- Projects module: logic (pure) + view (DOM) -->
+  <script src="../src/modules/projects/projects.logic.js"></script>
+  <script src="../src/modules/projects/projects.view.js"></script>
+
+  <link rel="icon" type="image/svg+xml" href="assets/img/logo.svg">
+</head>
+<body>
+
+<div class="nr-app">
+
+  <!-- ============ SIDEBAR ============ -->
+  <aside class="nr-sidebar">
+    <div class="nr-sidebar__brand">
+      <img src="assets/img/logo.svg" alt="NouRion" style="height:32px;">
+    </div>
+    <nav class="nr-sidebar__nav">
+      <div class="nr-nav-section">
+        <div class="nr-nav-section__title">الرئيسية</div>
+        <a class="nr-nav-item" href="index.html"><span class="nr-nav-item__icon">◇</span> Design System</a>
+        <a class="nr-nav-item is-active"><span class="nr-nav-item__icon">◈</span> المشاريع</a>
+        <a class="nr-nav-item"><span class="nr-nav-item__icon">◇</span> العملاء</a>
+      </div>
+      <div class="nr-nav-section">
+        <div class="nr-nav-section__title">التصنيع</div>
+        <a class="nr-nav-item"><span class="nr-nav-item__icon">◉</span> خط الإنتاج</a>
+        <a class="nr-nav-item"><span class="nr-nav-item__icon">◎</span> القطاعات</a>
+        <a class="nr-nav-item"><span class="nr-nav-item__icon">◉</span> التركيبات</a>
+      </div>
+      <div class="nr-nav-section">
+        <div class="nr-nav-section__title">الإدارة</div>
+        <a class="nr-nav-item"><span class="nr-nav-item__icon">◆</span> الموظفون</a>
+        <a class="nr-nav-item"><span class="nr-nav-item__icon">◇</span> العهدة</a>
+        <a class="nr-nav-item"><span class="nr-nav-item__icon">◈</span> التقارير</a>
+      </div>
+    </nav>
+  </aside>
+
+
+  <!-- ============ MAIN ============ -->
+  <main class="nr-app__main">
+
+    <header class="nr-topbar">
+      <div class="nr-topbar__title">المشاريع · Projects</div>
+      <div class="nr-topbar__actions">
+        <div class="nr-btn-group">
+          <button class="nr-btn nr-btn--sm" id="viewTableBtn">جدول</button>
+          <button class="nr-btn nr-btn--sm" id="viewCardsBtn">بطاقات</button>
+        </div>
+        <button class="nr-btn nr-btn--ghost nr-btn--sm" data-nr-theme-toggle>
+          <span data-nr-theme-icon>☀</span>
+          <span data-nr-theme-label>الوضع الفاتح</span>
+        </button>
+        <button class="nr-btn nr-btn--primary nr-btn--sm">+ مشروع جديد</button>
+      </div>
+    </header>
+
+
+    <div class="nr-app__content">
+
+      <!-- POC banner -->
+      <div class="nr-alert nr-alert--info" style="margin-bottom: var(--nr-sp-8);">
+        <span class="nr-alert__icon">ⓘ</span>
+        <div class="nr-alert__body">
+          <div class="nr-alert__title">Phase 2.5 · Proof of Concept</div>
+          <div class="nr-alert__msg">
+            هذه الصفحة تستخدم <code>projects.logic.js</code> (منطق خالص مختبَر بـ 45 اختبار)
+            + <code>projects.view.js</code> (رسم DOM نظيف) + <strong>NouRion Design System</strong>.
+            البيانات هنا عيّنة تجريبية مبنيّة على بنية pm_server الحقيقية.
+          </div>
+        </div>
+      </div>
+
+
+      <!-- Hero -->
+      <section style="margin-bottom: var(--nr-sp-8);">
+        <h1 style="font-size: var(--nr-fs-3xl); font-weight: 300; letter-spacing:-0.02em;">
+          نظرة عامة على <span style="color: var(--nr-accent); font-weight: 500;">المشاريع</span>
+        </h1>
+        <p style="max-width: 640px;">
+          كل الحسابات هنا (الحالة، نسبة الإنجاز، موعد التسليم الذكي، قيمة الإنتاج، المبلغ المتبقّي)
+          تأتي من <code>NouRion.ProjectsLogic</code> الذي تم نقله حرفياً من النظام الأصلي في pm_server.
+        </p>
+      </section>
+
+
+      <!-- ============ KPI SUMMARY ============ -->
+      <section style="margin-bottom: var(--nr-sp-10);">
+        <h6 class="nr-section-title">Summary · الملخّص</h6>
+        <div id="summaryHost"></div>
+      </section>
+
+
+      <!-- ============ PROJECTS LIST ============ -->
+      <section style="margin-bottom: var(--nr-sp-10);">
+        <h6 class="nr-section-title" id="listTitle">Projects Table</h6>
+        <div id="listHost"></div>
+      </section>
+
+
+      <footer style="padding-top: var(--nr-sp-8); border-top: 1px solid var(--nr-border-subtle);">
+        <div class="nr-row-between">
+          <small>Module: projects · logic: 45 tests passing · view: pure DOM</small>
+          <small style="font-family: var(--nr-font-mono);">Phase 2.5 · POC</small>
+        </div>
+      </footer>
+
+    </div>
+  </main>
+</div>
+
+
+<script>
+  /* ============================================================
+     Sample projects — بنية حقيقية مقتبسة من pm_server/data/pm_projects.json
+     البيانات مصنوعة خصّيصاً لتُظهر كل الحالات الممكنة في الحسابات.
+     ============================================================ */
+  var SAMPLE_PROJECTS = [
+    {
+      id: 'nr-001',
+      contractNo: '240200156',
+      name: 'صالح محمد الشهراني',
+      company: 'الراجحي',
+      region: 'الوسطى',
+      gallery: 'الياسمين',
+      contractValue: '65000',
+      downPayment: '50000',
+      extractValue: '75000',
+      contractDate: '2026-01-10',
+      approvalDate: '2026-01-28',
+      siteReadyDate: '2026-01-20',
+      secondPaymentDate: '2026-02-15',
+      contractDuration: '90',
+      stage: 'دهان الخامات',
+      progress: '45'
+    },
+    {
+      id: 'nr-002',
+      contractNo: '240300012',
+      name: 'عبدالله سعد الغامدي',
+      company: 'السلطان',
+      region: 'الوسطى',
+      gallery: 'التخصصي 1',
+      contractValue: '42000',
+      downPayment: '15000',
+      extractValue: '42000',
+      contractDate: '2026-01-15',
+      approvalDate: '2026-02-01',
+      siteReadyDate: '2026-01-28',
+      secondPaymentDate: '2026-02-20',
+      contractDuration: '75',
+      stage: 'أمر تركيب',
+      progress: '85'
+    },
+    {
+      id: 'nr-003',
+      contractNo: '240100238',
+      name: 'شركة عوارض للمقاولات العامة',
+      company: 'عالم المعادن',
+      region: 'الشرقية',
+      gallery: 'التخصصي 2',
+      contractValue: '156410',
+      downPayment: '50000',
+      extractValue: '120000',
+      contractDate: '2025-12-20',
+      approvalDate: '2026-01-05',
+      siteReadyDate: '2026-01-10',
+      contractDuration: '60',
+      stage: 'طلب الزجاج',
+      progress: '70'
+    },
+    {
+      id: 'nr-004',
+      contractNo: '240400089',
+      name: 'خالد عبدالرحمن الدوسري',
+      company: 'الفوزان',
+      region: 'الغربية',
+      gallery: 'النخيل',
+      contractValue: '95000',
+      downPayment: '30000',
+      extractValue: '',
+      contractDate: '2026-02-01',
+      approvalDate: '2026-02-20',
+      contractDuration: '60',
+      stage: 'سداد الدفعة الثانية',
+      progress: '30'
+    },
+    {
+      id: 'nr-005',
+      contractNo: '240500001',
+      name: 'فندق النخبة الدولي',
+      company: 'الراجحي',
+      region: 'الوسطى',
+      gallery: 'التخصصي 1',
+      contractValue: '485000',
+      downPayment: '100000',
+      extractValue: '450000',
+      contractDate: '2025-11-15',
+      approvalDate: '2025-12-01',
+      siteReadyDate: '2025-12-10',
+      secondPaymentDate: '2025-12-25',
+      contractDuration: '120',
+      stage: 'تسليم الموقع',
+      progress: '100'
+    },
+    {
+      id: 'nr-006',
+      contractNo: '240600014',
+      name: 'محمد علي القحطاني',
+      company: 'السلطان',
+      region: 'الجنوبية',
+      gallery: 'البلاد',
+      contractValue: '58000',
+      downPayment: '20000',
+      extractValue: '',
+      contractDate: '2026-03-01',
+      contractDuration: '45',
+      stage: 'رفع مقاسات',
+      progress: '15'
+    }
+  ];
+
+  /* ============================================================
+     Render — wire up logic + view
+     ============================================================ */
+  var summaryHost = document.getElementById('summaryHost');
+  var listHost    = document.getElementById('listHost');
+  var listTitle   = document.getElementById('listTitle');
+  var tableBtn    = document.getElementById('viewTableBtn');
+  var cardsBtn    = document.getElementById('viewCardsBtn');
+
+  var currentView = 'table';
+
+  function renderAll() {
+    // Summary (always visible)
+    summaryHost.innerHTML = '';
+    summaryHost.appendChild(NouRion.ProjectsView.renderSummary(SAMPLE_PROJECTS));
+
+    // List
+    listHost.innerHTML = '';
+    if (currentView === 'table') {
+      listHost.appendChild(NouRion.ProjectsView.renderTable(SAMPLE_PROJECTS));
+      listTitle.textContent = 'Projects Table';
+      tableBtn.classList.add('nr-btn--primary');
+      cardsBtn.classList.remove('nr-btn--primary');
+    } else {
+      listHost.appendChild(NouRion.ProjectsView.renderCardsGrid(SAMPLE_PROJECTS));
+      listTitle.textContent = 'Project Cards';
+      cardsBtn.classList.add('nr-btn--primary');
+      tableBtn.classList.remove('nr-btn--primary');
+    }
+  }
+
+  tableBtn.addEventListener('click', function () { currentView = 'table'; renderAll(); });
+  cardsBtn.addEventListener('click', function () { currentView = 'cards'; renderAll(); });
+
+  // Delegate row actions
+  listHost.addEventListener('click', function (e) {
+    var btn = e.target.closest('[data-action="view"]');
+    if (!btn) return;
+    var id = btn.getAttribute('data-project-id');
+    var p = SAMPLE_PROJECTS.find(function (x) { return x.id === id; });
+    if (!p) return;
+    console.log('[projects.view] clicked:', p);
+    alert('عرض تفاصيل المشروع: ' + (p.name || id));
+  });
+
+  renderAll();
+</script>
+
+</body>
+</html>

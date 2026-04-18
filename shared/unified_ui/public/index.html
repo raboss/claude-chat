@@ -1,0 +1,447 @@
+<!doctype html>
+<html lang="ar" dir="rtl" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>NouRion — Design System</title>
+  <meta name="description" content="NouRion design system showcase — Smart Industrial Platform">
+
+  <!-- Fonts: Space Grotesk (primary tech sans) + JetBrains Mono + IBM Plex Sans Arabic -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&family=IBM+Plex+Sans+Arabic:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+  <!-- NouRion Design System -->
+  <link rel="stylesheet" href="assets/css/nourion-tokens.css">
+  <link rel="stylesheet" href="assets/css/nourion-base.css">
+  <link rel="stylesheet" href="assets/css/nourion-components.css">
+
+  <!-- Theme init (must run before body paint to avoid flash) -->
+  <script src="assets/js/nourion-theme.js"></script>
+
+  <link rel="icon" type="image/svg+xml" href="assets/img/logo.svg">
+</head>
+<body>
+
+<div class="nr-app">
+
+  <!-- ============ SIDEBAR ============ -->
+  <aside class="nr-sidebar">
+    <div class="nr-sidebar__brand">
+      <img src="assets/img/logo.svg" alt="NouRion" style="height:32px;">
+    </div>
+
+    <nav class="nr-sidebar__nav">
+      <div class="nr-nav-section">
+        <div class="nr-nav-section__title">الرئيسية</div>
+        <a class="nr-nav-item is-active"><span class="nr-nav-item__icon">◇</span> نظرة عامة</a>
+        <a class="nr-nav-item"><span class="nr-nav-item__icon">◈</span> المشاريع</a>
+        <a class="nr-nav-item"><span class="nr-nav-item__icon">◇</span> العملاء</a>
+      </div>
+      <div class="nr-nav-section">
+        <div class="nr-nav-section__title">التصنيع</div>
+        <a class="nr-nav-item"><span class="nr-nav-item__icon">◉</span> خط الإنتاج</a>
+        <a class="nr-nav-item"><span class="nr-nav-item__icon">◎</span> القطاعات</a>
+        <a class="nr-nav-item"><span class="nr-nav-item__icon">◉</span> التركيبات</a>
+      </div>
+      <div class="nr-nav-section">
+        <div class="nr-nav-section__title">الإدارة</div>
+        <a class="nr-nav-item"><span class="nr-nav-item__icon">◆</span> الموظفون</a>
+        <a class="nr-nav-item"><span class="nr-nav-item__icon">◇</span> العهدة</a>
+        <a class="nr-nav-item"><span class="nr-nav-item__icon">◈</span> التقارير</a>
+        <a class="nr-nav-item"><span class="nr-nav-item__icon">⚙</span> الإعدادات</a>
+      </div>
+    </nav>
+  </aside>
+
+
+  <!-- ============ MAIN ============ -->
+  <main class="nr-app__main">
+
+    <!-- Topbar -->
+    <header class="nr-topbar">
+      <div class="nr-topbar__title">Design System · نظام الهوية</div>
+      <div class="nr-topbar__actions">
+        <button class="nr-btn nr-btn--ghost nr-btn--sm" data-nr-theme-toggle aria-pressed="true">
+          <span data-nr-theme-icon>☀</span>
+          <span data-nr-theme-label>الوضع الفاتح</span>
+        </button>
+        <button class="nr-btn nr-btn--primary nr-btn--sm">+ مشروع جديد</button>
+      </div>
+    </header>
+
+
+    <div class="nr-app__content">
+
+      <!-- ============ HERO ============ -->
+      <section style="margin-bottom: var(--nr-sp-10);">
+        <div class="nr-stack">
+          <span class="nr-badge nr-badge--primary nr-badge--dot" style="align-self:flex-start;">Phase 6 · Branding</span>
+          <h1 style="font-size: var(--nr-fs-4xl); font-weight: 300; letter-spacing:-0.03em;">
+            Smart Industrial<br>
+            <span style="color: var(--nr-accent); font-weight: 500;">Platform.</span>
+          </h1>
+          <p style="max-width: 640px; font-size: var(--nr-fs-md);">
+            منصّة <strong style="color:var(--nr-text-primary);font-weight:500;">NouRion</strong> —
+            نظام صناعي ذكي يربط جميع العمليات في مكان واحد: من التصميم والمقاسات حتى التصنيع والتركيب والمحاسبة.
+            مبني على أسس هندسية نظيفة وقابل للتوسّع إلى الخشب والصلب والزجاج.
+          </p>
+          <div class="nr-row">
+            <button class="nr-btn nr-btn--primary nr-btn--lg">ابدأ الآن</button>
+            <button class="nr-btn nr-btn--outline nr-btn--lg">دليل الاستخدام</button>
+          </div>
+        </div>
+      </section>
+
+
+      <!-- ============ STATS ============ -->
+      <section style="margin-bottom: var(--nr-sp-10);">
+        <h6 class="nr-section-title">Overview · نظرة عامة</h6>
+        <div class="nr-grid-4">
+          <div class="nr-stat">
+            <div class="nr-stat__label">Active Projects</div>
+            <div class="nr-stat__value">128</div>
+            <div class="nr-stat__trend nr-stat__trend--up">▲ 12% هذا الشهر</div>
+          </div>
+          <div class="nr-stat">
+            <div class="nr-stat__label">Production m²</div>
+            <div class="nr-stat__value">4,820</div>
+            <div class="nr-stat__trend nr-stat__trend--up">▲ 8.4%</div>
+          </div>
+          <div class="nr-stat">
+            <div class="nr-stat__label">Revenue</div>
+            <div class="nr-stat__value">1.42M</div>
+            <div class="nr-stat__trend nr-stat__trend--down">▼ 2.1%</div>
+          </div>
+          <div class="nr-stat">
+            <div class="nr-stat__label">Pending Tasks</div>
+            <div class="nr-stat__value">37</div>
+            <div class="nr-stat__trend">— مستقر</div>
+          </div>
+        </div>
+      </section>
+
+
+      <!-- ============ COLORS ============ -->
+      <section style="margin-bottom: var(--nr-sp-10);">
+        <h6 class="nr-section-title">Color System · نظام الألوان</h6>
+        <div class="nr-grid-4" style="grid-template-columns: repeat(6, 1fr);">
+          <div class="nr-swatch"><div class="nr-swatch__box" style="background:var(--nr-brand-blue)"></div><div class="nr-swatch__meta"><div class="nr-swatch__name">Brand Blue</div><div class="nr-swatch__val">#0099FF</div></div></div>
+          <div class="nr-swatch"><div class="nr-swatch__box" style="background:var(--nr-brand-silver)"></div><div class="nr-swatch__meta"><div class="nr-swatch__name">Silver</div><div class="nr-swatch__val">#C0C0C6</div></div></div>
+          <div class="nr-swatch"><div class="nr-swatch__box" style="background:var(--nr-bg-0)"></div><div class="nr-swatch__meta"><div class="nr-swatch__name">BG / 0</div><div class="nr-swatch__val">var(--nr-bg-0)</div></div></div>
+          <div class="nr-swatch"><div class="nr-swatch__box" style="background:var(--nr-bg-2)"></div><div class="nr-swatch__meta"><div class="nr-swatch__name">BG / 2</div><div class="nr-swatch__val">var(--nr-bg-2)</div></div></div>
+          <div class="nr-swatch"><div class="nr-swatch__box" style="background:var(--nr-success)"></div><div class="nr-swatch__meta"><div class="nr-swatch__name">Success</div><div class="nr-swatch__val">var(--nr-success)</div></div></div>
+          <div class="nr-swatch"><div class="nr-swatch__box" style="background:var(--nr-danger)"></div><div class="nr-swatch__meta"><div class="nr-swatch__name">Danger</div><div class="nr-swatch__val">var(--nr-danger)</div></div></div>
+        </div>
+      </section>
+
+
+      <!-- ============ TYPOGRAPHY ============ -->
+      <section style="margin-bottom: var(--nr-sp-10);">
+        <h6 class="nr-section-title">Typography · الخطوط</h6>
+        <div class="nr-card">
+          <div class="nr-card__body nr-stack-lg">
+            <div>
+              <small>Display / 46 · Light</small>
+              <div style="font-size:46px; font-weight:300; letter-spacing:-0.03em; line-height:1.1;">NouRion Platform</div>
+            </div>
+            <div>
+              <small>H1 / 34 · Semibold</small>
+              <h1>نظام ذكي لإدارة المصانع</h1>
+            </div>
+            <div>
+              <small>H2 / 26 · Medium</small>
+              <h2>Smart Industrial Platform</h2>
+            </div>
+            <div>
+              <small>Body / 14 · Light</small>
+              <p>منصّة NouRion مبنية على خط Space Grotesk التقني، مع دعم كامل للغة العربية عبر IBM Plex Sans Arabic. النتيجة: شعور هندسي دقيق وخفيف يُوحي بالذكاء والاتصال.</p>
+            </div>
+            <div>
+              <small>Mono / 14 · JetBrains Mono</small>
+              <div style="font-family: var(--nr-font-mono); color: var(--nr-accent);">const profile = NouRion.load('ALUPCO_45');</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+
+      <!-- ============ BUTTONS ============ -->
+      <section style="margin-bottom: var(--nr-sp-10);">
+        <h6 class="nr-section-title">Buttons · الأزرار</h6>
+        <div class="nr-card">
+          <div class="nr-card__body nr-stack">
+            <div class="nr-row" style="flex-wrap:wrap;">
+              <button class="nr-btn nr-btn--primary">Primary</button>
+              <button class="nr-btn">Secondary</button>
+              <button class="nr-btn nr-btn--outline">Outline</button>
+              <button class="nr-btn nr-btn--ghost">Ghost</button>
+              <button class="nr-btn nr-btn--success">Success</button>
+              <button class="nr-btn nr-btn--warning">Warning</button>
+              <button class="nr-btn nr-btn--danger">Danger</button>
+              <button class="nr-btn" disabled>Disabled</button>
+            </div>
+            <hr>
+            <div class="nr-row" style="flex-wrap:wrap;">
+              <button class="nr-btn nr-btn--primary nr-btn--sm">Small</button>
+              <button class="nr-btn nr-btn--primary">Default</button>
+              <button class="nr-btn nr-btn--primary nr-btn--lg">Large</button>
+              <button class="nr-btn nr-btn--primary nr-btn--icon" aria-label="إضافة">+</button>
+              <div class="nr-btn-group">
+                <button class="nr-btn">يوم</button>
+                <button class="nr-btn">أسبوع</button>
+                <button class="nr-btn">شهر</button>
+                <button class="nr-btn">سنة</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+
+      <!-- ============ BADGES + PROGRESS ============ -->
+      <section style="margin-bottom: var(--nr-sp-10);">
+        <h6 class="nr-section-title">Badges · Status · Progress</h6>
+        <div class="nr-grid-2">
+          <div class="nr-card">
+            <div class="nr-card__body nr-stack">
+              <div class="nr-row" style="flex-wrap:wrap;">
+                <span class="nr-badge">Default</span>
+                <span class="nr-badge nr-badge--primary nr-badge--dot">نشط</span>
+                <span class="nr-badge nr-badge--success nr-badge--dot">مُكتمل</span>
+                <span class="nr-badge nr-badge--warning nr-badge--dot">قيد المراجعة</span>
+                <span class="nr-badge nr-badge--danger nr-badge--dot">متأخر</span>
+                <span class="nr-badge nr-badge--info nr-badge--dot">معلومة</span>
+              </div>
+            </div>
+          </div>
+          <div class="nr-card">
+            <div class="nr-card__body nr-stack-sm">
+              <div class="nr-row-between"><small>مشروع الفيلا — A12</small><small style="color:var(--nr-accent);font-family:var(--nr-font-mono);">68%</small></div>
+              <div class="nr-progress"><div class="nr-progress__fill" style="width:68%;"></div></div>
+              <div class="nr-row-between" style="margin-top:var(--nr-sp-3);"><small>مشروع البرج — T04</small><small style="color:var(--nr-accent);font-family:var(--nr-font-mono);">32%</small></div>
+              <div class="nr-progress"><div class="nr-progress__fill" style="width:32%;"></div></div>
+              <div class="nr-row-between" style="margin-top:var(--nr-sp-3);"><small>مشروع المعرض — M08</small><small style="color:var(--nr-accent);font-family:var(--nr-font-mono);">94%</small></div>
+              <div class="nr-progress"><div class="nr-progress__fill" style="width:94%;"></div></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+
+      <!-- ============ FORMS ============ -->
+      <section style="margin-bottom: var(--nr-sp-10);">
+        <h6 class="nr-section-title">Form Controls · النماذج</h6>
+        <div class="nr-card">
+          <div class="nr-card__header">
+            <div>
+              <div class="nr-card__title">مشروع جديد</div>
+              <div class="nr-card__subtitle">أدخل بيانات المشروع الأساسية</div>
+            </div>
+          </div>
+          <div class="nr-card__body nr-grid-2">
+            <div class="nr-field">
+              <label class="nr-label">اسم المشروع <span class="nr-label__required">*</span></label>
+              <input class="nr-input" type="text" placeholder="مثال: فيلا الخالدية — A12">
+            </div>
+            <div class="nr-field">
+              <label class="nr-label">العميل</label>
+              <select class="nr-select">
+                <option>اختر عميلاً…</option>
+                <option>شركة النور للمقاولات</option>
+                <option>مجموعة الرونق</option>
+              </select>
+            </div>
+            <div class="nr-field">
+              <label class="nr-label">رقم العقد</label>
+              <input class="nr-input" type="text" value="NR-2026-0183">
+            </div>
+            <div class="nr-field">
+              <label class="nr-label">قيمة العقد (SAR)</label>
+              <input class="nr-input" type="text" placeholder="0.00">
+              <small class="nr-help">اكتب الرقم بدون فواصل</small>
+            </div>
+            <div class="nr-field" style="grid-column: 1 / -1;">
+              <label class="nr-label">ملاحظات</label>
+              <textarea class="nr-textarea" placeholder="تفاصيل إضافية عن المشروع…"></textarea>
+            </div>
+            <div class="nr-field">
+              <label class="nr-label">الخيارات</label>
+              <div class="nr-stack-sm">
+                <label class="nr-check"><input type="checkbox" checked> تفعيل التنبيهات التلقائية</label>
+                <label class="nr-check"><input type="checkbox"> إنشاء مجلد العميل</label>
+              </div>
+            </div>
+            <div class="nr-field">
+              <label class="nr-label">أولوية عالية</label>
+              <label class="nr-switch"><input type="checkbox" checked><span class="nr-switch__slider"></span></label>
+            </div>
+          </div>
+          <div class="nr-card__footer">
+            <button class="nr-btn nr-btn--ghost">إلغاء</button>
+            <button class="nr-btn nr-btn--primary">حفظ المشروع</button>
+          </div>
+        </div>
+      </section>
+
+
+      <!-- ============ TABLE ============ -->
+      <section style="margin-bottom: var(--nr-sp-10);">
+        <h6 class="nr-section-title">Data Table · الجداول</h6>
+        <div class="nr-table-wrap">
+          <table class="nr-table">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>المشروع</th>
+                <th>العميل</th>
+                <th>المساحة (m²)</th>
+                <th>القيمة</th>
+                <th>الحالة</th>
+                <th>التقدّم</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>A12</td>
+                <td>فيلا الخالدية</td>
+                <td>شركة النور</td>
+                <td>482</td>
+                <td>285,000</td>
+                <td><span class="nr-badge nr-badge--primary nr-badge--dot">تصنيع</span></td>
+                <td><div class="nr-progress" style="width:100px;"><div class="nr-progress__fill" style="width:68%;"></div></div></td>
+                <td><button class="nr-btn nr-btn--ghost nr-btn--sm">عرض</button></td>
+              </tr>
+              <tr>
+                <td>T04</td>
+                <td>برج الأعمال</td>
+                <td>الرونق</td>
+                <td>1,240</td>
+                <td>940,000</td>
+                <td><span class="nr-badge nr-badge--warning nr-badge--dot">مراجعة</span></td>
+                <td><div class="nr-progress" style="width:100px;"><div class="nr-progress__fill" style="width:32%;"></div></div></td>
+                <td><button class="nr-btn nr-btn--ghost nr-btn--sm">عرض</button></td>
+              </tr>
+              <tr>
+                <td>M08</td>
+                <td>معرض السيارات</td>
+                <td>المركز الصناعي</td>
+                <td>720</td>
+                <td>510,000</td>
+                <td><span class="nr-badge nr-badge--success nr-badge--dot">تسليم</span></td>
+                <td><div class="nr-progress" style="width:100px;"><div class="nr-progress__fill" style="width:94%;"></div></div></td>
+                <td><button class="nr-btn nr-btn--ghost nr-btn--sm">عرض</button></td>
+              </tr>
+              <tr>
+                <td>R02</td>
+                <td>فيلا الرياض</td>
+                <td>مقاولات الخليج</td>
+                <td>340</td>
+                <td>198,500</td>
+                <td><span class="nr-badge nr-badge--danger nr-badge--dot">متأخر</span></td>
+                <td><div class="nr-progress" style="width:100px;"><div class="nr-progress__fill" style="width:15%;"></div></div></td>
+                <td><button class="nr-btn nr-btn--ghost nr-btn--sm">عرض</button></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+
+      <!-- ============ ALERTS ============ -->
+      <section style="margin-bottom: var(--nr-sp-10);">
+        <h6 class="nr-section-title">Alerts · التنبيهات</h6>
+        <div class="nr-stack">
+          <div class="nr-alert nr-alert--info">
+            <span class="nr-alert__icon">ⓘ</span>
+            <div class="nr-alert__body">
+              <div class="nr-alert__title">نسخة احتياطية جاهزة</div>
+              <div class="nr-alert__msg">تم إنشاء نسخة احتياطية من البيانات منذ دقيقتين.</div>
+            </div>
+          </div>
+          <div class="nr-alert nr-alert--success">
+            <span class="nr-alert__icon">✓</span>
+            <div class="nr-alert__body">
+              <div class="nr-alert__title">تم الحفظ بنجاح</div>
+              <div class="nr-alert__msg">تم تحديث بيانات المشروع A12 ومزامنتها مع السيرفر.</div>
+            </div>
+          </div>
+          <div class="nr-alert nr-alert--warning">
+            <span class="nr-alert__icon">!</span>
+            <div class="nr-alert__body">
+              <div class="nr-alert__title">مراجعة مطلوبة</div>
+              <div class="nr-alert__msg">مشروع T04 يحتاج مراجعة المقاسات قبل التصنيع.</div>
+            </div>
+          </div>
+          <div class="nr-alert nr-alert--danger">
+            <span class="nr-alert__icon">✕</span>
+            <div class="nr-alert__body">
+              <div class="nr-alert__title">خطأ في الاتصال</div>
+              <div class="nr-alert__msg">تعذّر الاتصال بالسيرفر — البيانات محفوظة محلياً.</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+
+      <!-- ============ MODAL DEMO ============ -->
+      <section style="margin-bottom: var(--nr-sp-10);">
+        <h6 class="nr-section-title">Modal · النوافذ المنبثقة</h6>
+        <button class="nr-btn nr-btn--primary" id="openModalBtn">فتح النافذة</button>
+      </section>
+
+
+      <!-- ============ FOOTER ============ -->
+      <footer style="padding-top: var(--nr-sp-8); border-top: 1px solid var(--nr-border-subtle); margin-top: var(--nr-sp-10);">
+        <div class="nr-row-between">
+          <small>NouRion Design System · v0.1 · Phase 6</small>
+          <small style="font-family: var(--nr-font-mono);">built with Space Grotesk + JetBrains Mono</small>
+        </div>
+      </footer>
+
+    </div>
+  </main>
+</div>
+
+
+<!-- Modal -->
+<div class="nr-modal-overlay" id="demoModal">
+  <div class="nr-modal" role="dialog" aria-labelledby="demoModalTitle">
+    <div class="nr-modal__header">
+      <div class="nr-modal__title" id="demoModalTitle">تأكيد العملية</div>
+      <button class="nr-modal__close" data-close-modal aria-label="إغلاق">×</button>
+    </div>
+    <div class="nr-modal__body">
+      <p>هل أنت متأكد من حفظ المشروع <strong style="color:var(--nr-text-primary);">فيلا الخالدية — A12</strong>؟</p>
+      <p style="margin-top:var(--nr-sp-3);">سيتم مزامنة البيانات مع السيرفر تلقائياً.</p>
+    </div>
+    <div class="nr-modal__footer">
+      <button class="nr-btn nr-btn--ghost" data-close-modal>إلغاء</button>
+      <button class="nr-btn nr-btn--primary" data-close-modal>تأكيد</button>
+    </div>
+  </div>
+</div>
+
+
+<script>
+  (function () {
+    var btn = document.getElementById('openModalBtn');
+    var modal = document.getElementById('demoModal');
+    if (btn && modal) {
+      btn.addEventListener('click', function () { modal.classList.add('is-open'); });
+      modal.querySelectorAll('[data-close-modal]').forEach(function (el) {
+        el.addEventListener('click', function () { modal.classList.remove('is-open'); });
+      });
+      modal.addEventListener('click', function (e) {
+        if (e.target === modal) modal.classList.remove('is-open');
+      });
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') modal.classList.remove('is-open');
+      });
+    }
+  })();
+</script>
+
+</body>
+</html>

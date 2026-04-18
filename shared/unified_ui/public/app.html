@@ -1,0 +1,226 @@
+<!doctype html>
+<html lang="ar" dir="rtl" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>NouRion — Smart Industrial Platform</title>
+  <meta name="description" content="NouRion — منصّة صناعية ذكية لإدارة مصنع الألمنيوم">
+
+  <!-- Local fonts (no Google dependency) -->
+  <link rel="stylesheet" href="assets/css/nourion-fonts.css">
+
+  <!-- Design system -->
+  <link rel="stylesheet" href="assets/css/nourion-tokens.css">
+  <link rel="stylesheet" href="assets/css/nourion-base.css">
+  <link rel="stylesheet" href="assets/css/nourion-components.css">
+
+  <!-- Theme + i18n (before body paint) -->
+  <script src="assets/js/nourion-theme.js"></script>
+  <script src="assets/js/nourion-i18n.js"></script>
+
+  <!-- Services -->
+  <script src="../src/services/repository.js"></script>
+  <script src="../src/services/project-service.js"></script>
+  <script src="../src/services/crud-service.js"></script>
+
+  <link rel="icon" type="image/svg+xml" href="assets/img/logo.svg">
+
+  <style>
+    /* ── Login screen ── */
+    .nr-login-screen {
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      background:
+        radial-gradient(ellipse at 30% 20%, rgba(0,153,255,0.10), transparent 55%),
+        radial-gradient(ellipse at 70% 80%, rgba(77,212,255,0.06), transparent 60%),
+        var(--nr-bg-0);
+    }
+    .nr-login-box {
+      width: min(420px, 92vw);
+      padding: var(--nr-sp-8);
+      background: var(--nr-bg-1);
+      border: 1px solid var(--nr-border-subtle);
+      border-radius: var(--nr-radius-lg);
+      box-shadow: 0 30px 80px rgba(0,0,0,0.45);
+    }
+    .nr-login-box__brand { display: flex; justify-content: center; margin-bottom: var(--nr-sp-6); }
+    .nr-login-box__brand img { height: 56px; }
+    .nr-login-box__title { font-size: var(--nr-fs-xl); font-weight: 500; text-align: center; margin-bottom: var(--nr-sp-2); color: var(--nr-text-primary); }
+    .nr-login-box__sub { text-align: center; color: var(--nr-text-muted); font-size: var(--nr-fs-sm); margin-bottom: var(--nr-sp-6); }
+    .nr-login-box__err { display: none; padding: var(--nr-sp-3) var(--nr-sp-4); background: rgba(220,38,38,0.12); border: 1px solid rgba(220,38,38,0.35); border-radius: var(--nr-radius-sm); color: #fca5a5; font-size: var(--nr-fs-sm); margin-bottom: var(--nr-sp-4); }
+    .nr-login-box__err.is-visible { display: block; }
+    .nr-login-box__footer { margin-top: var(--nr-sp-6); padding-top: var(--nr-sp-4); border-top: 1px solid var(--nr-border-subtle); text-align: center; font-size: var(--nr-fs-xs); color: var(--nr-text-muted); font-family: var(--nr-font-mono); }
+    .nr-login-box__lang { position: absolute; top: var(--nr-sp-4); right: var(--nr-sp-4); }
+
+    /* ── SPA: hide all sections by default, show .is-active ── */
+    .nr-spa-section { display: none; }
+    .nr-spa-section.is-active { display: block; }
+
+    /* ── Page transition ── */
+    #loginScreen { display: block; }
+    #appScreen { display: none; }
+    .nr-app-hidden { display: none !important; }
+  </style>
+</head>
+<body>
+
+<!-- ════════════════════════════════════════════════ -->
+<!--               LOGIN SCREEN                      -->
+<!-- ════════════════════════════════════════════════ -->
+<div id="loginScreen" class="nr-login-screen">
+  <div style="position:relative;">
+    <button class="nr-btn nr-btn--ghost nr-btn--sm nr-login-box__lang" data-i18n-toggle
+            onclick="NouRionI18n.toggleLang()">EN</button>
+    <main class="nr-login-box">
+      <div class="nr-login-box__brand">
+        <img src="assets/img/logo.svg" alt="NouRion">
+      </div>
+      <div class="nr-login-box__title" data-i18n="login.title">تسجيل الدخول</div>
+      <div class="nr-login-box__sub" data-i18n="login.subtitle">المنصّة الصناعية الذكية</div>
+
+      <div class="nr-login-box__err" id="loginErr" role="alert"></div>
+
+      <form id="loginForm" class="nr-stack" autocomplete="on" novalidate onsubmit="return false;">
+        <div class="nr-field">
+          <label class="nr-label" for="loginUser" data-i18n="login.username">اسم المستخدم</label>
+          <input class="nr-input" id="loginUser" name="username" type="text" autocomplete="username" required dir="ltr" placeholder="admin">
+        </div>
+        <div class="nr-field">
+          <label class="nr-label" for="loginPass" data-i18n="login.password">كلمة المرور</label>
+          <input class="nr-input" id="loginPass" name="password" type="password" autocomplete="current-password" required dir="ltr" placeholder="••••••••">
+        </div>
+        <button class="nr-btn nr-btn--primary nr-btn--lg" type="button" id="loginBtn" style="width:100%; margin-top:var(--nr-sp-2);" data-i18n="login.submit">دخول</button>
+      </form>
+
+      <div class="nr-login-box__footer">NouRion · v0.5</div>
+    </main>
+  </div>
+</div>
+
+
+<!-- ════════════════════════════════════════════════ -->
+<!--              MAIN APP SCREEN                    -->
+<!-- ════════════════════════════════════════════════ -->
+<div id="appScreen" class="nr-app">
+
+  <!-- ─── SIDEBAR ─── -->
+  <aside class="nr-sidebar">
+    <div class="nr-sidebar__brand">
+      <img src="assets/img/logo.svg" alt="NouRion" style="height:32px;">
+    </div>
+    <nav class="nr-sidebar__nav" id="sidebarNav">
+      <div class="nr-nav-section">
+        <div class="nr-nav-section__title" data-i18n="nav.main">الرئيسية</div>
+        <a class="nr-nav-item is-active" data-section="dashboard" href="#dashboard"><span class="nr-nav-item__icon">◇</span> <span data-i18n="nav.dashboard">لوحة التحكّم</span></a>
+        <a class="nr-nav-item" data-section="projects" href="#projects"><span class="nr-nav-item__icon">◈</span> <span data-i18n="nav.projects">المشاريع</span></a>
+        <a class="nr-nav-item" data-section="customers" href="#customers"><span class="nr-nav-item__icon">◇</span> <span data-i18n="nav.customers">العملاء</span></a>
+        <a class="nr-nav-item" data-section="employees" href="#employees"><span class="nr-nav-item__icon">◆</span> <span data-i18n="nav.employees">الموظفون</span></a>
+        <a class="nr-nav-item" data-section="formtypes" href="#formtypes"><span class="nr-nav-item__icon">◉</span> <span data-i18n="nav.form_types">أنواع النماذج</span></a>
+      </div>
+      <div class="nr-nav-section">
+        <div class="nr-nav-section__title" data-i18n="nav.system">النظام</div>
+        <a class="nr-nav-item" data-section="settings" href="#settings"><span class="nr-nav-item__icon">⚙</span> <span data-i18n="nav.settings">الإعدادات</span></a>
+        <a class="nr-nav-item" id="logoutBtn" href="#"><span class="nr-nav-item__icon">⎆</span> <span data-i18n="login.logout">تسجيل الخروج</span></a>
+      </div>
+    </nav>
+  </aside>
+
+  <!-- ─── MAIN CONTENT ─── -->
+  <main class="nr-app__main">
+    <header class="nr-topbar">
+      <div class="nr-topbar__title" id="topbarTitle" data-i18n="nav.dashboard">لوحة التحكّم</div>
+      <div class="nr-topbar__actions">
+        <button class="nr-btn nr-btn--ghost nr-btn--sm" data-i18n-toggle onclick="NouRionI18n.toggleLang()">EN</button>
+        <button class="nr-btn nr-btn--ghost nr-btn--sm" data-nr-theme-toggle>
+          <span data-nr-theme-icon>☀</span>
+          <span data-nr-theme-label data-i18n="ui.light_mode">الوضع الفاتح</span>
+        </button>
+        <span class="nr-badge nr-badge--success nr-badge--dot" id="userBadge"></span>
+      </div>
+    </header>
+
+    <div class="nr-app__content">
+
+      <!-- ═══ SECTION: Dashboard ═══ -->
+      <div class="nr-spa-section is-active" id="sec-dashboard">
+        <section class="nr-hero" style="padding:var(--nr-sp-8); border-radius:var(--nr-radius-lg); background:radial-gradient(ellipse at 20% 20%,rgba(0,153,255,0.12),transparent 55%),radial-gradient(ellipse at 80% 80%,rgba(77,212,255,0.08),transparent 60%),var(--nr-bg-1); border:1px solid var(--nr-border-subtle); margin-bottom:var(--nr-sp-8);">
+          <h1 style="font-size:var(--nr-fs-4xl); font-weight:300; letter-spacing:-0.03em;">
+            <span data-i18n="dash.welcome">أهلاً بك في</span>
+            <span style="color:var(--nr-accent); font-weight:500;">NouRion</span>
+          </h1>
+          <p data-i18n="dash.subtitle" style="max-width:640px; color:var(--nr-text-muted);">منصّة صناعية ذكية لإدارة مصنع الألمنيوم</p>
+        </section>
+        <section style="margin-bottom:var(--nr-sp-8);">
+          <h6 class="nr-section-title" data-i18n="ui.overview">نظرة عامة</h6>
+          <div class="nr-grid-4" id="dashStats"></div>
+        </section>
+      </div>
+
+      <!-- ═══ SECTION: Projects ═══ -->
+      <div class="nr-spa-section" id="sec-projects">
+        <div id="projects-host"></div>
+      </div>
+
+      <!-- ═══ SECTION: Customers ═══ -->
+      <div class="nr-spa-section" id="sec-customers">
+        <div id="customers-host"></div>
+      </div>
+
+      <!-- ═══ SECTION: Employees ═══ -->
+      <div class="nr-spa-section" id="sec-employees">
+        <div id="employees-host"></div>
+      </div>
+
+      <!-- ═══ SECTION: Form Types ═══ -->
+      <div class="nr-spa-section" id="sec-formtypes">
+        <div id="formtypes-host"></div>
+      </div>
+
+      <!-- ═══ SECTION: Settings ═══ -->
+      <div class="nr-spa-section" id="sec-settings">
+        <h6 class="nr-section-title" data-i18n="nav.settings">الإعدادات</h6>
+        <div class="nr-card">
+          <div class="nr-card__body nr-stack">
+            <div class="nr-row-between">
+              <span data-i18n="ui.light_mode">الوضع الفاتح / الداكن</span>
+              <label class="nr-switch"><input type="checkbox" data-nr-theme-toggle id="themeSwitch"><span class="nr-switch__slider"></span></label>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+</div>
+
+
+<!-- ═══ SHARED MODAL (used by all CRUD sections) ═══ -->
+<div id="spaModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.6); z-index:9999; justify-content:center; align-items:center; padding:16px;">
+  <div class="nr-modal" role="dialog" aria-labelledby="spaModalTitle">
+    <div class="nr-modal__header">
+      <div class="nr-modal__title" id="spaModalTitle"></div>
+      <button class="nr-modal__close" id="spaModalClose" aria-label="Close">×</button>
+    </div>
+    <form id="spaModalForm" autocomplete="off" novalidate>
+      <div class="nr-modal__body">
+        <div class="nr-alert nr-alert--danger" id="spaModalErr" style="display:none; margin-bottom:var(--nr-sp-4);"></div>
+        <div class="nr-grid-2" id="spaModalBody"></div>
+      </div>
+      <div class="nr-modal__footer">
+        <button type="button" class="nr-btn nr-btn--ghost" id="spaModalCancel" data-i18n="ui.cancel">إلغاء</button>
+        <button type="submit" class="nr-btn nr-btn--primary" data-i18n="ui.save">حفظ</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+
+<!-- ════════════════════════════════════════════════ -->
+<!--              SPA ENGINE + DATA TRANSLATE        -->
+<!-- ════════════════════════════════════════════════ -->
+<script src="assets/js/nourion-data-translate.js"></script>
+<script src="assets/js/nourion-spa.js"></script>
+
+</body>
+</html>

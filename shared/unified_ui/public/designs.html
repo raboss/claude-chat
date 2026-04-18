@@ -1,0 +1,229 @@
+<!doctype html>
+<html lang="ar" dir="rtl" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>NouRion — التصاميم</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&family=IBM+Plex+Sans+Arabic:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="assets/css/nourion-tokens.css">
+  <link rel="stylesheet" href="assets/css/nourion-base.css">
+  <link rel="stylesheet" href="assets/css/nourion-components.css">
+
+  <script src="assets/js/nourion-theme.js"></script>
+  <script src="../src/modules/draw/draw.logic.js"></script>
+  <script src="../src/modules/draw/draw.view.js"></script>
+  <script src="../src/modules/designs/designs.logic.js"></script>
+  <script src="../src/modules/designs/designs.view.js"></script>
+
+  <link rel="icon" type="image/svg+xml" href="assets/img/logo.svg">
+</head>
+<body>
+
+<div class="nr-app">
+
+  <aside class="nr-sidebar">
+    <div class="nr-sidebar__brand">
+      <img src="assets/img/logo.svg" alt="NouRion" style="height:32px;">
+    </div>
+    <nav class="nr-sidebar__nav">
+      <div class="nr-nav-section">
+        <div class="nr-nav-section__title">الرئيسية</div>
+        <a class="nr-nav-item" href="index.html"><span class="nr-nav-item__icon">◇</span> Design System</a>
+        <a class="nr-nav-item" href="projects.html"><span class="nr-nav-item__icon">◈</span> المشاريع</a>
+      </div>
+      <div class="nr-nav-section">
+        <div class="nr-nav-section__title">التصنيع</div>
+        <a class="nr-nav-item" href="forms.html"><span class="nr-nav-item__icon">📋</span> الاستمارة</a>
+        <a class="nr-nav-item" href="measurements.html"><span class="nr-nav-item__icon">◎</span> المقاسات</a>
+        <a class="nr-nav-item" href="draw.html"><span class="nr-nav-item__icon">📐</span> الرسم</a>
+        <a class="nr-nav-item is-active"><span class="nr-nav-item__icon">🎨</span> التصاميم</a>
+        <a class="nr-nav-item" href="installations.html"><span class="nr-nav-item__icon">🔨</span> التركيبات</a>
+      </div>
+      <div class="nr-nav-section">
+        <div class="nr-nav-section__title">الإدارة</div>
+        <a class="nr-nav-item" href="hr.html"><span class="nr-nav-item__icon">👥</span> الموظفون</a>
+        <a class="nr-nav-item" href="custody.html"><span class="nr-nav-item__icon">💰</span> العهدة</a>
+      </div>
+    </nav>
+  </aside>
+
+  <main class="nr-app__main">
+
+    <header class="nr-topbar">
+      <div class="nr-topbar__title">التصاميم · Designs</div>
+      <div class="nr-topbar__actions">
+        <select class="nr-select" id="projectSelect" style="width: 220px; height: 36px;"></select>
+        <button class="nr-btn nr-btn--ghost nr-btn--sm" data-nr-theme-toggle>
+          <span data-nr-theme-icon>☀</span>
+          <span data-nr-theme-label>الوضع الفاتح</span>
+        </button>
+      </div>
+    </header>
+
+    <div class="nr-app__content">
+
+      <div class="nr-alert nr-alert--info" style="margin-bottom: var(--nr-sp-8);">
+        <span class="nr-alert__icon">ⓘ</span>
+        <div class="nr-alert__body">
+          <div class="nr-alert__title">Phase 2.5 · designs POC</div>
+          <div class="nr-alert__msg">
+            صفحة التصاميم الكاملة: تجميع المقاسات حسب القطاع + معاينة SVG لكل فتحة
+            + خصائص مع تحقّق من الأبعاد. يُعيد استخدام <code>DrawLogic</code> و
+            <code>DrawView</code> للرسم (صفر تكرار). <strong>40 اختبار</strong> ناجح.
+          </div>
+        </div>
+      </div>
+
+      <section style="margin-bottom: var(--nr-sp-8);">
+        <h1 style="font-size: var(--nr-fs-3xl); font-weight: 300;">
+          صفحة <span style="color: var(--nr-accent); font-weight: 500;">التصاميم</span>
+        </h1>
+        <p style="max-width: 720px;">
+          اختر مشروعاً من الـ topbar، ثم اضغط على أيّ فتحة في الشجرة اليسرى لرؤية
+          تصميمها SVG + خصائصها المحسوبة.
+        </p>
+      </section>
+
+      <!-- Summary -->
+      <section style="margin-bottom: var(--nr-sp-6);">
+        <h6 class="nr-section-title">Project Summary</h6>
+        <div id="summaryHost"></div>
+      </section>
+
+      <!-- Layout: left tree + center preview + right props -->
+      <section style="margin-bottom: var(--nr-sp-6);">
+        <div class="nr-grid-3" style="grid-template-columns: 320px 1fr 320px;">
+          <div id="treeHost"></div>
+          <div id="previewHost"></div>
+          <div id="propsHost"></div>
+        </div>
+      </section>
+
+      <!-- Sections table -->
+      <section style="margin-bottom: var(--nr-sp-10);">
+        <h6 class="nr-section-title">Sections Overview</h6>
+        <div id="sectionsHost"></div>
+      </section>
+
+      <footer style="padding-top: var(--nr-sp-8); border-top: 1px solid var(--nr-border-subtle);">
+        <div class="nr-row-between">
+          <small>Module: designs · 40 tests · 10 logic functions · reuses DrawLogic for SVG</small>
+          <small style="font-family: var(--nr-font-mono);">Phase 2.5 · POC #13</small>
+        </div>
+      </footer>
+
+    </div>
+  </main>
+</div>
+
+
+<script>
+  var L = NouRion.DesignsLogic;
+  var V = NouRion.DesignsView;
+
+  /* Sample projects with measurement data */
+  var PROJECTS = [
+    {
+      id: 'p1',
+      name: 'فيلا الخالدية',
+      measurements: [
+        { code: 'W01', width: 1200, height: 1800, sectionName: 'نوافذ سحاب قلف 12', description: 'نافذة غرفة نوم' },
+        { code: 'W02', width: 1500, height: 2200, sectionName: 'نوافذ سحاب قلف 12', description: 'نافذة صالة' },
+        { code: 'W03', width: 900,  height: 2100, sectionName: 'أبواب سرايا 10', description: 'باب مدخل' },
+        { code: 'W04', width: 800,  height: 2000, sectionName: 'أبواب سرايا 10', description: 'باب غرفة' },
+        { code: 'W05', width: 600,  height: 600,  sectionName: 'نوافذ حمام', description: 'نافذة حمام' }
+      ]
+    },
+    {
+      id: 'p2',
+      name: 'برج الأعمال',
+      measurements: [
+        { code: 'W01', width: 2000, height: 2500, sectionName: 'واجهات استركشر SG50', description: 'واجهة طابق 1' },
+        { code: 'W02', width: 2000, height: 2500, sectionName: 'واجهات استركشر SG50', description: 'واجهة طابق 2' },
+        { code: 'W03', width: 1800, height: 2500, sectionName: 'واجهات استركشر SG50', description: 'واجهة جانبية' },
+        { code: 'W04', width: 1500, height: 2200, sectionName: 'نوافذ سحاب قلف 12', description: 'نوافذ مكاتب' }
+      ]
+    },
+    {
+      id: 'p3',
+      name: 'فندق النخبة',
+      measurements: [
+        { code: 'F01', width: 1200, height: 2000, sectionName: 'نوافذ غرف نزلاء', description: 'نافذة غرفة مفردة' },
+        { code: 'F02', width: 1400, height: 2000, sectionName: 'نوافذ غرف نزلاء', description: 'نافذة غرفة مزدوجة' },
+        { code: 'F03', width: 1800, height: 2400, sectionName: 'نوافذ صالات', description: 'نافذة لوبي' },
+        { code: 'F04', width: 3000, height: 2800, sectionName: 'واجهات استركشر SG50', description: 'واجهة المدخل' },
+        { code: 'F05', width: 900,  height: 2100, sectionName: 'أبواب سرايا 10', description: 'باب الخدمات' },
+        { code: 'F06', width: 1100, height: 2100, sectionName: 'أبواب سرايا 10', description: 'باب المطبخ' }
+      ]
+    }
+  ];
+
+  var currentProjectId = PROJECTS[0].id;
+  var selectedIdx = 0;
+
+  var projectSelect = document.getElementById('projectSelect');
+  var summaryHost   = document.getElementById('summaryHost');
+  var treeHost      = document.getElementById('treeHost');
+  var previewHost   = document.getElementById('previewHost');
+  var propsHost     = document.getElementById('propsHost');
+  var sectionsHost  = document.getElementById('sectionsHost');
+
+  // Populate select
+  PROJECTS.forEach(function (p) {
+    var opt = document.createElement('option');
+    opt.value = p.id;
+    opt.textContent = p.name;
+    projectSelect.appendChild(opt);
+  });
+
+  function getCurrentProject() {
+    return PROJECTS.find(function (p) { return p.id === currentProjectId; });
+  }
+
+  function getSelectedFrame() {
+    var proj = getCurrentProject();
+    var tree = L.buildSectionsTree(proj.measurements);
+    var flat = [];
+    tree.forEach(function (s) { s.rows.forEach(function (r) { flat.push(r); }); });
+    return flat.find(function (r) { return r.globalIndex === selectedIdx; });
+  }
+
+  function renderAll() {
+    var proj = getCurrentProject();
+    var meas = proj.measurements;
+
+    summaryHost.innerHTML = '';
+    summaryHost.appendChild(V.renderSummary(meas));
+
+    treeHost.innerHTML = '';
+    treeHost.appendChild(V.renderFramesTree(meas, selectedIdx, function (idx) {
+      selectedIdx = idx;
+      renderAll();
+    }));
+
+    var frame = getSelectedFrame();
+    previewHost.innerHTML = '';
+    previewHost.appendChild(V.renderFramePreview(frame));
+
+    propsHost.innerHTML = '';
+    propsHost.appendChild(V.renderFrameProperties(frame));
+
+    sectionsHost.innerHTML = '';
+    sectionsHost.appendChild(V.renderSectionsTable(meas));
+  }
+
+  projectSelect.addEventListener('change', function () {
+    currentProjectId = projectSelect.value;
+    selectedIdx = 0;
+    renderAll();
+  });
+
+  renderAll();
+</script>
+
+</body>
+</html>

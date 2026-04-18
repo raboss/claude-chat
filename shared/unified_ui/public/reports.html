@@ -1,0 +1,209 @@
+<!doctype html>
+<html lang="ar" dir="rtl" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>NouRion — التقارير</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&family=IBM+Plex+Sans+Arabic:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="assets/css/nourion-tokens.css">
+  <link rel="stylesheet" href="assets/css/nourion-base.css">
+  <link rel="stylesheet" href="assets/css/nourion-components.css">
+
+  <script src="assets/js/nourion-theme.js"></script>
+
+  <!-- Reports depends on ProjectsLogic + SavedLogic -->
+  <script src="../src/modules/projects/projects.logic.js"></script>
+  <script src="../src/modules/saved/saved.logic.js"></script>
+  <script src="../src/modules/reports/reports.logic.js"></script>
+  <script src="../src/modules/reports/reports.view.js"></script>
+
+  <link rel="icon" type="image/svg+xml" href="assets/img/logo.svg">
+</head>
+<body>
+
+<div class="nr-app">
+
+  <aside class="nr-sidebar">
+    <div class="nr-sidebar__brand">
+      <img src="assets/img/logo.svg" alt="NouRion" style="height:32px;">
+    </div>
+    <nav class="nr-sidebar__nav">
+      <div class="nr-nav-section">
+        <div class="nr-nav-section__title">الرئيسية</div>
+        <a class="nr-nav-item" href="index.html"><span class="nr-nav-item__icon">◇</span> Design System</a>
+        <a class="nr-nav-item" href="projects.html"><span class="nr-nav-item__icon">◈</span> المشاريع</a>
+        <a class="nr-nav-item" href="measurements.html"><span class="nr-nav-item__icon">◎</span> المقاسات</a>
+        <a class="nr-nav-item" href="documents.html"><span class="nr-nav-item__icon">📄</span> المستندات</a>
+        <a class="nr-nav-item is-active"><span class="nr-nav-item__icon">📊</span> التقارير</a>
+        <a class="nr-nav-item" href="saved.html"><span class="nr-nav-item__icon">◇</span> التقارير المحفوظة</a>
+      </div>
+      <div class="nr-nav-section">
+        <div class="nr-nav-section__title">التصنيع</div>
+        <a class="nr-nav-item" href="form-types.html"><span class="nr-nav-item__icon">◎</span> القطاعات</a>
+      </div>
+      <div class="nr-nav-section">
+        <div class="nr-nav-section__title">الإدارة</div>
+        <a class="nr-nav-item" href="settings.html"><span class="nr-nav-item__icon">⚙</span> الإعدادات</a>
+      </div>
+    </nav>
+  </aside>
+
+  <main class="nr-app__main">
+
+    <header class="nr-topbar">
+      <div class="nr-topbar__title">التقارير · Reports</div>
+      <div class="nr-topbar__actions">
+        <select class="nr-select" id="userFilter" style="width: 220px; height: 36px;"></select>
+        <button class="nr-btn nr-btn--ghost nr-btn--sm" data-nr-theme-toggle>
+          <span data-nr-theme-icon>☀</span>
+          <span data-nr-theme-label>الوضع الفاتح</span>
+        </button>
+      </div>
+    </header>
+
+    <div class="nr-app__content">
+
+      <div class="nr-alert nr-alert--info" style="margin-bottom: var(--nr-sp-8);">
+        <span class="nr-alert__icon">ⓘ</span>
+        <div class="nr-alert__body">
+          <div class="nr-alert__title">Phase 2.5 · reports POC</div>
+          <div class="nr-alert__msg">
+            استبدلنا <strong>Chart.js</strong> بـ charts مبنية بالـ CSS فقط (stacked bars + horizontal bars).
+            النتيجة: لا dependencies خارجية، لا canvas، printable مباشرة، 0 KB JS extra.
+            بدّل المستخدم في الـ topbar لرؤية الفلتر التلقائي حسب صلاحيات
+            <code>filterCompany / filterRegion / filterGallery</code>.
+            <strong>37 اختبار</strong> ناجح.
+          </div>
+        </div>
+      </div>
+
+      <section style="margin-bottom: var(--nr-sp-8);">
+        <h1 style="font-size: var(--nr-fs-3xl); font-weight: 300;">
+          لوحة <span style="color: var(--nr-accent); font-weight: 500;">التقارير</span>
+        </h1>
+        <p style="max-width: 720px;">
+          إحصائيات شاملة للحالات + توزيع مالي + تجميع حسب الشركة والمنطقة + إجماليات المواد.
+          كل الحسابات live من <code>NouRion.ReportsLogic</code>.
+        </p>
+      </section>
+
+      <!-- Status counts -->
+      <section style="margin-bottom: var(--nr-sp-8);">
+        <h6 class="nr-section-title">Status Overview</h6>
+        <div id="statusHost"></div>
+      </section>
+
+      <!-- Financial snapshot -->
+      <section style="margin-bottom: var(--nr-sp-8);">
+        <h6 class="nr-section-title">Financial Snapshot</h6>
+        <div id="financialHost"></div>
+      </section>
+
+      <!-- Charts -->
+      <section style="margin-bottom: var(--nr-sp-8);">
+        <h6 class="nr-section-title">Distributions (CSS Charts)</h6>
+        <div class="nr-grid-2">
+          <div id="distHost"></div>
+          <div id="stackedHost"></div>
+        </div>
+      </section>
+
+      <!-- Materials totals -->
+      <section style="margin-bottom: var(--nr-sp-8);">
+        <h6 class="nr-section-title">Materials Totals</h6>
+        <div id="materialsHost"></div>
+      </section>
+
+      <!-- Breakdown by company -->
+      <section style="margin-bottom: var(--nr-sp-10);">
+        <h6 class="nr-section-title">Company × Region Breakdown</h6>
+        <div id="breakdownHost"></div>
+      </section>
+
+      <footer style="padding-top: var(--nr-sp-8); border-top: 1px solid var(--nr-border-subtle);">
+        <div class="nr-row-between">
+          <small>Module: reports · 37 tests · 12 logic functions · 0 Chart.js dependency</small>
+          <small style="font-family: var(--nr-font-mono);">Phase 2.5 · POC #7</small>
+        </div>
+      </footer>
+
+    </div>
+  </main>
+</div>
+
+
+<script>
+  var L = NouRion.ReportsLogic;
+  var V = NouRion.ReportsView;
+
+  /* Sample projects — متنوعة تشمل كل الحالات والشركات */
+  var SAMPLE = [
+    { name: 'فيلا الخالدية',  company: 'الراجحي', region: 'الوسطى',  gallery: 'الياسمين', stage: 'دهان الخامات', contractValue: '285000', extractValue: '320000', downPayment: '60000',  progress: '60', materialsValue: '120000', materialsPurchased: '50000', alumValue: '70000', glassValue: '40000', opsValue: '15000' },
+    { name: 'برج الأعمال',    company: 'الراجحي', region: 'الشرقية', gallery: 'التخصصي', stage: 'أمر تركيب',     contractValue: '940000', downPayment: '150000', progress: '32', materialsValue: '320000', materialsPurchased: '180000', alumValue: '210000', glassValue: '95000', opsValue: '40000' },
+    { name: 'معرض السيارات',  company: 'السلطان', region: 'الغربية', gallery: 'النخيل',   stage: 'تسليم الموقع',  contractValue: '510000', extractValue: '530000', downPayment: '100000', progress: '94' },
+    { name: 'فيلا الرياض',     company: 'الفوزان', region: 'الوسطى',  gallery: 'البلاد',   stage: 'سداد الدفعة الثانية', contractValue: '198500', downPayment: '40000', progress: '15' },
+    { name: 'فندق النخبة',    company: 'الراجحي', region: 'الوسطى',  gallery: 'الياسمين', stage: 'البدء بالتصنيع', contractValue: '1420000', extractValue: '1350000', downPayment: '200000', progress: '70', materialsValue: '420000', materialsPurchased: '380000', alumValue: '280000', glassValue: '110000', opsValue: '30000' },
+    { name: 'مبنى تجاري',     company: 'السلطان', region: 'الشرقية', gallery: 'التخصصي', stage: 'طلب الزجاج',     contractValue: '650000', downPayment: '80000', progress: '45', materialsValue: '180000', materialsPurchased: '60000', alumValue: '110000', glassValue: '50000', opsValue: '20000' },
+    { name: 'مجمع الواحة',    company: 'عالم المعادن', region: 'الغربية', gallery: 'التخصصي', stage: 'رفع مقاسات', contractValue: '380000', downPayment: '50000', progress: '20' },
+    { name: 'فيلا النخيل',    company: 'عالم المعادن', region: 'الوسطى',  gallery: 'النخيل', stage: 'طلب الخامات', contractValue: '220000', downPayment: '40000', progress: '30', materialsValue: '90000', materialsPurchased: '20000' },
+    { name: 'مكتب إداري',    company: 'الفوزان', region: 'الشرقية', gallery: 'البلاد',   stage: 'اعتماد المخططات', contractValue: '160000', downPayment: '30000', progress: '25' }
+  ];
+
+  /* User filters — يحاكي صلاحيات النظام */
+  var USERS = [
+    { name: 'كل المشاريع (Admin)', isAdmin: true },
+    { name: 'مدير الراجحي',         filterCompany: 'الراجحي' },
+    { name: 'مدير السلطان',         filterCompany: 'السلطان' },
+    { name: 'مدير الوسطى',          filterRegion: 'الوسطى' },
+    { name: 'الياسمين فقط',         filterGallery: 'الياسمين' }
+  ];
+
+  var statusHost     = document.getElementById('statusHost');
+  var financialHost  = document.getElementById('financialHost');
+  var distHost       = document.getElementById('distHost');
+  var stackedHost    = document.getElementById('stackedHost');
+  var materialsHost  = document.getElementById('materialsHost');
+  var breakdownHost  = document.getElementById('breakdownHost');
+  var userFilter     = document.getElementById('userFilter');
+
+  // populate user filter
+  USERS.forEach(function (u, i) {
+    var opt = document.createElement('option');
+    opt.value = String(i);
+    opt.textContent = u.name;
+    userFilter.appendChild(opt);
+  });
+
+  function renderAll() {
+    var user = USERS[parseInt(userFilter.value, 10) || 0];
+    var filtered = L.filterByUser(SAMPLE, user);
+
+    statusHost.innerHTML = '';
+    statusHost.appendChild(V.renderStatusCounts(filtered));
+
+    financialHost.innerHTML = '';
+    financialHost.appendChild(V.renderFinancialSnapshot(filtered));
+
+    distHost.innerHTML = '';
+    distHost.appendChild(V.renderStatusDistribution(filtered));
+
+    stackedHost.innerHTML = '';
+    stackedHost.appendChild(V.renderCompanyStackedBars(filtered));
+
+    materialsHost.innerHTML = '';
+    materialsHost.appendChild(V.renderMaterialsTotals(filtered));
+
+    breakdownHost.innerHTML = '';
+    breakdownHost.appendChild(V.renderBreakdownTable(filtered));
+  }
+
+  userFilter.addEventListener('change', renderAll);
+  renderAll();
+</script>
+
+</body>
+</html>

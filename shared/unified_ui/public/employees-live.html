@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="ar" dir="rtl" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>NouRion — الموظفون</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&family=IBM+Plex+Sans+Arabic:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/nourion-tokens.css">
+  <link rel="stylesheet" href="assets/css/nourion-base.css">
+  <link rel="stylesheet" href="assets/css/nourion-components.css">
+  <script src="assets/js/nourion-theme.js"></script>
+  <script src="../src/services/repository.js"></script>
+  <script src="../src/services/crud-service.js"></script>
+  <script src="assets/js/nourion-i18n.js"></script>
+  <script src="assets/js/live-page.js"></script>
+  <script src="assets/js/live-page-shell.js"></script>
+  <link rel="icon" type="image/svg+xml" href="assets/img/logo.svg">
+</head>
+<body>
+<script>
+  window.__livePageConfig = {
+    title: 'NouRion — الموظفون',
+    titleText: 'الموظفون · Employees',
+    listTitle: 'قائمة الموظفين',
+    nav: 'employees',
+    key: 'pm_nourion_employees',
+    ServiceClass: window.NouRionCrudService.EmployeeService,
+    entityLabel: 'موظف',
+    searchable: true,
+    columns: [
+      { field: 'name',       label: 'الاسم' },
+      { field: 'role',       label: 'الدور' },
+      { field: 'department', label: 'القسم' },
+      { field: 'phone',      label: 'الهاتف', mono: true },
+      { field: 'status',     label: 'الحالة',
+        render: function (r) { return r.status === 'inactive' ? 'غير نشط' : 'نشط'; } }
+    ],
+    filters: [
+      { field: 'department', label: 'القسم' },
+      { field: 'role',       label: 'الدور' },
+      { field: 'status',     label: 'الحالة', values: ['active', 'inactive'] }
+    ],
+    formFields: [
+      { field: 'name',       label: 'الاسم',   type: 'text', required: true, full: true, placeholder: 'الاسم الكامل' },
+      { field: 'role',       label: 'الدور',   type: 'text', placeholder: 'مهندس / فنّي / محاسب' },
+      { field: 'department', label: 'القسم',   type: 'text', placeholder: 'تصنيع / تركيب / مبيعات' },
+      { field: 'phone',      label: 'الهاتف',  type: 'text', placeholder: '05xxxxxxxx' },
+      { field: 'salary',     label: 'الراتب',  type: 'number', placeholder: '0' },
+      { field: 'status',     label: 'الحالة',  type: 'select', options: [
+        { value: 'active',   label: 'نشط' },
+        { value: 'inactive', label: 'غير نشط' }
+      ]},
+      { field: 'notes',      label: 'ملاحظات', type: 'textarea', full: true, placeholder: 'أي معلومات إضافية' }
+    ],
+    statsFn: function (svc) {
+      var s = svc.stats();
+      var depts = Object.keys(s.by_department || {}).length;
+      var active = svc.list().filter(function (e) { return e.isActive; }).length;
+      return [
+        { label: 'إجمالي الموظفين', value: s.total, trend: 'عدد السجلات' },
+        { label: 'نشط',              value: active, trend: 'الحالة = active' },
+        { label: 'غير نشط',          value: s.total - active, trend: 'الحالة = inactive' },
+        { label: 'أقسام',             value: depts, trend: 'عدد الأقسام' }
+      ];
+    },
+    seed: [
+      { name: 'شهاب الدخيل', role: 'مهندس',  department: 'تصنيع', phone: '0501111111', status: 'active',   salary: 12000 },
+      { name: 'أحمد حمدي',    role: 'فنّي',   department: 'تركيب', phone: '0502222222', status: 'active',   salary: 8500  },
+      { name: 'محمد سعيد',    role: 'محاسب',  department: 'إدارة', phone: '0503333333', status: 'active',   salary: 9500  },
+      { name: 'خالد عامر',    role: 'مهندس',  department: 'تصنيع', phone: '0504444444', status: 'inactive', salary: 10000 }
+    ]
+  };
+  document.addEventListener('DOMContentLoaded', function () {
+    window.NouRionLivePageShell.init();
+  });
+</script>
+</body>
+</html>

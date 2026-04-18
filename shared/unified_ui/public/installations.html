@@ -1,0 +1,250 @@
+<!doctype html>
+<html lang="ar" dir="rtl" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>NouRion — التركيبات</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&family=IBM+Plex+Sans+Arabic:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="assets/css/nourion-tokens.css">
+  <link rel="stylesheet" href="assets/css/nourion-base.css">
+  <link rel="stylesheet" href="assets/css/nourion-components.css">
+
+  <script src="assets/js/nourion-theme.js"></script>
+  <script src="../src/modules/installations/installations.logic.js"></script>
+  <script src="../src/modules/installations/installations.view.js"></script>
+
+  <link rel="icon" type="image/svg+xml" href="assets/img/logo.svg">
+</head>
+<body>
+
+<div class="nr-app">
+
+  <aside class="nr-sidebar">
+    <div class="nr-sidebar__brand">
+      <img src="assets/img/logo.svg" alt="NouRion" style="height:32px;">
+    </div>
+    <nav class="nr-sidebar__nav">
+      <div class="nr-nav-section">
+        <div class="nr-nav-section__title">الرئيسية</div>
+        <a class="nr-nav-item" href="index.html"><span class="nr-nav-item__icon">◇</span> Design System</a>
+        <a class="nr-nav-item" href="projects.html"><span class="nr-nav-item__icon">◈</span> المشاريع</a>
+      </div>
+      <div class="nr-nav-section">
+        <div class="nr-nav-section__title">التصنيع</div>
+        <a class="nr-nav-item" href="forms.html"><span class="nr-nav-item__icon">📋</span> الاستمارة</a>
+        <a class="nr-nav-item" href="measurements.html"><span class="nr-nav-item__icon">◎</span> المقاسات</a>
+        <a class="nr-nav-item is-active"><span class="nr-nav-item__icon">🔨</span> التركيبات</a>
+      </div>
+      <div class="nr-nav-section">
+        <div class="nr-nav-section__title">الإدارة</div>
+        <a class="nr-nav-item" href="hr.html"><span class="nr-nav-item__icon">👥</span> الموظفون</a>
+        <a class="nr-nav-item" href="custody.html"><span class="nr-nav-item__icon">💰</span> العهدة</a>
+      </div>
+    </nav>
+  </aside>
+
+  <main class="nr-app__main">
+
+    <header class="nr-topbar">
+      <div class="nr-topbar__title">التركيبات · Installations</div>
+      <div class="nr-topbar__actions">
+        <div class="nr-btn-group">
+          <button class="nr-btn nr-btn--sm" data-tab="entries">المُدخلات</button>
+          <button class="nr-btn nr-btn--sm" data-tab="maint">الصيانة</button>
+          <button class="nr-btn nr-btn--sm" data-tab="delivery">التسليم</button>
+          <button class="nr-btn nr-btn--sm" data-tab="teams">الفرق</button>
+        </div>
+        <button class="nr-btn nr-btn--ghost nr-btn--sm" data-nr-theme-toggle>
+          <span data-nr-theme-icon>☀</span>
+          <span data-nr-theme-label>الوضع الفاتح</span>
+        </button>
+      </div>
+    </header>
+
+    <div class="nr-app__content">
+
+      <div class="nr-alert nr-alert--info" style="margin-bottom: var(--nr-sp-8);">
+        <span class="nr-alert__icon">ⓘ</span>
+        <div class="nr-alert__body">
+          <div class="nr-alert__title">Phase 2.5 · installations POC</div>
+          <div class="nr-alert__msg">
+            أكبر module حتى الآن (3,600 سطر) — يحتوي على <strong>5 أنظمة فرعية</strong>:
+            مُدخلات تركيب + نواقص + أوامر صيانة + أوامر تسليم + فرق عمل.
+            كل status transitions pure. <strong>50 اختبار</strong> ناجح من أوّل محاولة.
+          </div>
+        </div>
+      </div>
+
+      <section style="margin-bottom: var(--nr-sp-8);">
+        <h1 style="font-size: var(--nr-fs-3xl); font-weight: 300;">
+          قسم <span style="color: var(--nr-accent); font-weight: 500;">التركيبات</span>
+        </h1>
+        <p style="max-width: 720px;">
+          إدارة كاملة لعمليات الموقع: من مقاسات الفنيين الجدد إلى أوامر التسليم وحركة الفرق.
+        </p>
+      </section>
+
+      <!-- Summary -->
+      <section style="margin-bottom: var(--nr-sp-8);">
+        <h6 class="nr-section-title">Overview</h6>
+        <div id="summaryHost"></div>
+      </section>
+
+      <!-- Tab content -->
+      <section id="tabContent" style="margin-bottom: var(--nr-sp-10);"></section>
+
+      <footer style="padding-top: var(--nr-sp-8); border-top: 1px solid var(--nr-border-subtle);">
+        <div class="nr-row-between">
+          <small>Module: installations · 50 tests · 20+ logic functions · 5 sub-systems</small>
+          <small style="font-family: var(--nr-font-mono);">Phase 2.5 · POC #11</small>
+        </div>
+      </footer>
+
+    </div>
+  </main>
+</div>
+
+
+<script>
+  var L = NouRion.InstallationsLogic;
+  var V = NouRion.InstallationsView;
+
+  var state = {
+    entries: [
+      { id: 'i1', clientName: 'صالح الشهراني', status: 'new',
+        createdAt: '2026-04-05T08:30:00Z',
+        measurements: [
+          { width: 1200, height: 1800 }, { width: 1500, height: 2200 }, { width: 800, height: 2000 }
+        ]},
+      { id: 'i2', clientName: 'عبدالله الغامدي', status: 'new',
+        createdAt: '2026-04-06T10:15:00Z',
+        measurements: [{ width: 1000, height: 2000 }, { width: 1400, height: 2300 }]},
+      { id: 'i3', clientName: 'شركة عوارض', status: 'confirmed',
+        createdAt: '2026-03-25T09:00:00Z',
+        linkedProjectId: 'p1',
+        measurements: [{ width: 800, height: 1800 }] },
+      { id: 'i4', clientName: 'خالد الدوسري', status: 'cancelled',
+        createdAt: '2026-03-20T14:00:00Z', measurements: [] }
+    ],
+    maintOrders: [
+      { id: 'm1', clientName: 'صالح الشهراني', description: 'تسريب مياه من الإطار',
+        assignedTo: 'خالد المقاول', status: 'pending', createdAt: '2026-04-01T08:00:00Z' },
+      { id: 'm2', clientName: 'شركة النخيل',    description: 'تعديل مفصلات',
+        assignedTo: 'سعد القحطاني', status: 'in_progress', createdAt: '2026-03-28T10:00:00Z', startedAt: '2026-03-30T08:00:00Z' },
+      { id: 'm3', clientName: 'عبدالله الغامدي', description: 'استبدال زجاج',
+        assignedTo: 'فهد العنزي',   status: 'pending', createdAt: '2026-04-05T09:00:00Z' },
+      { id: 'm4', clientName: 'شركة الأصالة',    description: 'تثبيت إضافي',
+        assignedTo: 'خالد المقاول', status: 'completed', createdAt: '2026-03-20T08:00:00Z', completedAt: '2026-03-22T15:00:00Z' }
+    ],
+    deliveries: [
+      { id: 'd1', projectName: 'فيلا الخالدية',  date: '2026-04-10', status: 'pending' },
+      { id: 'd2', projectName: 'برج الأعمال',    date: '2026-04-12', status: 'signed', signedAt: '2026-04-11T10:00:00Z' },
+      { id: 'd3', projectName: 'معرض السيارات',  date: '2026-03-28', status: 'completed', completedAt: '2026-03-29T16:00:00Z' }
+    ],
+    teams: [
+      { id: 't1', name: 'فرقة ١ — الوسطى',  workers: ['سعد', 'فهد', 'علي'],           projects: ['p1', 'p5'] },
+      { id: 't2', name: 'فرقة ٢ — الشرقية', workers: ['خالد', 'محمد', 'ياسر', 'بدر'], projects: ['p2', 'p6', 'p7'] },
+      { id: 't3', name: 'فرقة ٣ — الغربية', workers: ['تركي', 'سلطان'],               projects: ['p3'] }
+    ]
+  };
+
+  var currentTab = 'entries';
+  var summaryHost = document.getElementById('summaryHost');
+  var tabContent  = document.getElementById('tabContent');
+
+  function renderTabButtons() {
+    document.querySelectorAll('[data-tab]').forEach(function (btn) {
+      if (btn.getAttribute('data-tab') === currentTab) btn.classList.add('nr-btn--primary');
+      else btn.classList.remove('nr-btn--primary');
+    });
+  }
+
+  function renderTab() {
+    tabContent.innerHTML = '';
+    var title = document.createElement('h6');
+    title.className = 'nr-section-title';
+
+    if (currentTab === 'entries') {
+      title.textContent = 'مُدخلات الفنيين (مقاسات جديدة)';
+      tabContent.appendChild(title);
+      tabContent.appendChild(V.renderEntriesList(state.entries, function (action, entry) {
+        if (action === 'merge' || action === 'confirm') {
+          state.entries = state.entries.map(function (e) {
+            if (e.id !== entry.id) return e;
+            return Object.assign({}, e, { status: 'confirmed', confirmedAt: new Date().toISOString(), linkedProjectId: 'p-auto' });
+          });
+          renderAll();
+        }
+      }));
+    } else if (currentTab === 'maint') {
+      title.textContent = 'أوامر الصيانة';
+      tabContent.appendChild(title);
+      tabContent.appendChild(V.renderMaintenanceTable(state.maintOrders, function (id, newStatus) {
+        state.maintOrders = state.maintOrders.map(function (o) {
+          if (o.id !== id) return o;
+          return L.transitionMaintStatus(o, newStatus);
+        });
+        renderAll();
+      }));
+    } else if (currentTab === 'delivery') {
+      title.textContent = 'أوامر التسليم';
+      tabContent.appendChild(title);
+      tabContent.appendChild(V.renderDeliveryTable(state.deliveries, function (id, newStatus) {
+        state.deliveries = state.deliveries.map(function (o) {
+          if (o.id !== id) return o;
+          return L.transitionDeliveryStatus(o, newStatus);
+        });
+        renderAll();
+      }));
+    } else if (currentTab === 'teams') {
+      title.textContent = 'توزيع الفرق';
+      tabContent.appendChild(title);
+
+      var summary = V.renderTeamsSummary(state.teams);
+      summary.style.marginBottom = 'var(--nr-sp-4)';
+      tabContent.appendChild(summary);
+
+      tabContent.appendChild(V.renderTeamsGrid(state.teams,
+        function (ti) {
+          var pid = prompt('معرّف المشروع (مثلاً p99):');
+          if (!pid) return;
+          state.teams = state.teams.map(function (team, i) {
+            if (i !== ti) return team;
+            return L.addProjectToTeam(team, pid);
+          });
+          renderAll();
+        },
+        function (ti, pi) {
+          state.teams = state.teams.map(function (team, i) {
+            if (i !== ti) return team;
+            return L.removeProjectFromTeam(team, pi);
+          });
+          renderAll();
+        }
+      ));
+    }
+  }
+
+  function renderAll() {
+    summaryHost.innerHTML = '';
+    summaryHost.appendChild(V.renderInstallationsSummary(state.entries, state.maintOrders, state.deliveries));
+    renderTabButtons();
+    renderTab();
+  }
+
+  document.querySelectorAll('[data-tab]').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      currentTab = btn.getAttribute('data-tab');
+      renderAll();
+    });
+  });
+
+  renderAll();
+</script>
+
+</body>
+</html>

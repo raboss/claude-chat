@@ -1,0 +1,281 @@
+<!doctype html>
+<html lang="ar" dir="rtl" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>NouRion — محرّك التصنيع</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&family=IBM+Plex+Sans+Arabic:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="assets/css/nourion-tokens.css">
+  <link rel="stylesheet" href="assets/css/nourion-base.css">
+  <link rel="stylesheet" href="assets/css/nourion-components.css">
+
+  <script src="assets/js/nourion-theme.js"></script>
+
+  <!-- Core engines (classes منقولة حرفياً من pm_server) -->
+  <script src="../src/core/geometry.js"></script>
+  <script src="../src/core/assembly.js"></script>
+  <script src="../src/core/manufacturing.js"></script>
+
+  <!-- View (SVG + tables) -->
+  <script src="../src/modules/draw/draw.logic.js"></script>
+  <script src="../src/modules/draw/draw.view.js"></script>
+  <script src="../src/modules/manufacturing/manufacturing.view.js"></script>
+
+  <link rel="icon" type="image/svg+xml" href="assets/img/logo.svg">
+</head>
+<body>
+
+<div class="nr-app">
+
+  <aside class="nr-sidebar">
+    <div class="nr-sidebar__brand">
+      <img src="assets/img/logo.svg" alt="NouRion" style="height:32px;">
+    </div>
+    <nav class="nr-sidebar__nav">
+      <div class="nr-nav-section">
+        <div class="nr-nav-section__title">الرئيسية</div>
+        <a class="nr-nav-item" href="index.html"><span class="nr-nav-item__icon">◇</span> Design System</a>
+        <a class="nr-nav-item" href="projects.html"><span class="nr-nav-item__icon">◈</span> المشاريع</a>
+      </div>
+      <div class="nr-nav-section">
+        <div class="nr-nav-section__title">التصنيع</div>
+        <a class="nr-nav-item" href="forms.html"><span class="nr-nav-item__icon">📋</span> الاستمارة</a>
+        <a class="nr-nav-item" href="draw.html"><span class="nr-nav-item__icon">📐</span> الرسم</a>
+        <a class="nr-nav-item" href="designs.html"><span class="nr-nav-item__icon">🎨</span> التصاميم</a>
+        <a class="nr-nav-item is-active"><span class="nr-nav-item__icon">⚙️</span> محرّك التصنيع</a>
+      </div>
+    </nav>
+  </aside>
+
+  <main class="nr-app__main">
+
+    <header class="nr-topbar">
+      <div class="nr-topbar__title">محرّك التصنيع · Manufacturing Engine</div>
+      <div class="nr-topbar__actions">
+        <button class="nr-btn nr-btn--ghost nr-btn--sm" data-nr-theme-toggle>
+          <span data-nr-theme-icon>☀</span>
+          <span data-nr-theme-label>الوضع الفاتح</span>
+        </button>
+      </div>
+    </header>
+
+    <div class="nr-app__content">
+
+      <div class="nr-alert nr-alert--success" style="margin-bottom: var(--nr-sp-8);">
+        <span class="nr-alert__icon">✓</span>
+        <div class="nr-alert__body">
+          <div class="nr-alert__title">Phase 2.5 · POC #14 + #15 · Final</div>
+          <div class="nr-alert__msg">
+            هذه الصفحة تُشغّل <strong>core/assembly.js</strong> و
+            <strong>core/manufacturing.js</strong> مباشرة — الـ classes المنقولة
+            حرفياً من pm_server بدون أي تعديل. <strong>20+30 اختبار</strong>
+            integration ناجح على الـ engine الحقيقي.
+          </div>
+        </div>
+      </div>
+
+      <section style="margin-bottom: var(--nr-sp-8);">
+        <h1 style="font-size: var(--nr-fs-3xl); font-weight: 300;">
+          محرّك <span style="color: var(--nr-accent); font-weight: 500;">التصنيع</span>
+        </h1>
+        <p style="max-width: 720px;">
+          أدخل أبعاد النافذة + معاملات الربات والإكسسوارات، و
+          <code>SweepEngine.sweep()</code> + <code>ManufacturingReport</code> ستُنتج
+          قائمة القطع والـ BOM والزجاج والإكسسوارات فوراً.
+        </p>
+      </section>
+
+      <!-- Inputs -->
+      <section style="margin-bottom: var(--nr-sp-6);">
+        <div class="nr-card">
+          <div class="nr-card__header">
+            <div class="nr-card__title">إعدادات الفتحة</div>
+          </div>
+          <div class="nr-card__body nr-grid-4" style="grid-template-columns: repeat(6, 1fr);">
+            <div>
+              <label class="nr-label">العرض W</label>
+              <input class="nr-input" id="inW" type="number" value="2000" step="50">
+              <small class="nr-help">mm</small>
+            </div>
+            <div>
+              <label class="nr-label">الارتفاع H</label>
+              <input class="nr-input" id="inH" type="number" value="1500" step="50">
+              <small class="nr-help">mm</small>
+            </div>
+            <div>
+              <label class="nr-label">عرض القطاع</label>
+              <input class="nr-input" id="inProfileW" type="number" value="50" step="5">
+              <small class="nr-help">mm</small>
+            </div>
+            <div>
+              <label class="nr-label">وزن/م</label>
+              <input class="nr-input" id="inWeight" type="number" value="0.6" step="0.1">
+              <small class="nr-help">kg/m</small>
+            </div>
+            <div>
+              <label class="nr-label">الربات</label>
+              <input class="nr-input" id="inRebate" type="number" value="15" step="1">
+              <small class="nr-help">mm</small>
+            </div>
+            <div>
+              <label class="nr-label">مسافة المفصّلات</label>
+              <input class="nr-input" id="inHingeSp" type="number" value="600" step="50">
+              <small class="nr-help">mm</small>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Summary -->
+      <section style="margin-bottom: var(--nr-sp-6);">
+        <h6 class="nr-section-title">Manufacturing Summary</h6>
+        <div id="summaryHost"></div>
+      </section>
+
+      <!-- Preview SVG + Pieces -->
+      <section style="margin-bottom: var(--nr-sp-6);">
+        <div class="nr-grid-2" style="grid-template-columns: 1fr 1fr;">
+          <div class="nr-card">
+            <div class="nr-card__header">
+              <div class="nr-card__title">الرسم التخطيطي</div>
+            </div>
+            <div class="nr-card__body" style="background: var(--nr-bg-1); min-height: 400px; display: flex; align-items: center; justify-content: center;">
+              <div id="previewHost" style="width: 100%;"></div>
+            </div>
+          </div>
+          <div>
+            <h6 class="nr-section-title">القطع (Assembly Pieces)</h6>
+            <div id="piecesHost"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Cut list -->
+      <section style="margin-bottom: var(--nr-sp-6);">
+        <h6 class="nr-section-title">Cut List (قائمة القطع)</h6>
+        <div id="cutListHost"></div>
+      </section>
+
+      <!-- BOM -->
+      <section style="margin-bottom: var(--nr-sp-6);">
+        <h6 class="nr-section-title">BOM (قائمة الطلب الموحَّدة)</h6>
+        <div id="bomHost"></div>
+      </section>
+
+      <!-- Glass -->
+      <section style="margin-bottom: var(--nr-sp-6);">
+        <h6 class="nr-section-title">Glass (الزجاج)</h6>
+        <div id="glassHost"></div>
+      </section>
+
+      <!-- Accessories -->
+      <section style="margin-bottom: var(--nr-sp-10);">
+        <h6 class="nr-section-title">Accessories (الإكسسوارات)</h6>
+        <div id="accHost"></div>
+      </section>
+
+      <footer style="padding-top: var(--nr-sp-8); border-top: 1px solid var(--nr-border-subtle);">
+        <div class="nr-row-between">
+          <small>Modules: assembly + manufacturing · 50 integration tests · core classes preserved as-is</small>
+          <small style="font-family: var(--nr-font-mono);">Phase 2.5 · POC #14 + #15 · Final</small>
+        </div>
+      </footer>
+
+    </div>
+  </main>
+</div>
+
+
+<script>
+  var V  = NouRion.ManufacturingView;
+  var DL = NouRion.DrawLogic;
+  var DV = NouRion.DrawView;
+
+  var summaryHost  = document.getElementById('summaryHost');
+  var previewHost  = document.getElementById('previewHost');
+  var piecesHost   = document.getElementById('piecesHost');
+  var cutListHost  = document.getElementById('cutListHost');
+  var bomHost      = document.getElementById('bomHost');
+  var glassHost    = document.getElementById('glassHost');
+  var accHost      = document.getElementById('accHost');
+
+  var inputs = ['inW', 'inH', 'inProfileW', 'inWeight', 'inRebate', 'inHingeSp'];
+  var els = {};
+  inputs.forEach(function (k) {
+    els[k] = document.getElementById(k);
+    els[k].addEventListener('input', render);
+  });
+
+  function render() {
+    var W = parseInt(els.inW.value, 10) || 2000;
+    var H = parseInt(els.inH.value, 10) || 1500;
+    var profileW = parseInt(els.inProfileW.value, 10) || 50;
+    var weight = parseFloat(els.inWeight.value) || 0.6;
+    var rebate = parseInt(els.inRebate.value, 10) || 15;
+    var hingeSp = parseInt(els.inHingeSp.value, 10) || 600;
+
+    // 1. Build assembly via core
+    var profile = new ProfileSection({
+      id: 'cas-' + profileW,
+      name: 'CAS-' + profileW,
+      width: profileW,
+      depth: 40,
+      weight: weight
+    });
+    var joint = new JointRule({ type: 'miter' });
+    var rect = ClosedShape.rect(W, H);
+    rect.autoLabel();
+    var assembly = SweepEngine.sweep(rect, profile, joint);
+
+    // 2. Build report via core
+    var report = new ManufacturingReport(
+      assembly,
+      profile,
+      { rebate: rebate, gap: 3, thickness: 6 },
+      { hingeSpacing: hingeSp, hinges: true, handle: true, lock: true }
+    );
+
+    // 3. Render via view
+    summaryHost.innerHTML = '';
+    summaryHost.appendChild(V.renderSummary(report));
+
+    // SVG preview via DrawLogic
+    previewHost.innerHTML = '';
+    var model = DL.buildModel({
+      W: W, H: H,
+      divW: 1, divH: 1,
+      sec: profileW / 2, tBarW: 28, bead: 22, glassDed: 8,
+      panelWidths: [], panelHeights: [],
+      vFull: true, doorBottom: true
+    }, null);
+    var svg = DV.renderModel(model, {});
+    svg.style.width = '100%';
+    svg.style.maxHeight = '400px';
+    svg.style.height = 'auto';
+    previewHost.appendChild(svg);
+
+    piecesHost.innerHTML = '';
+    piecesHost.appendChild(V.renderPiecesDetail(assembly));
+
+    cutListHost.innerHTML = '';
+    cutListHost.appendChild(V.renderCutList(report.cutList));
+
+    bomHost.innerHTML = '';
+    bomHost.appendChild(V.renderBOM(report.cutList));
+
+    glassHost.innerHTML = '';
+    glassHost.appendChild(V.renderGlassList(report.glass));
+
+    accHost.innerHTML = '';
+    accHost.appendChild(V.renderAccessoriesList(report.accessories));
+  }
+
+  render();
+</script>
+
+</body>
+</html>

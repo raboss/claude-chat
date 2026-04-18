@@ -1,0 +1,255 @@
+<!doctype html>
+<html lang="ar" dir="rtl" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>NouRion — المستندات</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&family=IBM+Plex+Sans+Arabic:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="assets/css/nourion-tokens.css">
+  <link rel="stylesheet" href="assets/css/nourion-base.css">
+  <link rel="stylesheet" href="assets/css/nourion-components.css">
+
+  <script src="assets/js/nourion-theme.js"></script>
+  <script src="../src/modules/documents/documents.logic.js"></script>
+  <script src="../src/modules/documents/documents.view.js"></script>
+
+  <link rel="icon" type="image/svg+xml" href="assets/img/logo.svg">
+</head>
+<body>
+
+<div class="nr-app">
+
+  <aside class="nr-sidebar">
+    <div class="nr-sidebar__brand">
+      <img src="assets/img/logo.svg" alt="NouRion" style="height:32px;">
+    </div>
+    <nav class="nr-sidebar__nav">
+      <div class="nr-nav-section">
+        <div class="nr-nav-section__title">الرئيسية</div>
+        <a class="nr-nav-item" href="index.html"><span class="nr-nav-item__icon">◇</span> Design System</a>
+        <a class="nr-nav-item" href="projects.html"><span class="nr-nav-item__icon">◈</span> المشاريع</a>
+        <a class="nr-nav-item" href="measurements.html"><span class="nr-nav-item__icon">◎</span> المقاسات</a>
+        <a class="nr-nav-item is-active"><span class="nr-nav-item__icon">📄</span> المستندات</a>
+        <a class="nr-nav-item" href="saved.html"><span class="nr-nav-item__icon">◇</span> التقارير المحفوظة</a>
+      </div>
+      <div class="nr-nav-section">
+        <div class="nr-nav-section__title">التصنيع</div>
+        <a class="nr-nav-item" href="form-types.html"><span class="nr-nav-item__icon">◎</span> القطاعات</a>
+      </div>
+      <div class="nr-nav-section">
+        <div class="nr-nav-section__title">الإدارة</div>
+        <a class="nr-nav-item" href="settings.html"><span class="nr-nav-item__icon">⚙</span> الإعدادات</a>
+      </div>
+    </nav>
+  </aside>
+
+  <main class="nr-app__main">
+
+    <header class="nr-topbar">
+      <div class="nr-topbar__title">المستندات · Documents</div>
+      <div class="nr-topbar__actions">
+        <button class="nr-btn nr-btn--ghost nr-btn--sm" data-nr-theme-toggle>
+          <span data-nr-theme-icon>☀</span>
+          <span data-nr-theme-label>الوضع الفاتح</span>
+        </button>
+      </div>
+    </header>
+
+    <div class="nr-app__content">
+
+      <div class="nr-alert nr-alert--info" style="margin-bottom: var(--nr-sp-8);">
+        <span class="nr-alert__icon">ⓘ</span>
+        <div class="nr-alert__body">
+          <div class="nr-alert__title">Phase 2.5 · documents POC</div>
+          <div class="nr-alert__msg">
+            هذا الـ module يحتوي على أهمّ الحسابات في النظام: <strong>ضريبة القيمة المضافة 15%</strong>،
+            تجميع البنود حسب القطاع مع تطبيق zero-zero و min-area، التوزيع المالي، اختيار الشعار حسب الشركة،
+            وفلتر الفترات. <strong>46 اختبار</strong> ناجح من أوّل محاولة.
+          </div>
+        </div>
+      </div>
+
+      <section style="margin-bottom: var(--nr-sp-8);">
+        <h1 style="font-size: var(--nr-fs-3xl); font-weight: 300;">
+          مستندات <span style="color: var(--nr-accent); font-weight: 500;">المشاريع</span>
+        </h1>
+        <p style="max-width: 720px;">
+          غيّر المشروع المحدّد أعلى الصفحة لرؤية كل الحسابات تتغيّر live: المستخلص بالضريبة،
+          التوزيع المالي، بنود المقاسات المجمّعة، وإعدادات المستند (شعار + علامة مائية).
+        </p>
+      </section>
+
+      <!-- Project + doc type selector -->
+      <section style="margin-bottom: var(--nr-sp-8);">
+        <h6 class="nr-section-title">Selection</h6>
+        <div class="nr-card">
+          <div class="nr-card__body">
+            <div class="nr-row" style="margin-bottom: var(--nr-sp-4); flex-wrap: wrap;">
+              <label class="nr-label" for="projectSelect" style="margin: 0;">المشروع:</label>
+              <select class="nr-select" id="projectSelect" style="width: 320px; height: 36px;"></select>
+            </div>
+            <h6 style="font-size: var(--nr-fs-xs); color: var(--nr-text-tertiary); margin-bottom: var(--nr-sp-3);">نوع المستند:</h6>
+            <div id="docTypesHost"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Doc settings (logo + watermark) -->
+      <section style="margin-bottom: var(--nr-sp-8);">
+        <h6 class="nr-section-title">Document Settings</h6>
+        <div id="docSettingsHost"></div>
+      </section>
+
+      <!-- Financial summary -->
+      <section style="margin-bottom: var(--nr-sp-8);">
+        <h6 class="nr-section-title">Financial Summary</h6>
+        <div class="nr-grid-2">
+          <div id="extractHost"></div>
+          <div id="distHost"></div>
+        </div>
+      </section>
+
+      <!-- Measurements aggregation -->
+      <section style="margin-bottom: var(--nr-sp-10);">
+        <h6 class="nr-section-title">Measurements Items (مستخلص grouping)</h6>
+        <div id="measItemsHost"></div>
+      </section>
+
+      <footer style="padding-top: var(--nr-sp-8); border-top: 1px solid var(--nr-border-subtle);">
+        <div class="nr-row-between">
+          <small>Module: documents · 46 tests · 10 logic functions · VAT 15% calculations</small>
+          <small style="font-family: var(--nr-font-mono);">Phase 2.5 · POC #6</small>
+        </div>
+      </footer>
+
+    </div>
+  </main>
+</div>
+
+
+<script>
+  var L = NouRion.DocumentsLogic;
+  var V = NouRion.DocumentsView;
+
+  /* sample projects */
+  var SAMPLE_PROJECTS = [
+    {
+      id: 'p1',
+      name: 'فيلا الخالدية',
+      company: 'الراجحي',
+      contractNo: '240200156',
+      contractValue: '285000',
+      extractValue: '320000',  /* شامل VAT */
+      downPayment: '60000',
+      progress: '60'
+    },
+    {
+      id: 'p2',
+      name: 'برج الأعمال',
+      company: 'السلطان',
+      contractNo: '240300012',
+      contractValue: '940000',
+      extractValue: '',         /* لا مستخلص — VAT يُضاف على العقد */
+      downPayment: '150000',
+      progress: '32'
+    },
+    {
+      id: 'p3',
+      name: 'معرض السيارات',
+      company: 'عالم المعادن',
+      contractNo: '240500001',
+      contractValue: '510000',
+      extractValue: '586500',  /* شامل VAT */
+      downPayment: '100000',
+      progress: '94'
+    },
+    {
+      id: 'p4',
+      name: 'فيلا الرياض',
+      company: 'الفوزان',
+      contractNo: '240400089',
+      contractValue: '198500',
+      extractValue: '',
+      downPayment: '40000',
+      progress: '15'
+    }
+  ];
+
+  /* sample meas + price list for the meas grouping demo */
+  var SAMPLE_MEAS = [
+    { width: 1200, height: 1800, sectionName: 'سحاب قلف 12 سم' },
+    { width: 1500, height: 2200, sectionName: 'سحاب قلف 12 سم' },
+    { width: 800,  height: 2000, sectionName: 'سرايا 10 سم' },
+    { width: 1000, height: 2400, sectionName: 'استركشر SG50' },
+    { width: 600,  height: 1200, sectionName: 'سرايا 10 سم' }
+  ];
+  var SAMPLE_PL = [
+    { sectionName: 'سحاب قلف 12 سم', pricePerM2: '450', addWidth: 0, addHeight: 0 },
+    { sectionName: 'سرايا 10 سم',     pricePerM2: '380', addWidth: 0, addHeight: 0 },
+    { sectionName: 'استركشر SG50',    pricePerM2: '720', addWidth: 0, addHeight: 0 }
+  ];
+
+  /* state */
+  var currentProjectId = SAMPLE_PROJECTS[0].id;
+  var currentDocType = 'مستخلص';
+
+  var projectSelect    = document.getElementById('projectSelect');
+  var docTypesHost     = document.getElementById('docTypesHost');
+  var docSettingsHost  = document.getElementById('docSettingsHost');
+  var extractHost      = document.getElementById('extractHost');
+  var distHost         = document.getElementById('distHost');
+  var measItemsHost    = document.getElementById('measItemsHost');
+
+  function getCurrentProject() {
+    return SAMPLE_PROJECTS.find(function (p) { return p.id === currentProjectId; });
+  }
+
+  function renderAll() {
+    var p = getCurrentProject();
+
+    docTypesHost.innerHTML = '';
+    docTypesHost.appendChild(V.renderDocTypesGrid(currentDocType, function (key) {
+      currentDocType = key;
+      renderAll();
+    }));
+
+    docSettingsHost.innerHTML = '';
+    docSettingsHost.appendChild(V.renderDocSettings({
+      company:       p.company,
+      wmColorName:   'auto',
+      useWatermark:  currentDocType === 'مستخلص',
+      forceWatermark:false,
+      hideWatermark: false
+    }));
+
+    extractHost.innerHTML = '';
+    extractHost.appendChild(V.renderExtractFinancials(p));
+
+    distHost.innerHTML = '';
+    distHost.appendChild(V.renderFinancialDistribution(p));
+
+    measItemsHost.innerHTML = '';
+    measItemsHost.appendChild(V.renderMeasItemsTable(SAMPLE_MEAS, SAMPLE_PL));
+  }
+
+  // populate select
+  SAMPLE_PROJECTS.forEach(function (p) {
+    var opt = document.createElement('option');
+    opt.value = p.id;
+    opt.textContent = p.name + ' (' + p.company + ')';
+    projectSelect.appendChild(opt);
+  });
+  projectSelect.addEventListener('change', function () {
+    currentProjectId = projectSelect.value;
+    renderAll();
+  });
+
+  renderAll();
+</script>
+
+</body>
+</html>
