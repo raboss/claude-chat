@@ -1,0 +1,137 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 340 80">
+  <defs>
+    <!-- Left tower glass gradient -->
+    <linearGradient id="gl" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%"   stop-color="#032a40"/>
+      <stop offset="30%"  stop-color="#055c7a"/>
+      <stop offset="60%"  stop-color="#0891b2"/>
+      <stop offset="82%"  stop-color="#22d3ee"/>
+      <stop offset="100%" stop-color="#67e8f9" stop-opacity="0.75"/>
+    </linearGradient>
+    <!-- Right tower glass gradient (mirror) -->
+    <linearGradient id="gr" x1="1" y1="0" x2="0" y2="0">
+      <stop offset="0%"   stop-color="#032a40"/>
+      <stop offset="30%"  stop-color="#055c7a"/>
+      <stop offset="60%"  stop-color="#0891b2"/>
+      <stop offset="82%"  stop-color="#22d3ee"/>
+      <stop offset="100%" stop-color="#67e8f9" stop-opacity="0.75"/>
+    </linearGradient>
+    <!-- Diagonal connector glass -->
+    <linearGradient id="gd" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%"   stop-color="#22d3ee" stop-opacity="0.78"/>
+      <stop offset="50%"  stop-color="#0891b2" stop-opacity="0.65"/>
+      <stop offset="100%" stop-color="#044a65" stop-opacity="0.80"/>
+    </linearGradient>
+    <!-- Glass reflection streak -->
+    <linearGradient id="refl" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%"   stop-color="#fff" stop-opacity="0.30"/>
+      <stop offset="50%"  stop-color="#fff" stop-opacity="0.09"/>
+      <stop offset="100%" stop-color="#fff" stop-opacity="0"/>
+    </linearGradient>
+    <!-- Diagonal reflection -->
+    <linearGradient id="drefl" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%"   stop-color="#fff" stop-opacity="0.24"/>
+      <stop offset="100%" stop-color="#fff" stop-opacity="0"/>
+    </linearGradient>
+    <!-- Bottom accent bar -->
+    <linearGradient id="bar" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%"   stop-color="#0284c7"/>
+      <stop offset="50%"  stop-color="#22d3ee"/>
+      <stop offset="100%" stop-color="#0284c7"/>
+    </linearGradient>
+    <!-- Wordmark gradient -->
+    <linearGradient id="wm" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%"   stop-color="#e8f0f8"/>
+      <stop offset="100%" stop-color="#aabccc"/>
+    </linearGradient>
+    <!-- Soft glow -->
+    <filter id="glow" x="-60%" y="-60%" width="220%" height="220%">
+      <feGaussianBlur stdDeviation="3" result="blur"/>
+      <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+    </filter>
+
+    <!-- Clip paths for window grid (scaled to logo) -->
+    <clipPath id="cll">
+      <polygon points="10,66 23,66 29,12 16,12"/>
+    </clipPath>
+    <clipPath id="clr">
+      <polygon points="46,66 59,66 53,12 40,12"/>
+    </clipPath>
+    <clipPath id="cld">
+      <polygon points="29,12 37,12 46,66 38,66"/>
+    </clipPath>
+  </defs>
+
+  <!-- ── Glow bloom behind buildings ── -->
+  <polygon points="10,66 23,66 29,12 16,12"  fill="#0ea5c9" opacity="0.12" filter="url(#glow)"/>
+  <polygon points="46,66 59,66 53,12 40,12"  fill="#0ea5c9" opacity="0.12" filter="url(#glow)"/>
+  <polygon points="29,12 37,12 46,66 38,66"  fill="#0ea5c9" opacity="0.08" filter="url(#glow)"/>
+
+  <!-- ── Left tower (leans right: bottom x=10–23, top x=16–29) ── -->
+  <polygon points="10,66 23,66 29,12 16,12" fill="url(#gl)"/>
+  <!-- Window grid -->
+  <g clip-path="url(#cll)" opacity="0.50">
+    <line x1="7"  y1="57" x2="32" y2="57" stroke="#fff" stroke-width="0.5"/>
+    <line x1="7"  y1="47" x2="32" y2="47" stroke="#fff" stroke-width="0.5"/>
+    <line x1="7"  y1="37" x2="32" y2="37" stroke="#fff" stroke-width="0.5"/>
+    <line x1="7"  y1="27" x2="32" y2="27" stroke="#fff" stroke-width="0.5"/>
+    <line x1="21" y1="9"  x2="21" y2="70" stroke="#fff" stroke-width="0.4" opacity="0.5"/>
+  </g>
+  <!-- Reflection streak -->
+  <polygon points="10,66 16,66 22,12 16,12" fill="url(#refl)"/>
+  <!-- Rooftop highlight -->
+  <line x1="16" y1="12" x2="29" y2="12" stroke="rgba(255,255,255,0.60)" stroke-width="1.2"/>
+  <!-- Right edge catchlight -->
+  <line x1="29" y1="12" x2="23" y2="66" stroke="rgba(255,255,255,0.28)" stroke-width="0.9"/>
+
+  <!-- ── Right tower (leans left: bottom x=46–59, top x=40–53) ── -->
+  <polygon points="46,66 59,66 53,12 40,12" fill="url(#gr)"/>
+  <!-- Window grid -->
+  <g clip-path="url(#clr)" opacity="0.50">
+    <line x1="37" y1="57" x2="62" y2="57" stroke="#fff" stroke-width="0.5"/>
+    <line x1="37" y1="47" x2="62" y2="47" stroke="#fff" stroke-width="0.5"/>
+    <line x1="37" y1="37" x2="62" y2="37" stroke="#fff" stroke-width="0.5"/>
+    <line x1="37" y1="27" x2="62" y2="27" stroke="#fff" stroke-width="0.5"/>
+    <line x1="49" y1="9"  x2="49" y2="70" stroke="#fff" stroke-width="0.4" opacity="0.5"/>
+  </g>
+  <!-- Reflection streak (mirrors left) -->
+  <polygon points="53,12 59,66 53,66 47,12" fill="url(#refl)"/>
+  <!-- Rooftop highlight -->
+  <line x1="40" y1="12" x2="53" y2="12" stroke="rgba(255,255,255,0.60)" stroke-width="1.2"/>
+  <!-- Left edge catchlight -->
+  <line x1="46" y1="66" x2="40" y2="12" stroke="rgba(255,255,255,0.28)" stroke-width="0.9"/>
+
+  <!-- ── Diagonal connector (N stroke: top x=29–37, bottom x=38–46) ── -->
+  <polygon points="29,12 37,12 46,66 38,66" fill="url(#gd)"/>
+  <!-- Diagonal window grid -->
+  <g clip-path="url(#cld)" opacity="0.35">
+    <line x1="26" y1="28" x2="50" y2="28" stroke="#fff" stroke-width="0.5"/>
+    <line x1="28" y1="44" x2="52" y2="44" stroke="#fff" stroke-width="0.5"/>
+  </g>
+  <!-- Diagonal reflection -->
+  <polygon points="29,12 34,12 43,66 38,66" fill="url(#drefl)"/>
+  <!-- Diagonal top edge -->
+  <line x1="29" y1="12" x2="37" y2="12" stroke="rgba(255,255,255,0.40)" stroke-width="1"/>
+
+  <!-- ── Brand accent line ── -->
+  <rect x="10" y="70" width="59" height="2.5" rx="1.2" fill="url(#bar)" opacity="0.88"/>
+
+  <!-- ── Divider ── -->
+  <line x1="83" y1="14" x2="83" y2="66" stroke="rgba(255,255,255,0.10)" stroke-width="1"/>
+
+  <!-- ── NourMetal wordmark ── -->
+  <text x="95" y="45"
+    font-family="Arial,Helvetica,sans-serif"
+    font-size="27"
+    font-weight="700"
+    fill="url(#wm)"
+    letter-spacing="0.5">NourMetal</text>
+
+  <!-- ── Tagline ── -->
+  <text x="96" y="61"
+    font-family="Arial,Helvetica,sans-serif"
+    font-size="8"
+    font-weight="400"
+    fill="#3a5568"
+    letter-spacing="2.8">METAL SYSTEMS</text>
+</svg>

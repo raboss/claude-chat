@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 200">
+  <defs>
+    <linearGradient id="metalLight" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#d8dfe8"/>
+      <stop offset="25%" stop-color="#f0f2f6"/>
+      <stop offset="45%" stop-color="#b8c4d2"/>
+      <stop offset="55%" stop-color="#e8ecf2"/>
+      <stop offset="75%" stop-color="#a0aec0"/>
+      <stop offset="100%" stop-color="#8896aa"/>
+    </linearGradient>
+    <linearGradient id="metalDark" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#3a4a5e"/>
+      <stop offset="25%" stop-color="#2a3a4e"/>
+      <stop offset="50%" stop-color="#4a5a6e"/>
+      <stop offset="75%" stop-color="#2a3a4e"/>
+      <stop offset="100%" stop-color="#1a2a3e"/>
+    </linearGradient>
+    <filter id="subtle3d">
+      <feDropShadow dx="0" dy="1" stdDeviation="1" flood-color="#000" flood-opacity="0.15"/>
+    </filter>
+  </defs>
+  <!-- A -->
+  <path d="M30,170 L85,30 C88,22 93,18 100,18 C107,18 112,22 115,30 L135,85 L105,85 L100,70 C98,64 96,62 93,62 C90,62 88,64 86,70 L65,135 L110,135 L120,163 C122,168 119,172 113,172 L45,172 C37,172 30,166 30,170 Z" fill="url(#metalLight)" filter="url(#subtle3d)" class="logo-letter"/>
+  <!-- V/W connector -->
+  <path d="M118,30 L155,120 L192,30 C195,22 200,18 207,18 C214,18 218,22 215,30 L168,150 C165,158 160,162 155,162 C150,162 145,158 142,150 L95,30 C92,22 97,18 104,18 C111,18 115,22 118,30 Z" fill="url(#metalLight)" filter="url(#subtle3d)" class="logo-letter"/>
+  <!-- N -->
+  <path d="M215,170 L215,45 C215,33 222,18 233,18 C240,18 246,22 249,30 L295,135 L295,45 C295,33 302,18 313,18 C324,18 320,33 320,45 L320,160 C320,168 313,175 303,175 L300,175 C292,175 286,170 283,160 L238,55 L238,160 C238,168 231,175 222,175 C213,175 215,168 215,160 Z" fill="url(#metalLight)" filter="url(#subtle3d)" class="logo-letter"/>
+  <!-- ALUMNOOR text -->
+  <text x="170" y="198" font-family="Arial,Helvetica,sans-serif" font-size="20" font-weight="700" fill="url(#metalLight)" text-anchor="middle" letter-spacing="8" filter="url(#subtle3d)" class="logo-text">ALUMNOOR</text>
+</svg>

@@ -1,0 +1,94 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 680 200" width="680" height="200">
+  <!--
+    NouRion — Artistic Wordmark (Manrope)
+    Artistic flourishes:
+    - Signature electron dot (animated) between R and "ion"
+    - Subtle baseline "spark" underline with gradient
+    - Floating micro-spark above R
+    - Atom symbol on the right
+  -->
+  <defs>
+    <linearGradient id="rPrimary" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%"   stop-color="#5AB4E8"/>
+      <stop offset="50%"  stop-color="#3FA2E0"/>
+      <stop offset="100%" stop-color="#1E5FA8"/>
+    </linearGradient>
+
+    <radialGradient id="elecDot" cx="30%" cy="30%" r="70%">
+      <stop offset="0%"   stop-color="#FEF3DA"/>
+      <stop offset="40%"  stop-color="#F4A91E"/>
+      <stop offset="100%" stop-color="#C87E0E"/>
+    </radialGradient>
+
+    <radialGradient id="microNucleus" cx="35%" cy="35%" r="65%">
+      <stop offset="0%"   stop-color="#FFFFFF"/>
+      <stop offset="30%"  stop-color="#F28189"/>
+      <stop offset="80%"  stop-color="#E63946"/>
+      <stop offset="100%" stop-color="#B52A37"/>
+    </radialGradient>
+
+    <linearGradient id="sparkLine" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%"   stop-color="transparent"/>
+      <stop offset="20%"  stop-color="#3FA2E0"/>
+      <stop offset="50%"  stop-color="#F4A91E"/>
+      <stop offset="80%"  stop-color="#3FA2E0"/>
+      <stop offset="100%" stop-color="transparent"/>
+    </linearGradient>
+
+    <filter id="rGlow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="1.6" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+
+    <filter id="softGlow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="1.2" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@700;800&amp;display=swap');
+      .brand-ar { font-family: 'Manrope', system-ui, sans-serif; }
+      .w700 { font-weight: 700; }
+      .w800 { font-weight: 800; }
+    </style>
+  </defs>
+
+  <!-- "Nou" -->
+  <text x="30" y="130" class="brand-ar w700" font-size="108" fill="#0A1628" letter-spacing="-5">Nou</text>
+
+  <!-- "R" — hero blue letter -->
+  <text x="230" y="134" class="brand-ar w800" font-size="118" fill="url(#rPrimary)" filter="url(#rGlow)" letter-spacing="-5">R</text>
+
+  <!-- Floating micro-spark above R (animated) -->
+  <circle cx="268" cy="52" r="2.5" fill="#F4A91E" filter="url(#softGlow)">
+    <animate attributeName="opacity" values="0.4;1;0.4" dur="2.5s" repeatCount="indefinite"/>
+    <animate attributeName="r" values="2;3;2" dur="2.5s" repeatCount="indefinite"/>
+  </circle>
+
+  <!-- Signature electron dot floating between R and "ion" (animated) -->
+  <circle cx="325" cy="110" r="4" fill="url(#elecDot)" filter="url(#softGlow)">
+    <animate attributeName="cy" values="110;100;110" dur="3s" repeatCount="indefinite"/>
+    <animate attributeName="r" values="3.5;5;3.5" dur="2s" repeatCount="indefinite"/>
+  </circle>
+
+  <!-- "ion" -->
+  <text x="345" y="130" class="brand-ar w700" font-size="108" fill="#0A1628" letter-spacing="-5">ion</text>
+
+  <!-- ATOM SYMBOL -->
+  <g transform="translate(590, 100)">
+    <ellipse cx="0" cy="0" rx="58" ry="22" fill="none" stroke="#1E5FA8" stroke-width="3.2" transform="rotate(0)"/>
+    <ellipse cx="0" cy="0" rx="58" ry="22" fill="none" stroke="#1E5FA8" stroke-width="3.2" transform="rotate(60)"/>
+    <ellipse cx="0" cy="0" rx="58" ry="22" fill="none" stroke="#3FA2E0" stroke-width="3.2" transform="rotate(-60)"/>
+    <circle cx="58" cy="0" r="5" fill="url(#elecDot)" filter="url(#softGlow)"/>
+    <circle cx="-29" cy="-50.2" r="5" fill="url(#elecDot)" filter="url(#softGlow)"/>
+    <circle cx="29" cy="50.2" r="5" fill="url(#elecDot)" filter="url(#softGlow)"/>
+    <circle cx="-58" cy="0" r="5" fill="url(#elecDot)" filter="url(#softGlow)"/>
+    <circle cx="0" cy="0" r="11" fill="url(#microNucleus)" filter="url(#softGlow)"/>
+  </g>
+
+  <!-- Signature underline spark -->
+  <line x1="30" y1="165" x2="510" y2="165" stroke="url(#sparkLine)" stroke-width="1.5" opacity="0.6"/>
+
+  <!-- Tagline -->
+  <text x="30" y="188" class="brand-ar" font-size="11" font-weight="600" fill="#64748B" style="letter-spacing: 6px;">INTELLIGENT MANUFACTURING</text>
+</svg>
