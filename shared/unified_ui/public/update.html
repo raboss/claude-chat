@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>تحديث البرنامج</title>
+<style>
+body{font-family:'Cairo',sans-serif;background:#0a0f1e;color:#fff;display:flex;justify-content:center;align-items:center;min-height:100vh;margin:0}
+.box{text-align:center;background:#0f172a;padding:40px;border-radius:16px;border:1px solid #1e293b;max-width:400px}
+h2{color:#3b82f6;margin-bottom:10px}
+p{color:#94a3b8;font-size:14px}
+.spinner{width:40px;height:40px;border:4px solid #1e293b;border-top-color:#3b82f6;border-radius:50%;animation:spin 1s linear infinite;margin:20px auto}
+@keyframes spin{to{transform:rotate(360deg)}}
+.done{color:#10b981;font-size:18px;font-weight:700}
+.err{color:#ef4444}
+.step{color:#94a3b8;font-size:13px;margin:4px 0}
+</style>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+<div class="box">
+<h2>🔄 تحديث البرنامج</h2>
+<p>جاري حذف الكاش والبيانات القديمة وتحميل الأحدث من السيرفر...</p>
+<div class="spinner" id="spin"></div>
+<div id="msg"></div>
+</div>
+<script>
+(async function(){
+  var msg = document.getElementById('msg');
+  var spin = document.getElementById('spin');
+  function step(txt){ msg.innerHTML += '<div class="step">✅ ' + txt + '</div>'; }
+  try {
+    // 1. حذف كل الكاشات
+    try {
+      var keys = await caches.keys();
+      for(var i=0;i<keys.length;i++) await caches.delete(keys[i]);
+      step('حذف كاش المتصفح (' + keys.length + ')');
+    } catch(e){ step('كاش — ' + e.message); }
+
+    // 2. إلغاء service workers
+    try {
+      var regs = await navigator.serviceWorker.getRegistrations();
+      for(var j=0;j<regs.length;j++) await regs[j].unregister();
+      step('إلغاء Service Worker (' + regs.length + ')');
+    } catch(e){ step('SW — ' + e.message); }
+
+    // 3. حذف كل بيانات localStorage القديمة (ما عدا الجلسة)
+    var session = sessionStorage.getItem('pm_current_user');
+    var master = sessionStorage.getItem('pm_master_unlocked');
+    var kept = 0, removed = 0;
+    var keysToRemove = [];
+    for(var k=0; k<localStorage.length; k++) {
+      var key = localStorage.key(k);
+      if(key && key.startsWith('pm_')) keysToRemove.push(key);
+    }
+    keysToRemove.forEach(function(key){ localStorage.removeItem(key); removed++; });
+    step('حذف بيانات محلية قديمة (' + removed + ' مفتاح)');
+
+    // 4. تحميل البيانات الجديدة من السيرفر مباشرة
+    try {
+      var r = await fetch('/api/data');
+      var d = await r.json();
+      if(d.ok && d.data) {
+        var count = 0;
+        Object.entries(d.data).forEach(function(entry) {
+          var dk = entry[0], dv = entry[1];
+          if(!dk.startsWith('pm_')) return;
+          if(dk === 'pm_current_user' || dk === 'pm_master_unlocked') return;
+          localStorage.setItem(dk, typeof dv === 'string' ? dv : JSON.stringify(dv));
+          count++;
+        });
+        step('تحميل ' + count + ' مفتاح من السيرفر');
+        var projects = d.data.pm_projects || [];
+        step('المشاريع: ' + projects.length + ' مشروع');
+      }
+    } catch(e){ step('تحميل — ' + e.message); }
+
+    // 5. استعادة الجلسة
+    if(session) sessionStorage.setItem('pm_current_user', session);
+    if(master) sessionStorage.setItem('pm_master_unlocked', master);
+    step('استعادة جلسة المستخدم');
+
+    // 6. تحويل للصفحة الرئيسية
+    msg.innerHTML += '<br><div class="done">✅ تم التحديث بنجاح!</div><br><p>جاري إعادة التوجيه...</p>';
+    spin.style.display = 'none';
+    setTimeout(function(){ window.location.href = '/?v=' + Date.now(); }, 2000);
+  } catch(e) {
+    spin.style.display = 'none';
+    msg.innerHTML += '<div class="err">❌ خطأ: ' + e.message + '</div><br><a href="/" style="color:#3b82f6">رجوع للبرنامج</a>';
+  }
+})();
+</script>
+</body>
+</html>

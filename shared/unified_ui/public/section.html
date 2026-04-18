@@ -1,0 +1,720 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NourMetal — Section Viewer | مقطع القطاع</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#0c0e14;--bg2:#141721;--bg3:#1c2030;--border:#2a2e42;
+  --teal:#0ea5c9;--teal2:#0284a0;--text:#e2e8f0;--text2:#94a3b8;--text3:#64748b;
+  --red:#ef4444;--orange:#f97316;--yellow:#eab308;--green:#22c55e;
+}
+body{font-family:Cairo,sans-serif;background:var(--bg);color:var(--text);overflow:hidden;height:100vh;display:flex;flex-direction:column}
+
+/* === HEADER === */
+.hdr{height:44px;background:var(--bg2);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 16px;gap:12px;flex-shrink:0}
+.hdr-logo{font-size:15px;font-weight:800;color:var(--teal);display:flex;align-items:center;gap:6px}
+.hdr-logo .dot{width:24px;height:24px;background:var(--teal);border-radius:5px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:11px;font-weight:800}
+.hdr-sep{width:1px;height:20px;background:var(--border)}
+.hdr-info{font-size:11px;color:var(--text3)}
+.hdr-info b{color:var(--text2)}
+.hdr-actions{margin-right:auto;display:flex;gap:6px}
+.hdr-btn{padding:5px 12px;border-radius:6px;border:1px solid var(--border);background:var(--bg3);color:var(--text2);font-family:Cairo;font-size:11px;font-weight:600;cursor:pointer;transition:all .15s;display:flex;align-items:center;gap:4px}
+.hdr-btn:hover{border-color:var(--teal);color:var(--teal)}
+
+/* === MAIN === */
+.main{display:flex;flex:1;overflow:hidden}
+
+/* === PANEL === */
+.panel{width:240px;background:var(--bg2);border-left:1px solid var(--border);overflow-y:auto;padding:10px;flex-shrink:0}
+.panel::-webkit-scrollbar{width:4px}
+.panel::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
+.sec-title{font-size:11px;font-weight:700;color:var(--teal);margin-bottom:6px;padding-bottom:4px;border-bottom:1px solid var(--border);text-transform:uppercase;letter-spacing:.5px;display:flex;align-items:center;gap:4px}
+.sec-title span{font-size:12px}
+.info-row{display:flex;justify-content:space-between;padding:3px 0;font-size:11px}
+.info-l{color:var(--text3)}
+.info-v{color:var(--text);font-weight:700}
+.gap{height:12px}
+
+/* Layer buttons */
+.layer-btn{width:100%;padding:6px 10px;border-radius:6px;border:2px solid var(--border);background:var(--bg3);color:var(--text2);font-family:Cairo;font-size:11px;font-weight:700;cursor:pointer;transition:all .15s;margin-bottom:4px;display:flex;align-items:center;gap:6px;position:relative}
+.layer-btn:hover{border-color:var(--teal);color:var(--text)}
+.layer-btn.active{border-color:var(--teal);background:rgba(14,165,201,.08);color:var(--teal)}
+.layer-btn.hidden{opacity:.4}
+.layer-dot{width:10px;height:10px;border-radius:3px;flex-shrink:0}
+.layer-eye{margin-right:auto;font-size:13px;cursor:pointer;opacity:.5}
+.layer-eye:hover{opacity:1}
+
+/* Color legend */
+.legend{display:grid;grid-template-columns:1fr 1fr;gap:4px;margin-bottom:8px}
+.legend-item{display:flex;align-items:center;gap:4px;font-size:10px;color:var(--text3)}
+.legend-dot{width:8px;height:8px;border-radius:2px;flex-shrink:0}
+
+/* === CANVAS AREA === */
+.canvas-wrap{flex:1;position:relative;background:#0a0c12;overflow:hidden}
+canvas{display:block;width:100%;height:100%;cursor:grab}
+canvas:active{cursor:grabbing}
+
+/* Canvas overlay info */
+.canvas-info{position:absolute;bottom:10px;right:10px;background:rgba(20,23,33,.9);border:1px solid var(--border);border-radius:8px;padding:6px 12px;font-size:10px;color:var(--text3);display:flex;gap:12px;backdrop-filter:blur(8px)}
+.canvas-info b{color:var(--text2)}
+
+/* Zoom controls */
+.zoom-ctrl{position:absolute;top:10px;left:10px;display:flex;flex-direction:column;gap:2px;background:rgba(20,23,33,.9);border:1px solid var(--border);border-radius:8px;overflow:hidden;backdrop-filter:blur(8px)}
+.zoom-btn{width:32px;height:32px;border:none;background:transparent;color:var(--text2);font-size:16px;font-weight:700;cursor:pointer;transition:all .15s;display:flex;align-items:center;justify-content:center;font-family:Cairo}
+.zoom-btn:hover{background:rgba(14,165,201,.15);color:var(--teal)}
+.zoom-sep{height:1px;background:var(--border)}
+
+/* Active element indicator */
+.active-indicator{position:absolute;top:10px;right:10px;background:rgba(14,165,201,.15);border:1px solid var(--teal);border-radius:8px;padding:6px 14px;font-size:11px;font-weight:700;color:var(--teal);backdrop-filter:blur(8px);display:none}
+.active-indicator.show{display:block}
+</style>
+</head>
+<body>
+
+<div class="hdr">
+  <div class="hdr-logo"><div class="dot">N</div> NourMetal</div>
+  <div class="hdr-sep"></div>
+  <div class="hdr-info"><b>Section Viewer</b> | ALUPCO 45mm — Fixed Window — Profile 32108</div>
+  <div class="hdr-actions">
+    <button class="hdr-btn" onclick="exportPNG()">PNG</button>
+    <button class="hdr-btn" onclick="resetAll()">Reset</button>
+  </div>
+</div>
+
+<div class="main">
+  <div class="panel">
+    <!-- Profile Info -->
+    <div class="sec-title"><span>&#9670;</span> Profile Info</div>
+    <div class="info-row"><span class="info-l">System</span><span class="info-v">ALUPCO 45mm</span></div>
+    <div class="info-row"><span class="info-l">Code</span><span class="info-v">32108</span></div>
+    <div class="info-row"><span class="info-l">Width</span><span class="info-v">45 mm</span></div>
+    <div class="info-row"><span class="info-l">Height</span><span class="info-v">50 mm</span></div>
+    <div class="info-row"><span class="info-l">Depth</span><span class="info-v">58 mm</span></div>
+    <div class="info-row"><span class="info-l">Wall</span><span class="info-v">1.4 mm</span></div>
+    <div class="info-row"><span class="info-l">Weight</span><span class="info-v">915 g/m</span></div>
+    <div class="info-row"><span class="info-l">Lip</span><span class="info-v">30 mm</span></div>
+    <div class="gap"></div>
+
+    <!-- Layers -->
+    <div class="sec-title"><span>&#9632;</span> Layers</div>
+    <div style="font-size:10px;color:var(--text3);margin-bottom:6px">Click to select & drag. Eye to toggle visibility.</div>
+
+    <button class="layer-btn" id="btn_Profile" onclick="selectLayer('Profile')">
+      <div class="layer-dot" style="background:#8b9dc3"></div>
+      Profile — 32108
+      <span class="layer-eye" onclick="event.stopPropagation();toggleLayer('Profile')">&#128065;</span>
+    </button>
+    <button class="layer-btn" id="btn_Glass" onclick="selectLayer('Glass')">
+      <div class="layer-dot" style="background:#38bdf8"></div>
+      Glass — 24mm Double
+      <span class="layer-eye" onclick="event.stopPropagation();toggleLayer('Glass')">&#128065;</span>
+    </button>
+    <button class="layer-btn" id="btn_GlazingBead" onclick="selectLayer('GlazingBead')">
+      <div class="layer-dot" style="background:#facc15"></div>
+      Glazing Bead — 11307
+      <span class="layer-eye" onclick="event.stopPropagation();toggleLayer('GlazingBead')">&#128065;</span>
+    </button>
+    <button class="layer-btn" id="btn_Gasket" onclick="selectLayer('Gasket')">
+      <div class="layer-dot" style="background:#ef4444"></div>
+      Gasket — A064091E
+      <span class="layer-eye" onclick="event.stopPropagation();toggleLayer('Gasket')">&#128065;</span>
+    </button>
+    <button class="layer-btn" id="btn_Sealant" onclick="selectLayer('Sealant')">
+      <div class="layer-dot" style="background:#f97316"></div>
+      Sealant
+      <span class="layer-eye" onclick="event.stopPropagation();toggleLayer('Sealant')">&#128065;</span>
+    </button>
+    <button class="layer-btn" id="btn_Screw" onclick="selectLayer('Screw')">
+      <div class="layer-dot" style="background:#9ca3af"></div>
+      Screw / Fixing
+      <span class="layer-eye" onclick="event.stopPropagation();toggleLayer('Screw')">&#128065;</span>
+    </button>
+    <div class="gap"></div>
+
+    <!-- Display -->
+    <div class="sec-title"><span>&#9881;</span> Display</div>
+    <button class="layer-btn" onclick="toggleGrid()" id="btn_grid">
+      <div class="layer-dot" style="background:#334155"></div>
+      Grid
+    </button>
+    <button class="layer-btn" onclick="toggleDims()" id="btn_dims">
+      <div class="layer-dot" style="background:#0ea5c9"></div>
+      Dimensions
+    </button>
+    <button class="layer-btn" onclick="toggleLabels()" id="btn_labels">
+      <div class="layer-dot" style="background:#a78bfa"></div>
+      Labels / Codes
+    </button>
+    <div class="gap"></div>
+
+    <!-- Components -->
+    <div class="sec-title"><span>&#9998;</span> Components</div>
+    <div class="info-row"><span class="info-l">32108</span><span class="info-v">Frame</span></div>
+    <div class="info-row"><span class="info-l">11307</span><span class="info-v">Glazing Bead</span></div>
+    <div class="info-row"><span class="info-l">A064091E</span><span class="info-v">External Gasket</span></div>
+    <div class="info-row"><span class="info-l">A064092E</span><span class="info-v">Internal Gasket</span></div>
+    <div class="info-row"><span class="info-l">Glass</span><span class="info-v">24mm Double</span></div>
+  </div>
+
+  <div class="canvas-wrap">
+    <canvas id="cv"></canvas>
+    <div class="zoom-ctrl">
+      <button class="zoom-btn" onclick="zoomIn()">+</button>
+      <div class="zoom-sep"></div>
+      <button class="zoom-btn" onclick="zoomOut()">&minus;</button>
+      <div class="zoom-sep"></div>
+      <button class="zoom-btn" onclick="fitView()" style="font-size:12px">&#8634;</button>
+    </div>
+    <div class="active-indicator" id="activeInd"></div>
+    <div class="canvas-info">
+      <span>Zoom: <b id="zoomLbl">100%</b></span>
+      <span>Mouse: <b id="mouseLbl">0, 0</b></span>
+    </div>
+  </div>
+</div>
+
+<script>
+// ============================================================
+// NourMetal Section Viewer — Professional DXF Cross-Section
+// ============================================================
+const cv = document.getElementById('cv');
+const ctx = cv.getContext('2d');
+
+// State
+let scale = 5;
+let panX = 0, panY = 0;
+let showGrid = true, showDims = true, showLabels = true;
+let selectedLayer = null;
+let dragging = false, dragType = null; // 'pan' or 'layer'
+let lastMX = 0, lastMY = 0;
+let mouseWorld = {x:0,y:0};
+
+// Layer visibility & offsets
+const layers = {
+  Profile:    { visible: true, ox: 0, oy: 0, color: '#8b9dc3', fill: 'none',                lineW: 0.3 },
+  Glass:      { visible: true, ox: 0, oy: 0, color: '#38bdf8', fill: 'rgba(56,189,248,0.15)', lineW: 0.2 },
+  GlazingBead:{ visible: true, ox: 0, oy: 0, color: '#facc15', fill: 'rgba(250,204,21,0.08)', lineW: 0.2 },
+  Gasket:     { visible: true, ox: 0, oy: 0, color: '#ef4444', fill: 'rgba(239,68,68,0.12)',  lineW: 0.15 },
+  Sealant:    { visible: true, ox: 0, oy: 0, color: '#f97316', fill: 'rgba(249,115,22,0.15)', lineW: 0.1 },
+  Screw:      { visible: true, ox: 0, oy: 0, color: '#9ca3af', fill: 'rgba(156,163,175,0.15)',lineW: 0.1 }
+};
+
+// DXF data (loaded from file)
+let dxfRaw = null;
+
+// Computed profile shapes for manual glazing bead
+// (DXF doesn't have a separate GlazingBead layer, so we generate it)
+const glazingBeadShape = {
+  polylines: [
+    // Inner glazing bead - clips against frame inner wall
+    { points: [
+      [3.0, 28.0], [6.0, 28.0], [6.0, 30.0], [9.0, 30.0], [9.0, 28.0],
+      [33.0, 28.0], [33.0, 30.0], [36.0, 30.0], [36.0, 28.0],
+      [60.0, 28.0], [60.0, 30.0], [63.0, 30.0], [63.0, 28.0],
+      [74.0, 28.0], [74.0, 30.0], [102.0, 30.0], [102.0, 35.4],
+      [3.0, 35.4]
+    ], closed: true }
+  ]
+};
+
+// Sealant arcs (from DXF — small coordinate range, these are the screw fixing arcs)
+const sealantShapes = {
+  arcs: []  // Will populate from filtered DXF data
+};
+
+// ============================================================
+// DATA LOADING
+// ============================================================
+async function loadDXF() {
+  try {
+    const r = await fetch('/draw/profiles/FIXED_WINDOW_DXF.json');
+    dxfRaw = await r.json();
+  } catch(e) {
+    console.warn('DXF load failed, using manual shapes');
+  }
+  render();
+}
+
+// Filter DXF data: only keep entities within reasonable cross-section bounds
+function filterEntities(layerData, maxCoord) {
+  if (!layerData) return { polylines: [], lines: [], arcs: [] };
+  const mc = maxCoord || 200;
+  const result = { polylines: [], lines: [], arcs: [] };
+
+  if (layerData.polylines) {
+    layerData.polylines.forEach(p => {
+      const inBounds = p.points.every(pt =>
+        Math.abs(pt[0]) < mc && Math.abs(pt[1]) < mc
+      );
+      if (inBounds) result.polylines.push(p);
+    });
+  }
+  if (layerData.lines) {
+    layerData.lines.forEach(l => {
+      const inBounds = Math.abs(l[0][0]) < mc && Math.abs(l[0][1]) < mc &&
+                        Math.abs(l[1][0]) < mc && Math.abs(l[1][1]) < mc;
+      if (inBounds) result.lines.push(l);
+    });
+  }
+  if (layerData.arcs) {
+    layerData.arcs.forEach(a => {
+      if (Math.abs(a.cx) < mc && Math.abs(a.cy) < mc) result.arcs.push(a);
+    });
+  }
+  return result;
+}
+
+// ============================================================
+// RENDERING
+// ============================================================
+function render() {
+  if (!cv.width) return;
+  const W = cv.width, H = cv.height;
+  ctx.clearRect(0, 0, W, H);
+
+  // Background
+  ctx.fillStyle = '#0a0c12';
+  ctx.fillRect(0, 0, W, H);
+
+  ctx.save();
+  // Transform: center, pan, scale; Y flipped for CAD
+  ctx.translate(W/2 + panX, H/2 + panY);
+  ctx.scale(scale, -scale);
+
+  // Grid
+  if (showGrid) drawGrid();
+
+  // Render layers in order
+  if (dxfRaw) {
+    // Profile (hollow — stroke only)
+    if (layers.Profile.visible) {
+      const data = filterEntities(dxfRaw.Profile, 200);
+      drawLayer('Profile', data);
+    }
+
+    // Glazing Bead (from profile's second polyline — the bead channel)
+    if (layers.GlazingBead.visible) {
+      drawLayer('GlazingBead', glazingBeadShape);
+    }
+
+    // Glass
+    if (layers.Glass.visible) {
+      const data = filterEntities(dxfRaw.Glass, 200);
+      drawLayer('Glass', data);
+    }
+
+    // Gasket
+    if (layers.Gasket.visible) {
+      const data = filterEntities(dxfRaw.Gasket, 200);
+      drawLayer('Gasket', data);
+    }
+
+    // Sealant (filtered arcs only)
+    if (layers.Sealant.visible) {
+      const data = filterEntities(dxfRaw.Sealant, 200);
+      drawLayer('Sealant', data);
+    }
+
+    // Screw
+    if (layers.Screw.visible) {
+      const data = filterEntities(dxfRaw.Screw, 200);
+      drawLayer('Screw', data);
+    }
+  } else {
+    // Manual fallback profile
+    drawManualProfile();
+  }
+
+  // Dimensions
+  if (showDims) drawDimensions();
+
+  ctx.restore();
+
+  // Update zoom label
+  document.getElementById('zoomLbl').textContent = Math.round(scale / 5 * 100) + '%';
+}
+
+function drawGrid() {
+  const step = 5; // 5mm grid
+  const range = 150;
+  ctx.strokeStyle = 'rgba(255,255,255,0.03)';
+  ctx.lineWidth = 0.1;
+  for (let i = -range; i <= range; i += step) {
+    ctx.beginPath(); ctx.moveTo(i, -range); ctx.lineTo(i, range); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(-range, i); ctx.lineTo(range, i); ctx.stroke();
+  }
+  // Origin cross
+  ctx.strokeStyle = 'rgba(14,165,201,0.15)';
+  ctx.lineWidth = 0.15;
+  ctx.beginPath(); ctx.moveTo(-range, 0); ctx.lineTo(range, 0); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(0, -range); ctx.lineTo(0, range); ctx.stroke();
+}
+
+function drawLayer(name, data) {
+  if (!data) return;
+  const L = layers[name];
+  const isSelected = (selectedLayer === name);
+
+  ctx.save();
+  ctx.translate(L.ox, L.oy);
+
+  // Glow for selected
+  if (isSelected) {
+    ctx.shadowColor = L.color;
+    ctx.shadowBlur = 3 / scale;
+  }
+
+  const lw = isSelected ? L.lineW * 1.8 : L.lineW;
+
+  // Draw polylines
+  if (data.polylines) {
+    data.polylines.forEach(poly => {
+      ctx.beginPath();
+      poly.points.forEach((pt, i) => {
+        if (i === 0) ctx.moveTo(pt[0], pt[1]);
+        else ctx.lineTo(pt[0], pt[1]);
+      });
+      if (poly.closed) ctx.closePath();
+
+      // Fill
+      if (L.fill && L.fill !== 'none') {
+        ctx.fillStyle = L.fill;
+        ctx.fill();
+      }
+
+      // Stroke
+      ctx.strokeStyle = L.color;
+      ctx.lineWidth = lw;
+      ctx.stroke();
+    });
+  }
+
+  // Draw lines
+  if (data.lines) {
+    ctx.strokeStyle = L.color;
+    ctx.lineWidth = lw;
+    data.lines.forEach(seg => {
+      ctx.beginPath();
+      ctx.moveTo(seg[0][0], seg[0][1]);
+      ctx.lineTo(seg[1][0], seg[1][1]);
+      ctx.stroke();
+    });
+  }
+
+  // Draw arcs
+  if (data.arcs) {
+    ctx.strokeStyle = L.color;
+    ctx.lineWidth = lw;
+    data.arcs.forEach(arc => {
+      ctx.beginPath();
+      const sa = arc.start * Math.PI / 180;
+      const ea = arc.end * Math.PI / 180;
+      ctx.arc(arc.cx, arc.cy, arc.r, sa, ea);
+      ctx.stroke();
+    });
+  }
+
+  // Labels
+  if (showLabels && data.polylines && data.polylines.length > 0) {
+    const labelMap = {
+      Profile: '32108', Glass: '24mm', GlazingBead: '11307',
+      Gasket: 'Gasket', Sealant: 'Sealant', Screw: 'Screw'
+    };
+    const firstPoly = data.polylines[0];
+    if (firstPoly.points.length > 2) {
+      let cx = 0, cy = 0;
+      firstPoly.points.forEach(pt => { cx += pt[0]; cy += pt[1]; });
+      cx /= firstPoly.points.length;
+      cy /= firstPoly.points.length;
+      drawText(cx, cy, labelMap[name] || name, L.color, 1.8);
+    }
+  }
+
+  ctx.restore();
+}
+
+function drawText(x, y, text, color, size) {
+  ctx.save();
+  ctx.scale(1, -1); // Unflip for text
+  ctx.font = `bold ${size}px Cairo`;
+  ctx.fillStyle = color;
+  ctx.globalAlpha = 0.7;
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText(text, x, -y);
+  ctx.restore();
+}
+
+function drawDimensions() {
+  ctx.save();
+  ctx.strokeStyle = 'rgba(14,165,201,0.4)';
+  ctx.lineWidth = 0.12;
+  ctx.setLineDash([0.5, 0.3]);
+
+  // Based on DXF Profile bounds: approximately x: 0-105, y: 0-85
+  // But the actual cross-section profile is about x: 0-25, y: 0-26 for one part
+  // and x: 60-105, y: 0-85 for the full frame section
+
+  // Main profile dimensions from catalog
+  drawDimArrow(-3, 0, -3, 25, '25mm', 'v');     // Left profile piece height
+  drawDimArrow(0, -3, 25.5, -3, '25.5mm', 'h'); // Left profile piece width
+  drawDimArrow(60, -3, 105, -3, '45mm', 'h');   // Right profile piece width (frame width)
+  drawDimArrow(108, 0, 108, 85, '85mm', 'v');   // Full height
+  drawDimArrow(0, -6, 105, -6, '105mm', 'h');   // Full width
+
+  // Wall thickness
+  drawDimArrow(60, 27, 62, 27, '1.4', 'h');
+
+  ctx.setLineDash([]);
+  ctx.restore();
+}
+
+function drawDimArrow(x1, y1, x2, y2, text, dir) {
+  // Extension lines
+  ctx.beginPath();
+  ctx.moveTo(x1, y1); ctx.lineTo(x2, y2);
+  ctx.stroke();
+
+  // End markers
+  const r = 0.3;
+  ctx.fillStyle = '#0ea5c9';
+  ctx.beginPath(); ctx.arc(x1, y1, r, 0, Math.PI*2); ctx.fill();
+  ctx.beginPath(); ctx.arc(x2, y2, r, 0, Math.PI*2); ctx.fill();
+
+  // Text
+  const mx = (x1+x2)/2, my = (y1+y2)/2;
+  const offset = dir === 'v' ? -3 : 0;
+  const offsetY = dir === 'h' ? 1.5 : 0;
+  drawText(mx + offset, my + offsetY, text, '#0ea5c9', 1.5);
+}
+
+function drawManualProfile() {
+  // Simplified ALUPCO 32108 cross-section when DXF not available
+  const L = layers.Profile;
+  ctx.save();
+  ctx.translate(L.ox, L.oy);
+
+  ctx.strokeStyle = L.color;
+  ctx.lineWidth = 0.3;
+
+  // Outer frame
+  ctx.beginPath();
+  ctx.rect(0, 0, 45, 50);
+  ctx.stroke();
+
+  // Inner cavity (hollow)
+  ctx.beginPath();
+  ctx.rect(1.4, 1.4, 42.2, 47.2);
+  ctx.stroke();
+
+  // Internal ribs
+  ctx.beginPath();
+  ctx.moveTo(5, 1.4); ctx.lineTo(5, 20);
+  ctx.moveTo(0, 20); ctx.lineTo(45, 20);
+  ctx.moveTo(40, 1.4); ctx.lineTo(40, 20);
+  ctx.stroke();
+
+  // Lip
+  ctx.beginPath();
+  ctx.rect(0, 20, 45, 1.4);
+  ctx.strokeStyle = '#facc15';
+  ctx.stroke();
+
+  ctx.restore();
+
+  // Glass
+  if (layers.Glass.visible) {
+    ctx.save();
+    ctx.translate(layers.Glass.ox, layers.Glass.oy);
+    ctx.fillStyle = 'rgba(56,189,248,0.15)';
+    ctx.strokeStyle = '#38bdf8';
+    ctx.lineWidth = 0.2;
+    ctx.beginPath();
+    ctx.rect(8, 5, 29, 12);
+    ctx.fill(); ctx.stroke();
+    ctx.restore();
+  }
+}
+
+// ============================================================
+// INTERACTION
+// ============================================================
+function resize() {
+  const wrap = cv.parentElement;
+  cv.width = wrap.clientWidth * devicePixelRatio;
+  cv.height = wrap.clientHeight * devicePixelRatio;
+  cv.style.width = wrap.clientWidth + 'px';
+  cv.style.height = wrap.clientHeight + 'px';
+  ctx.scale(devicePixelRatio, devicePixelRatio);
+  // Adjust pan for CSS dimensions
+  render();
+}
+
+// Convert screen coords to world coords
+function screenToWorld(sx, sy) {
+  const rect = cv.getBoundingClientRect();
+  const cx = rect.width / 2 + panX;
+  const cy = rect.height / 2 + panY;
+  return {
+    x: (sx - rect.left - cx) / scale,
+    y: -(sy - rect.top - cy) / scale
+  };
+}
+
+cv.addEventListener('mousedown', e => {
+  dragging = true;
+  lastMX = e.clientX;
+  lastMY = e.clientY;
+  dragType = selectedLayer ? 'layer' : 'pan';
+});
+
+cv.addEventListener('mousemove', e => {
+  // Update world coords display
+  const w = screenToWorld(e.clientX, e.clientY);
+  mouseWorld = w;
+  document.getElementById('mouseLbl').textContent =
+    w.x.toFixed(1) + ', ' + w.y.toFixed(1);
+
+  if (!dragging) return;
+  const dx = (e.clientX - lastMX);
+  const dy = (e.clientY - lastMY);
+  lastMX = e.clientX;
+  lastMY = e.clientY;
+
+  if (dragType === 'layer' && selectedLayer && layers[selectedLayer]) {
+    // Move selected layer
+    layers[selectedLayer].ox += dx / scale;
+    layers[selectedLayer].oy -= dy / scale; // Flip Y
+  } else {
+    // Pan canvas
+    panX += dx;
+    panY += dy;
+  }
+  render();
+});
+
+cv.addEventListener('mouseup', () => { dragging = false; });
+cv.addEventListener('mouseleave', () => { dragging = false; });
+
+cv.addEventListener('wheel', e => {
+  e.preventDefault();
+  const factor = e.deltaY < 0 ? 1.12 : 0.89;
+
+  // Zoom toward mouse position
+  const rect = cv.getBoundingClientRect();
+  const mx = e.clientX - rect.left - rect.width/2;
+  const my = e.clientY - rect.top - rect.height/2;
+
+  panX = mx - (mx - panX) * factor;
+  panY = my - (my - panY) * factor;
+  scale *= factor;
+  scale = Math.max(0.5, Math.min(80, scale));
+  render();
+}, { passive: false });
+
+// Keyboard shortcuts
+document.addEventListener('keydown', e => {
+  if (e.key === 'g') toggleGrid();
+  if (e.key === 'd') toggleDims();
+  if (e.key === 'l') toggleLabels();
+  if (e.key === 'f') fitView();
+  if (e.key === 'Escape') { selectedLayer = null; updateLayerButtons(); render(); }
+  if (e.key >= '1' && e.key <= '6') {
+    const names = ['Profile','Glass','GlazingBead','Gasket','Sealant','Screw'];
+    selectLayer(names[parseInt(e.key)-1]);
+  }
+});
+
+// ============================================================
+// CONTROLS
+// ============================================================
+function selectLayer(name) {
+  selectedLayer = (selectedLayer === name) ? null : name;
+  updateLayerButtons();
+  render();
+
+  const ind = document.getElementById('activeInd');
+  if (selectedLayer) {
+    ind.textContent = 'Dragging: ' + selectedLayer;
+    ind.classList.add('show');
+  } else {
+    ind.classList.remove('show');
+  }
+}
+
+function toggleLayer(name) {
+  layers[name].visible = !layers[name].visible;
+  updateLayerButtons();
+  render();
+}
+
+function updateLayerButtons() {
+  Object.keys(layers).forEach(name => {
+    const btn = document.getElementById('btn_' + name);
+    if (!btn) return;
+    btn.classList.toggle('active', selectedLayer === name);
+    btn.classList.toggle('hidden', !layers[name].visible);
+  });
+}
+
+function toggleGrid() {
+  showGrid = !showGrid;
+  document.getElementById('btn_grid').classList.toggle('active', showGrid);
+  render();
+}
+function toggleDims() {
+  showDims = !showDims;
+  document.getElementById('btn_dims').classList.toggle('active', showDims);
+  render();
+}
+function toggleLabels() {
+  showLabels = !showLabels;
+  document.getElementById('btn_labels').classList.toggle('active', showLabels);
+  render();
+}
+
+function zoomIn() { scale = Math.min(scale * 1.3, 80); render(); }
+function zoomOut() { scale = Math.max(scale / 1.3, 0.5); render(); }
+
+function fitView() {
+  scale = 5;
+  panX = 0;
+  panY = 0;
+  render();
+}
+
+function resetAll() {
+  Object.keys(layers).forEach(k => {
+    layers[k].ox = 0; layers[k].oy = 0; layers[k].visible = true;
+  });
+  selectedLayer = null;
+  showGrid = true; showDims = true; showLabels = true;
+  fitView();
+  updateLayerButtons();
+}
+
+function exportPNG() {
+  const link = document.createElement('a');
+  link.download = 'NourMetal_Section_32108.png';
+  link.href = cv.toDataURL('image/png');
+  link.click();
+}
+
+// ============================================================
+// INIT
+// ============================================================
+// Set initial display states
+document.getElementById('btn_grid').classList.add('active');
+document.getElementById('btn_dims').classList.add('active');
+document.getElementById('btn_labels').classList.add('active');
+
+window.addEventListener('resize', resize);
+resize();
+loadDXF();
+</script>
+</body>
+</html>

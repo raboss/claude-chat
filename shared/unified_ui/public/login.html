@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="ar" dir="rtl" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>NouRion · تسجيل الدخول</title>
+  <meta name="description" content="NouRion — تسجيل الدخول للمنصّة الصناعية الذكية">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&family=IBM+Plex+Sans+Arabic:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="assets/css/nourion-tokens.css">
+  <link rel="stylesheet" href="assets/css/nourion-base.css">
+  <link rel="stylesheet" href="assets/css/nourion-components.css">
+
+  <script src="assets/js/nourion-theme.js"></script>
+  <script src="assets/js/nourion-i18n.js"></script>
+  <link rel="icon" type="image/svg+xml" href="assets/img/logo.svg">
+
+  <style>
+    body {
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      background:
+        radial-gradient(ellipse at 30% 20%, rgba(0,153,255,0.10), transparent 55%),
+        radial-gradient(ellipse at 70% 80%, rgba(77,212,255,0.06), transparent 60%),
+        var(--nr-bg-0);
+    }
+    .nr-login {
+      width: min(420px, 92vw);
+      padding: var(--nr-sp-8);
+      background: var(--nr-bg-1);
+      border: 1px solid var(--nr-border-subtle);
+      border-radius: var(--nr-radius-lg);
+      box-shadow: 0 30px 80px rgba(0,0,0,0.45);
+    }
+    .nr-login__brand {
+      display: flex;
+      justify-content: center;
+      margin-bottom: var(--nr-sp-6);
+    }
+    .nr-login__brand img { height: 56px; }
+    .nr-login__title {
+      font-size: var(--nr-fs-xl);
+      font-weight: 500;
+      text-align: center;
+      margin-bottom: var(--nr-sp-2);
+      color: var(--nr-text-primary);
+    }
+    .nr-login__sub {
+      text-align: center;
+      color: var(--nr-text-muted);
+      font-size: var(--nr-fs-sm);
+      margin-bottom: var(--nr-sp-6);
+    }
+    .nr-login__error {
+      display: none;
+      padding: var(--nr-sp-3) var(--nr-sp-4);
+      background: rgba(220, 38, 38, 0.12);
+      border: 1px solid rgba(220, 38, 38, 0.35);
+      border-radius: var(--nr-radius-sm);
+      color: #fca5a5;
+      font-size: var(--nr-fs-sm);
+      margin-bottom: var(--nr-sp-4);
+    }
+    .nr-login__error.is-visible { display: block; }
+    .nr-login__footer {
+      margin-top: var(--nr-sp-6);
+      padding-top: var(--nr-sp-4);
+      border-top: 1px solid var(--nr-border-subtle);
+      text-align: center;
+      font-size: var(--nr-fs-xs);
+      color: var(--nr-text-muted);
+      font-family: var(--nr-font-mono);
+    }
+  </style>
+</head>
+<body>
+
+  <main class="nr-login" role="main">
+    <div class="nr-login__brand">
+      <img src="assets/img/logo.svg" alt="NouRion">
+    </div>
+    <div class="nr-login__title">تسجيل الدخول</div>
+    <div class="nr-login__sub">المنصّة الصناعية الذكية</div>
+
+    <div class="nr-login__error" id="loginError" role="alert"></div>
+
+    <form id="loginForm" class="nr-stack" autocomplete="on" novalidate>
+      <div class="nr-field">
+        <label class="nr-label" for="username">اسم المستخدم</label>
+        <input class="nr-input" id="username" name="username" type="text"
+               autocomplete="username" required dir="ltr"
+               placeholder="admin">
+      </div>
+      <div class="nr-field">
+        <label class="nr-label" for="password">كلمة المرور</label>
+        <input class="nr-input" id="password" name="password" type="password"
+               autocomplete="current-password" required dir="ltr"
+               placeholder="••••••••">
+      </div>
+      <button class="nr-btn nr-btn--primary nr-btn--lg" type="submit" id="submitBtn"
+              style="width:100%; margin-top:var(--nr-sp-2);">
+        دخول
+      </button>
+    </form>
+
+    <div class="nr-login__footer">
+      NouRion · v0.4 · Phase 4 — Auth
+    </div>
+  </main>
+
+  <script>
+    (function () {
+      var form    = document.getElementById('loginForm');
+      var errBox  = document.getElementById('loginError');
+      var submit  = document.getElementById('submitBtn');
+
+      function showError(msg) {
+        errBox.textContent = msg;
+        errBox.classList.add('is-visible');
+      }
+      function clearError() {
+        errBox.textContent = '';
+        errBox.classList.remove('is-visible');
+      }
+
+      form.addEventListener('submit', async function (e) {
+        e.preventDefault();
+        clearError();
+        var u = document.getElementById('username').value.trim();
+        var p = document.getElementById('password').value;
+        if (!u || !p) { showError('أدخل اسم المستخدم وكلمة المرور'); return; }
+
+        submit.disabled = true;
+        submit.textContent = '...جاري التحقق';
+
+        try {
+          var res = await fetch('/api/auth/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'same-origin',
+            body: JSON.stringify({ username: u, password: p })
+          });
+          var data = await res.json().catch(function () { return null; });
+          if (!res.ok || !data || !data.ok) {
+            showError((data && data.message) || 'بيانات الدخول غير صحيحة');
+            submit.disabled = false;
+            submit.textContent = 'دخول';
+            return;
+          }
+          // Store CSRF token in sessionStorage for state-changing requests
+          if (data.csrf) sessionStorage.setItem('nr_csrf', data.csrf);
+          // Redirect
+          var next = new URLSearchParams(location.search).get('next') || '/public/index.html';
+          location.href = next;
+        } catch (err) {
+          showError('تعذّر الاتصال بالسيرفر');
+          submit.disabled = false;
+          submit.textContent = 'دخول';
+        }
+      });
+    })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="ar" dir="rtl" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>NouRion — العملاء</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&family=IBM+Plex+Sans+Arabic:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/nourion-tokens.css">
+  <link rel="stylesheet" href="assets/css/nourion-base.css">
+  <link rel="stylesheet" href="assets/css/nourion-components.css">
+  <script src="assets/js/nourion-theme.js"></script>
+  <script src="../src/services/repository.js"></script>
+  <script src="../src/services/crud-service.js"></script>
+  <script src="assets/js/nourion-i18n.js"></script>
+  <script src="assets/js/live-page.js"></script>
+  <script src="assets/js/live-page-shell.js"></script>
+  <link rel="icon" type="image/svg+xml" href="assets/img/logo.svg">
+</head>
+<body>
+<script>
+  window.__livePageConfig = {
+    title: 'NouRion — العملاء',
+    titleText: 'العملاء · Customers',
+    listTitle: 'قائمة العملاء',
+    nav: 'customers',
+    key: 'pm_nourion_customers',
+    ServiceClass: window.NouRionCrudService.CustomerService,
+    entityLabel: 'عميل',
+    searchable: true,
+    columns: [
+      { field: 'name',    label: 'الاسم' },
+      { field: 'phone',   label: 'الهاتف',   mono: true },
+      { field: 'city',    label: 'المدينة' },
+      { field: 'type',    label: 'النوع' },
+      { field: 'company', label: 'الشركة' }
+    ],
+    filters: [
+      { field: 'city', label: 'المدينة' },
+      { field: 'type', label: 'النوع' }
+    ],
+    formFields: [
+      { field: 'name',    label: 'الاسم',     type: 'text', required: true, full: true, placeholder: 'اسم العميل' },
+      { field: 'phone',   label: 'الهاتف',    type: 'text',  placeholder: '05xxxxxxxx' },
+      { field: 'email',   label: 'البريد',    type: 'email', placeholder: 'name@example.com' },
+      { field: 'city',    label: 'المدينة',   type: 'text',  placeholder: 'الرياض' },
+      { field: 'type',    label: 'النوع',     type: 'select', options: [
+        { value: 'فرد',  label: 'فرد' },
+        { value: 'شركة', label: 'شركة' }
+      ]},
+      { field: 'company', label: 'الشركة',    type: 'text',  placeholder: 'اسم الشركة إن وُجدت' },
+      { field: 'notes',   label: 'ملاحظات',   type: 'textarea', full: true, placeholder: 'أي معلومات إضافية' }
+    ],
+    statsFn: function (svc) {
+      var s = svc.stats();
+      var cityKeys = Object.keys(s.by_city || {});
+      var typeKeys = Object.keys(s.by_type || {});
+      return [
+        { label: 'إجمالي العملاء', value: s.total, trend: 'عدد السجلات' },
+        { label: 'عدد المدن',       value: cityKeys.length, trend: 'توزّع جغرافي' },
+        { label: 'أفراد',           value: (s.by_type && s.by_type['فرد']) || 0, trend: 'عملاء أفراد' },
+        { label: 'شركات',           value: (s.by_type && s.by_type['شركة']) || 0, trend: 'عملاء شركات' }
+      ];
+    },
+    seed: [
+      { name: 'شركة النور للمقاولات', phone: '0112345678', city: 'الرياض', type: 'شركة', company: 'النور', email: 'info@alnoor.sa' },
+      { name: 'أحمد الخالدي',          phone: '0501234567', city: 'الرياض', type: 'فرد' },
+      { name: 'مجموعة الرونق',         phone: '0126543210', city: 'جدة',    type: 'شركة', company: 'الرونق' },
+      { name: 'خالد الغامدي',          phone: '0539876543', city: 'جدة',    type: 'فرد' }
+    ]
+  };
+  document.addEventListener('DOMContentLoaded', function () {
+    window.NouRionLivePageShell.init();
+  });
+</script>
+</body>
+</html>

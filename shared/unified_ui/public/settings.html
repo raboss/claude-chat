@@ -1,0 +1,230 @@
+<!doctype html>
+<html lang="ar" dir="rtl" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>NouRion — الإعدادات والصلاحيات</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&family=IBM+Plex+Sans+Arabic:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="assets/css/nourion-tokens.css">
+  <link rel="stylesheet" href="assets/css/nourion-base.css">
+  <link rel="stylesheet" href="assets/css/nourion-components.css">
+
+  <script src="assets/js/nourion-theme.js"></script>
+  <script src="../src/modules/settings/settings.logic.js"></script>
+  <script src="../src/modules/settings/settings.view.js"></script>
+
+  <link rel="icon" type="image/svg+xml" href="assets/img/logo.svg">
+</head>
+<body>
+
+<div class="nr-app">
+
+  <aside class="nr-sidebar">
+    <div class="nr-sidebar__brand">
+      <img src="assets/img/logo.svg" alt="NouRion" style="height:32px;">
+    </div>
+    <nav class="nr-sidebar__nav">
+      <div class="nr-nav-section">
+        <div class="nr-nav-section__title">الرئيسية</div>
+        <a class="nr-nav-item" href="index.html"><span class="nr-nav-item__icon">◇</span> Design System</a>
+        <a class="nr-nav-item" href="projects.html"><span class="nr-nav-item__icon">◈</span> المشاريع</a>
+        <a class="nr-nav-item" href="saved.html"><span class="nr-nav-item__icon">◇</span> التقارير المحفوظة</a>
+      </div>
+      <div class="nr-nav-section">
+        <div class="nr-nav-section__title">التصنيع</div>
+        <a class="nr-nav-item" href="form-types.html"><span class="nr-nav-item__icon">◎</span> القطاعات</a>
+      </div>
+      <div class="nr-nav-section">
+        <div class="nr-nav-section__title">الإدارة</div>
+        <a class="nr-nav-item is-active"><span class="nr-nav-item__icon">⚙</span> الإعدادات</a>
+      </div>
+    </nav>
+  </aside>
+
+  <main class="nr-app__main">
+
+    <header class="nr-topbar">
+      <div class="nr-topbar__title">الإعدادات والصلاحيات · Settings &amp; Permissions</div>
+      <div class="nr-topbar__actions">
+        <button class="nr-btn nr-btn--ghost nr-btn--sm" data-nr-theme-toggle>
+          <span data-nr-theme-icon>☀</span>
+          <span data-nr-theme-label>الوضع الفاتح</span>
+        </button>
+      </div>
+    </header>
+
+    <div class="nr-app__content">
+
+      <div class="nr-alert nr-alert--info" style="margin-bottom: var(--nr-sp-8);">
+        <span class="nr-alert__icon">ⓘ</span>
+        <div class="nr-alert__body">
+          <div class="nr-alert__title">Phase 2.5 · settings POC</div>
+          <div class="nr-alert__msg">
+            نظام الصلاحيات الكامل محسوب من <code>NouRion.SettingsLogic</code> — 11 مجموعة صلاحيات،
+            106+ صلاحية فردية، expandImpliedPerms ينشط الصفحات تلقائياً، filterActionsByPerms يخفي
+            الأزرار الممنوعة. <strong>46 اختبار</strong> ناجح من أول محاولة.
+          </div>
+        </div>
+      </div>
+
+      <section style="margin-bottom: var(--nr-sp-8);">
+        <h1 style="font-size: var(--nr-fs-3xl); font-weight: 300;">
+          نظام <span style="color: var(--nr-accent); font-weight: 500;">الصلاحيات</span>
+        </h1>
+        <p style="max-width: 720px;">
+          كل مستخدم يحصل على مجموعة صلاحيات محدّدة (page_X / btn_X / inst_X / cust_X / hr_X).
+          النظام يُفعّل تلقائياً صلاحية الصفحة الأم عندما يُمنح المستخدم أي صلاحية فرعية،
+          ويُخفي الأزرار التي ليست ضمن صلاحياته.
+        </p>
+      </section>
+
+      <!-- Overview -->
+      <section style="margin-bottom: var(--nr-sp-10);">
+        <h6 class="nr-section-title">Overview</h6>
+        <div id="overviewHost"></div>
+      </section>
+
+      <!-- User selector + cards -->
+      <section style="margin-bottom: var(--nr-sp-10);">
+        <h6 class="nr-section-title">Users</h6>
+        <div id="usersHost"></div>
+      </section>
+
+      <!-- Selected user details -->
+      <section style="margin-bottom: var(--nr-sp-10);">
+        <h6 class="nr-section-title">Selected User Details</h6>
+        <div class="nr-row" style="margin-bottom: var(--nr-sp-4);">
+          <label class="nr-label" for="userSelect" style="margin: 0;">اختر مستخدماً:</label>
+          <select class="nr-select" id="userSelect" style="width: 280px; height: 36px;"></select>
+        </div>
+        <div id="impliedHost" style="margin-bottom: var(--nr-sp-4);"></div>
+        <div id="actionsHost"></div>
+      </section>
+
+      <!-- Permission grid (read-only display) -->
+      <section style="margin-bottom: var(--nr-sp-10);">
+        <h6 class="nr-section-title">Full Permission Grid</h6>
+        <div id="permsHost"></div>
+      </section>
+
+      <footer style="padding-top: var(--nr-sp-8); border-top: 1px solid var(--nr-border-subtle);">
+        <div class="nr-row-between">
+          <small>Module: settings · 46 tests · 11 perm groups · 106+ perms</small>
+          <small style="font-family: var(--nr-font-mono);">Phase 2.5 · POC #4</small>
+        </div>
+      </footer>
+
+    </div>
+  </main>
+</div>
+
+
+<script>
+  /* Sample users — يمثّلون أدواراً فعلية في النظام */
+  var SAMPLE_USERS = [
+    {
+      name: 'شهاب الدخيل',
+      isAdmin: true
+    },
+    {
+      name: 'أحمد حمدي',
+      perms: [
+        'page_projects', 'page_reports', 'page_saved',
+        'toolbar_new', 'toolbar_save', 'toolbar_export', 'toolbar_prod',
+        'btn_edit', 'btn_timeline', 'btn_stage', 'btn_extract', 'btn_form', 'btn_files', 'btn_meas', 'btn_price', 'btn_clientreport',
+        'rpt_tab_overview', 'rpt_tab_weekly', 'rpt_tab_monthly',
+        'rpt_prod', 'rpt_print', 'rpt_save'
+      ],
+      filterCompany: 'الراجحي',
+      filterRegion: 'الوسطى'
+    },
+    {
+      name: 'خالد المقاول (تركيبات)',
+      perms: [
+        'inst_add_client', 'inst_add_defect', 'inst_delivery_view', 'inst_delivery_print',
+        'inst_team_tab', 'inst_team_add_project'
+      ]
+    },
+    {
+      name: 'سعاد الموارد البشرية',
+      perms: ['hr_tab_org', 'hr_tab_list', 'hr_tab_attend', 'hr_add_emp', 'hr_print']
+    },
+    {
+      name: 'محاسب مشترك',
+      perms: ['cust_emp_42']
+    },
+    {
+      name: 'مستخدم بدون صلاحيات',
+      perms: []
+    }
+  ];
+
+  /* Sample actions — تظهر في side panel للمشروع */
+  var SAMPLE_ACTIONS = [
+    { fn: 'editProject',           label: '✏️ تعديل المشروع' },
+    { fn: 'openTimeline',          label: '📅 المخطط الزمني' },
+    { fn: 'changeStage',           label: '📊 تغيير المرحلة' },
+    { fn: 'quickDoc_مستخلص_p1',    label: '🖨️ مستخلص' },
+    { fn: 'openManufacturingForm', label: '📋 استمارة تصنيع' },
+    { fn: 'openPurchaseOrderDirect', label: '🛒 طلب شراء' },
+    { fn: 'openProjectFiles',      label: '📁 ملفات المشروع' },
+    { fn: 'openMeasurements',      label: '📐 المقاسات' },
+    { fn: 'openPriceList',         label: '💰 عرض الأسعار' },
+    { fn: 'openClientReport',      label: '📄 تقرير العميل' },
+    { fn: 'deleteProject',         label: '🗑️ حذف المشروع' },
+    { fn: 'openDeliveryOrder',     label: '📋 أمر تسليم' }
+  ];
+
+  var L = NouRion.SettingsLogic;
+  var V = NouRion.SettingsView;
+
+  var overviewHost = document.getElementById('overviewHost');
+  var usersHost    = document.getElementById('usersHost');
+  var userSelect   = document.getElementById('userSelect');
+  var impliedHost  = document.getElementById('impliedHost');
+  var actionsHost  = document.getElementById('actionsHost');
+  var permsHost    = document.getElementById('permsHost');
+
+  function renderForUser(idx) {
+    var user = SAMPLE_USERS[idx];
+    impliedHost.innerHTML = '';
+    impliedHost.appendChild(V.renderImpliedPermsPreview(user));
+
+    actionsHost.innerHTML = '';
+    actionsHost.appendChild(V.renderActionFilterPreview(user, SAMPLE_ACTIONS));
+
+    permsHost.innerHTML = '';
+    permsHost.appendChild(V.renderPermGroupGrid(user));
+  }
+
+  function renderAll() {
+    overviewHost.innerHTML = '';
+    overviewHost.appendChild(V.renderUsersOverview(SAMPLE_USERS));
+
+    usersHost.innerHTML = '';
+    var grid = document.createElement('div');
+    grid.className = 'nr-grid-2';
+    SAMPLE_USERS.forEach(function (u, i) { grid.appendChild(V.renderUserCard(u, i)); });
+    usersHost.appendChild(grid);
+
+    userSelect.innerHTML = '';
+    SAMPLE_USERS.forEach(function (u, i) {
+      var opt = document.createElement('option');
+      opt.value = String(i);
+      opt.textContent = u.name + (u.isAdmin ? ' (Admin)' : '');
+      userSelect.appendChild(opt);
+    });
+
+    renderForUser(0);
+  }
+
+  userSelect.addEventListener('change', function () { renderForUser(parseInt(userSelect.value, 10)); });
+  renderAll();
+</script>
+
+</body>
+</html>

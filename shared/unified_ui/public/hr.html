@@ -1,0 +1,228 @@
+<!doctype html>
+<html lang="ar" dir="rtl" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>NouRion — الموظفون</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&family=IBM+Plex+Sans+Arabic:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="assets/css/nourion-tokens.css">
+  <link rel="stylesheet" href="assets/css/nourion-base.css">
+  <link rel="stylesheet" href="assets/css/nourion-components.css">
+
+  <script src="assets/js/nourion-theme.js"></script>
+  <script src="../src/modules/hr/hr.logic.js"></script>
+  <script src="../src/modules/hr/hr.view.js"></script>
+
+  <link rel="icon" type="image/svg+xml" href="assets/img/logo.svg">
+</head>
+<body>
+
+<div class="nr-app">
+
+  <aside class="nr-sidebar">
+    <div class="nr-sidebar__brand">
+      <img src="assets/img/logo.svg" alt="NouRion" style="height:32px;">
+    </div>
+    <nav class="nr-sidebar__nav">
+      <div class="nr-nav-section">
+        <div class="nr-nav-section__title">الرئيسية</div>
+        <a class="nr-nav-item" href="index.html"><span class="nr-nav-item__icon">◇</span> Design System</a>
+        <a class="nr-nav-item" href="projects.html"><span class="nr-nav-item__icon">◈</span> المشاريع</a>
+        <a class="nr-nav-item" href="reports.html"><span class="nr-nav-item__icon">📊</span> التقارير</a>
+      </div>
+      <div class="nr-nav-section">
+        <div class="nr-nav-section__title">التصنيع</div>
+        <a class="nr-nav-item" href="form-types.html"><span class="nr-nav-item__icon">◎</span> القطاعات</a>
+        <a class="nr-nav-item" href="measurements.html"><span class="nr-nav-item__icon">◎</span> المقاسات</a>
+        <a class="nr-nav-item" href="documents.html"><span class="nr-nav-item__icon">📄</span> المستندات</a>
+      </div>
+      <div class="nr-nav-section">
+        <div class="nr-nav-section__title">الإدارة</div>
+        <a class="nr-nav-item is-active"><span class="nr-nav-item__icon">👥</span> الموظفون</a>
+        <a class="nr-nav-item" href="settings.html"><span class="nr-nav-item__icon">⚙</span> الإعدادات</a>
+      </div>
+    </nav>
+  </aside>
+
+  <main class="nr-app__main">
+
+    <header class="nr-topbar">
+      <div class="nr-topbar__title">الموظفون · HR</div>
+      <div class="nr-topbar__actions">
+        <div class="nr-btn-group">
+          <button class="nr-btn nr-btn--sm" data-tab="org">الهيكل</button>
+          <button class="nr-btn nr-btn--sm" data-tab="list">القائمة</button>
+          <button class="nr-btn nr-btn--sm" data-tab="salary">الرواتب</button>
+          <button class="nr-btn nr-btn--sm" data-tab="attend">الحضور</button>
+        </div>
+        <button class="nr-btn nr-btn--ghost nr-btn--sm" data-nr-theme-toggle>
+          <span data-nr-theme-icon>☀</span>
+          <span data-nr-theme-label>الوضع الفاتح</span>
+        </button>
+      </div>
+    </header>
+
+    <div class="nr-app__content">
+
+      <div class="nr-alert nr-alert--info" style="margin-bottom: var(--nr-sp-8);">
+        <span class="nr-alert__icon">ⓘ</span>
+        <div class="nr-alert__body">
+          <div class="nr-alert__title">Phase 2.5 · hr POC</div>
+          <div class="nr-alert__msg">
+            نظام HR كامل بـ 4 تبويبات: الهيكل التنظيمي الشجري + قائمة الموظفين +
+            الرواتب (بمعادلة gross/net/due المنقولة حرفياً) +
+            جدول الحضور التفاعلي مع <strong>cycle ✓→⏰→✗→empty</strong>.
+            <strong>49 اختبار</strong> ناجح من أوّل محاولة.
+          </div>
+        </div>
+      </div>
+
+      <section style="margin-bottom: var(--nr-sp-8);">
+        <h1 style="font-size: var(--nr-fs-3xl); font-weight: 300;">
+          الموارد <span style="color: var(--nr-accent); font-weight: 500;">البشرية</span>
+        </h1>
+        <p style="max-width: 720px;">
+          إدارة كاملة للموظفين والأقسام مع حسابات الرواتب والحضور.
+          المعادلة المالية: <code>gross = (basic + housing + other) / 30 × days</code>
+        </p>
+      </section>
+
+      <!-- Overview -->
+      <section style="margin-bottom: var(--nr-sp-8);">
+        <h6 class="nr-section-title">Overview</h6>
+        <div id="overviewHost"></div>
+      </section>
+
+      <!-- Tab content -->
+      <section id="tabContent" style="margin-bottom: var(--nr-sp-10);"></section>
+
+      <footer style="padding-top: var(--nr-sp-8); border-top: 1px solid var(--nr-border-subtle);">
+        <div class="nr-row-between">
+          <small>Module: hr · 49 tests · 16 logic functions · salary + attendance calc</small>
+          <small style="font-family: var(--nr-font-mono);">Phase 2.5 · POC #8</small>
+        </div>
+      </footer>
+
+    </div>
+  </main>
+</div>
+
+
+<script>
+  var L = NouRion.HrLogic;
+  var V = NouRion.HrView;
+
+  /* Sample employees */
+  var SAMPLE_EMPLOYEES = [
+    { id: 'e1', name: 'شهاب الدخيل',     role: 'مدير المصنع',      departmentId: 'dept_mgmt',       iqama: '2456789013', basic: 12000, housing: 3000, other: 1500 },
+    { id: 'e2', name: 'أحمد حمدي',       role: 'مدير الإنتاج',     departmentId: 'dept_production', iqama: '2345678901', basic: 8000,  housing: 2000, other: 800 },
+    { id: 'e3', name: 'محمد العتيبي',    role: 'رئيس المكتب الفني',departmentId: 'dept_technical',  iqama: '2456789012', basic: 7500,  housing: 2000, other: 800 },
+    { id: 'e4', name: 'خالد الشهري',     role: 'مشرف التركيبات',   departmentId: 'dept_install',    iqama: '2567890123', basic: 6000,  housing: 1500, other: 500 },
+    { id: 'e5', name: 'سعد القحطاني',    role: 'فني تركيب',         departmentId: 'dept_install',    iqama: '2678901234', basic: 4000,  housing: 1000, other: 300 },
+    { id: 'e6', name: 'فهد العنزي',      role: 'فني تركيب',         departmentId: 'dept_install',    iqama: '2789012345', basic: 4000,  housing: 1000, other: 300 },
+    { id: 'e7', name: 'علي الحارثي',     role: 'عامل قص',           departmentId: 'dept_cutting',    iqama: '2890123456', basic: 3500,  housing: 800,  other: 200 },
+    { id: 'e8', name: 'بدر السبيعي',     role: 'عامل قص',           departmentId: 'dept_cutting',    iqama: '2901234567', basic: 3500,  housing: 800,  other: 200 },
+    { id: 'e9', name: 'تركي الزهراني',   role: 'عامل تفريز',        departmentId: 'dept_milling',    iqama: '2012345678', basic: 3500,  housing: 800,  other: 200 },
+    { id: 'e10',name: 'ياسر المالكي',    role: 'عامل تجميع',        departmentId: 'dept_assembly',   iqama: '2123456789', basic: 3500,  housing: 800,  other: 200 }
+  ];
+
+  var DEPTS = L.HR_DEFAULT_DEPTS;
+
+  /* state */
+  var currentTab = 'org';
+
+  /* Build initial salary rows */
+  var SALARY_ROWS = SAMPLE_EMPLOYEES.map(function (e) {
+    var base = L.createEmptySalaryRow(e);
+    base.basic = e.basic;
+    base.housing = e.housing;
+    base.other = e.other;
+    return base;
+  });
+
+  /* Build initial attendance rows + sample data */
+  var year = 2026, month = 4;
+  var ATTEND_ROWS = SAMPLE_EMPLOYEES.map(function (e) {
+    var row = L.createEmptyAttendanceRow(e);
+    // populate days 1-15 with random pattern
+    for (var d = 1; d <= 15; d++) {
+      var isFri = L.isFriday(year, month, d);
+      if (isFri) continue;
+      var rnd = Math.random();
+      if (rnd < 0.85) row.days[d] = '1';
+      else if (rnd < 0.93) row.days[d] = 'L';
+      else row.days[d] = 'X';
+    }
+    return row;
+  });
+
+  var overviewHost = document.getElementById('overviewHost');
+  var tabContent   = document.getElementById('tabContent');
+
+  function renderTabButtons() {
+    document.querySelectorAll('[data-tab]').forEach(function (btn) {
+      if (btn.getAttribute('data-tab') === currentTab) btn.classList.add('nr-btn--primary');
+      else btn.classList.remove('nr-btn--primary');
+    });
+  }
+
+  function renderTab() {
+    tabContent.innerHTML = '';
+    var titleMap = {
+      org:    'الهيكل التنظيمي',
+      list:   'قائمة الموظفين',
+      salary: 'كشف الرواتب — أبريل 2026',
+      attend: 'الحضور والانصراف — أبريل 2026'
+    };
+    var title = el('h6', { class: 'nr-section-title' });
+    title.textContent = titleMap[currentTab];
+    tabContent.appendChild(title);
+
+    if (currentTab === 'org') {
+      tabContent.appendChild(V.renderOrgTree(DEPTS, SAMPLE_EMPLOYEES));
+    } else if (currentTab === 'list') {
+      tabContent.appendChild(V.renderEmployeesList(SAMPLE_EMPLOYEES, DEPTS));
+    } else if (currentTab === 'salary') {
+      tabContent.appendChild(V.renderSalaryTable(SALARY_ROWS));
+    } else if (currentTab === 'attend') {
+      var summary = V.renderAttendanceSummary(ATTEND_ROWS, year, month);
+      summary.style.marginBottom = 'var(--nr-sp-4)';
+      tabContent.appendChild(summary);
+      tabContent.appendChild(V.renderAttendanceTable(ATTEND_ROWS, year, month, function (rowIdx, day) {
+        var cur = ATTEND_ROWS[rowIdx].days[day] || '';
+        ATTEND_ROWS[rowIdx].days[day] = L.toggleAttendanceCell(cur);
+        if (!ATTEND_ROWS[rowIdx].days[day]) delete ATTEND_ROWS[rowIdx].days[day];
+        renderTab();
+      }));
+    }
+  }
+
+  function el(tag, attrs) {
+    var n = document.createElement(tag);
+    if (attrs && attrs.class) n.className = attrs.class;
+    return n;
+  }
+
+  function renderAll() {
+    overviewHost.innerHTML = '';
+    overviewHost.appendChild(V.renderOverview(SAMPLE_EMPLOYEES, DEPTS));
+    renderTabButtons();
+    renderTab();
+  }
+
+  document.querySelectorAll('[data-tab]').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      currentTab = btn.getAttribute('data-tab');
+      renderAll();
+    });
+  });
+
+  renderAll();
+</script>
+
+</body>
+</html>

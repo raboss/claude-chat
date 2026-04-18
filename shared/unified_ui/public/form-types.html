@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="ar" dir="rtl" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>NouRion — أنواع القطاعات</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&family=IBM+Plex+Sans+Arabic:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="assets/css/nourion-tokens.css">
+  <link rel="stylesheet" href="assets/css/nourion-base.css">
+  <link rel="stylesheet" href="assets/css/nourion-components.css">
+
+  <script src="assets/js/nourion-theme.js"></script>
+  <script src="../src/modules/form-types/form-types.logic.js"></script>
+  <script src="../src/modules/form-types/form-types.view.js"></script>
+
+  <link rel="icon" type="image/svg+xml" href="assets/img/logo.svg">
+</head>
+<body>
+
+<div class="nr-app">
+
+  <aside class="nr-sidebar">
+    <div class="nr-sidebar__brand">
+      <img src="assets/img/logo.svg" alt="NouRion" style="height:32px;">
+    </div>
+    <nav class="nr-sidebar__nav">
+      <div class="nr-nav-section">
+        <div class="nr-nav-section__title">الرئيسية</div>
+        <a class="nr-nav-item" href="index.html"><span class="nr-nav-item__icon">◇</span> Design System</a>
+        <a class="nr-nav-item" href="projects.html"><span class="nr-nav-item__icon">◈</span> المشاريع</a>
+      </div>
+      <div class="nr-nav-section">
+        <div class="nr-nav-section__title">التصنيع</div>
+        <a class="nr-nav-item is-active"><span class="nr-nav-item__icon">◎</span> القطاعات</a>
+        <a class="nr-nav-item"><span class="nr-nav-item__icon">◉</span> خط الإنتاج</a>
+      </div>
+    </nav>
+  </aside>
+
+  <main class="nr-app__main">
+
+    <header class="nr-topbar">
+      <div class="nr-topbar__title">أنواع القطاعات · Form Types</div>
+      <div class="nr-topbar__actions">
+        <div class="nr-row">
+          <label class="nr-label" for="kgPriceInput" style="margin: 0;">سعر الكيلو:</label>
+          <input class="nr-input" id="kgPriceInput" type="number" value="10" step="0.5" style="width: 100px; height: 32px;">
+        </div>
+        <button class="nr-btn nr-btn--ghost nr-btn--sm" data-nr-theme-toggle>
+          <span data-nr-theme-icon>☀</span>
+          <span data-nr-theme-label>الوضع الفاتح</span>
+        </button>
+      </div>
+    </header>
+
+    <div class="nr-app__content">
+
+      <div class="nr-alert nr-alert--info" style="margin-bottom: var(--nr-sp-8);">
+        <span class="nr-alert__icon">ⓘ</span>
+        <div class="nr-alert__body">
+          <div class="nr-alert__title">Phase 2.5 · form-types POC</div>
+          <div class="nr-alert__msg">
+            يعرض هذا العرض 3 أنواع قطاعات افتراضية (سحاب قلف / سحاب سرايا / استركشر SG50) مع حساب الوزن والسعر live من
+            <code>NouRion.FormTypesLogic</code>. غيّر سعر الكيلو أعلى الصفحة لترى إعادة الحساب فوراً.
+            <strong>44 اختبار</strong> ناجح + 2 quirks موثَّقين في <code>KNOWN_QUIRKS.md</code>.
+          </div>
+        </div>
+      </div>
+
+      <section style="margin-bottom: var(--nr-sp-10);">
+        <h1 style="font-size: var(--nr-fs-3xl); font-weight: 300;">
+          شجرة <span style="color: var(--nr-accent); font-weight: 500;">أنواع القطاعات</span>
+        </h1>
+        <p style="max-width: 720px;">
+          كل نوع قطاع يحتوي على: قطاعات ألمنيوم (بأوزان وأسعار محسوبة)، إكسسوارات، ومواد تركيب. النظام يدعم "إضافات"
+          تُفعَّل تلقائياً حسب كلمات مفتاحية في اسم النوع (مثل: "مع قوس"، "مع ثابت"، "4 درف").
+        </p>
+      </section>
+
+      <section style="margin-bottom: var(--nr-sp-10);">
+        <h6 class="nr-section-title">Smart Type Resolver · المطابقة الذكية</h6>
+        <div class="nr-card">
+          <div class="nr-card__body">
+            <div class="nr-field">
+              <label class="nr-label">جرّب اسم نوع</label>
+              <input class="nr-input" id="resolverInput"
+                     value="نوافذ سحاب قلف 12 سم مع قوس"
+                     placeholder="اكتب اسم القطاع مع كلمات مفتاحية...">
+              <small class="nr-help">
+                جرّب: <code>نوافذ سحاب قلف 12 سم</code> · <code>نوافذ سحاب قلف 12 سم مع ثابت 4 درف</code> ·
+                <code>SG50</code> · أو اسم غير موجود لرؤية null.
+              </small>
+            </div>
+            <div id="resolverResult" style="margin-top: var(--nr-sp-4);"></div>
+          </div>
+        </div>
+      </section>
+
+      <section style="margin-bottom: var(--nr-sp-10);">
+        <h6 class="nr-section-title">Type Catalog · 3 أنواع قطاعات</h6>
+        <div id="typesHost"></div>
+      </section>
+
+      <footer style="padding-top: var(--nr-sp-8); border-top: 1px solid var(--nr-border-subtle);">
+        <div class="nr-row-between">
+          <small>Module: form-types · 44 tests passing · 2 known quirks documented</small>
+          <small style="font-family: var(--nr-font-mono);">Phase 2.5 · POC #2</small>
+        </div>
+      </footer>
+
+    </div>
+  </main>
+</div>
+
+
+<script>
+  var L = NouRion.FormTypesLogic;
+  var V = NouRion.FormTypesView;
+
+  var typesHost    = document.getElementById('typesHost');
+  var resolverInput = document.getElementById('resolverInput');
+  var resolverResult = document.getElementById('resolverResult');
+  var kgPriceInput = document.getElementById('kgPriceInput');
+
+  var TYPES  = L.getDefaultTypes();
+  var ADDONS = L.getDefaultAddons();
+
+  function renderTypes() {
+    var kgPrice = parseFloat(kgPriceInput.value) || L.DEFAULT_KG_PRICE;
+    typesHost.innerHTML = '';
+    TYPES.forEach(function (t) {
+      typesHost.appendChild(V.renderTypePanel(t, kgPrice));
+    });
+  }
+
+  function renderResolve() {
+    var input = resolverInput.value;
+    var r = L.fmResolveType(input, TYPES, ADDONS);
+    resolverResult.innerHTML = '';
+    resolverResult.appendChild(V.renderResolveResult(input, r));
+  }
+
+  kgPriceInput.addEventListener('input', renderTypes);
+  resolverInput.addEventListener('input', renderResolve);
+
+  renderTypes();
+  renderResolve();
+</script>
+
+</body>
+</html>

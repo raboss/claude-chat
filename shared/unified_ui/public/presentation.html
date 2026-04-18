@@ -1,0 +1,1197 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ALUMINOR - العرض التقديمي</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Cairo', sans-serif;
+            background: #0a0a1a;
+            color: white;
+            overflow: hidden;
+            direction: rtl;
+            height: 100vh;
+            width: 100vw;
+            user-select: none;
+        }
+
+        .slides-container {
+            width: 100vw;
+            height: 100vh;
+            position: relative;
+        }
+
+        .slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 60px 80px;
+            opacity: 0;
+            transform: translateX(-60px);
+            transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            pointer-events: none;
+            overflow-y: auto;
+        }
+
+        .slide.active {
+            opacity: 1;
+            transform: translateX(0);
+            pointer-events: auto;
+        }
+
+        .slide.prev {
+            opacity: 0;
+            transform: translateX(60px);
+        }
+
+        /* Slide backgrounds */
+        .slide:nth-child(odd) {
+            background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #0f172a 100%);
+        }
+
+        .slide:nth-child(even) {
+            background: linear-gradient(135deg, #0f172a 0%, #1a1a3e 50%, #1e293b 100%);
+        }
+
+        .slide::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: radial-gradient(circle at 20% 80%, rgba(124, 58, 237, 0.08) 0%, transparent 50%),
+                        radial-gradient(circle at 80% 20%, rgba(59, 130, 246, 0.06) 0%, transparent 50%);
+            pointer-events: none;
+        }
+
+        .slide > * {
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Decorative elements */
+        .slide::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(to left, #7c3aed, #3b82f6, #7c3aed);
+            z-index: 2;
+        }
+
+        /* Navigation */
+        .nav-controls {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            z-index: 100;
+            background: rgba(15, 23, 42, 0.9);
+            padding: 10px 25px;
+            border-radius: 50px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(124, 58, 237, 0.3);
+        }
+
+        .nav-btn {
+            background: rgba(124, 58, 237, 0.3);
+            border: 1px solid rgba(124, 58, 237, 0.5);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+
+        .nav-btn:hover {
+            background: rgba(124, 58, 237, 0.6);
+            transform: scale(1.1);
+        }
+
+        .slide-counter {
+            font-size: 14px;
+            font-weight: 600;
+            color: rgba(255,255,255,0.7);
+            min-width: 60px;
+            text-align: center;
+            font-family: 'Cairo', sans-serif;
+            direction: ltr;
+        }
+
+        .progress-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            height: 3px;
+            background: linear-gradient(to right, #7c3aed, #3b82f6);
+            transition: width 0.5s ease;
+            z-index: 100;
+        }
+
+        /* Typography */
+        .slide-title {
+            font-size: 48px;
+            font-weight: 900;
+            margin-bottom: 15px;
+            text-align: center;
+            background: linear-gradient(135deg, #ffffff, #c4b5fd);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .slide-subtitle {
+            font-size: 22px;
+            font-weight: 400;
+            color: rgba(255,255,255,0.7);
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .slide-icon {
+            font-size: 60px;
+            margin-bottom: 20px;
+            display: block;
+            text-align: center;
+        }
+
+        /* Content layouts */
+        .content-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            width: 100%;
+            max-width: 1000px;
+        }
+
+        .content-grid.three-col {
+            grid-template-columns: repeat(3, 1fr);
+        }
+
+        .content-grid.four-col {
+            grid-template-columns: repeat(4, 1fr);
+        }
+
+        .card {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 16px;
+            padding: 25px;
+            backdrop-filter: blur(5px);
+            transition: all 0.3s;
+        }
+
+        .card:hover {
+            background: rgba(255,255,255,0.08);
+            border-color: rgba(124, 58, 237, 0.4);
+            transform: translateY(-3px);
+        }
+
+        .card-icon {
+            font-size: 36px;
+            margin-bottom: 12px;
+        }
+
+        .card h3 {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: #c4b5fd;
+        }
+
+        .card p, .card li {
+            font-size: 14px;
+            color: rgba(255,255,255,0.7);
+            line-height: 1.8;
+        }
+
+        .card ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .card ul li {
+            padding: 3px 0;
+            padding-right: 18px;
+            position: relative;
+        }
+
+        .card ul li::before {
+            content: '\25C6';
+            position: absolute;
+            right: 0;
+            color: #7c3aed;
+            font-size: 8px;
+            top: 6px;
+        }
+
+        /* Stats */
+        .stats-bar {
+            display: flex;
+            gap: 30px;
+            margin: 30px 0;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .stat {
+            text-align: center;
+            min-width: 100px;
+        }
+
+        .stat-number {
+            font-size: 48px;
+            font-weight: 900;
+            background: linear-gradient(135deg, #7c3aed, #3b82f6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            color: rgba(255,255,255,0.6);
+        }
+
+        /* Feature list */
+        .feature-list {
+            list-style: none;
+            padding: 0;
+            width: 100%;
+            max-width: 800px;
+        }
+
+        .feature-list li {
+            padding: 12px 20px;
+            background: rgba(255,255,255,0.03);
+            border-radius: 10px;
+            margin-bottom: 8px;
+            border-right: 3px solid #7c3aed;
+            font-size: 16px;
+            color: rgba(255,255,255,0.85);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .feature-list li span.feat-icon {
+            font-size: 22px;
+        }
+
+        /* Tree diagram for presentation */
+        .pres-tree {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0;
+            width: 100%;
+            max-width: 900px;
+        }
+
+        .pres-tree-root {
+            background: linear-gradient(135deg, #7c3aed, #3b82f6);
+            padding: 14px 40px;
+            border-radius: 12px;
+            font-size: 20px;
+            font-weight: 800;
+            box-shadow: 0 4px 20px rgba(124, 58, 237, 0.4);
+        }
+
+        .pres-tree-line {
+            width: 2px;
+            height: 20px;
+            background: rgba(124, 58, 237, 0.5);
+        }
+
+        .pres-tree-row {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            flex-wrap: wrap;
+            position: relative;
+        }
+
+        .pres-tree-row::before {
+            content: '';
+            position: absolute;
+            top: -1px;
+            right: 10%;
+            left: 10%;
+            height: 2px;
+            background: rgba(124, 58, 237, 0.3);
+        }
+
+        .pres-tree-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .pres-tree-item .pres-tree-line {
+            height: 15px;
+        }
+
+        .pres-tree-node {
+            background: rgba(124, 58, 237, 0.15);
+            border: 1px solid rgba(124, 58, 237, 0.4);
+            padding: 10px 18px;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 600;
+            text-align: center;
+            white-space: nowrap;
+        }
+
+        .pres-tree-node.backend {
+            background: rgba(59, 130, 246, 0.15);
+            border-color: rgba(59, 130, 246, 0.4);
+        }
+
+        .pres-tree-node.frontend {
+            background: rgba(16, 185, 129, 0.15);
+            border-color: rgba(16, 185, 129, 0.4);
+        }
+
+        /* Permissions visual */
+        .perm-badge {
+            display: inline-block;
+            padding: 5px 16px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 700;
+            margin: 4px;
+        }
+
+        .perm-admin { background: rgba(220, 38, 38, 0.3); border: 1px solid rgba(220, 38, 38, 0.5); }
+        .perm-super { background: rgba(124, 58, 237, 0.3); border: 1px solid rgba(124, 58, 237, 0.5); }
+        .perm-tech { background: rgba(37, 99, 235, 0.3); border: 1px solid rgba(37, 99, 235, 0.5); }
+        .perm-sales { background: rgba(5, 150, 105, 0.3); border: 1px solid rgba(5, 150, 105, 0.5); }
+        .perm-acct { background: rgba(217, 119, 6, 0.3); border: 1px solid rgba(217, 119, 6, 0.5); }
+        .perm-view { background: rgba(107, 114, 128, 0.3); border: 1px solid rgba(107, 114, 128, 0.5); }
+
+        /* Phase card */
+        .phase-card {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(124, 58, 237, 0.3);
+            border-radius: 16px;
+            padding: 30px;
+            width: 100%;
+            max-width: 850px;
+        }
+
+        .phase-card .phase-num {
+            background: linear-gradient(135deg, #7c3aed, #3b82f6);
+            display: inline-block;
+            padding: 4px 16px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+
+        .phase-card h3 {
+            font-size: 28px;
+            font-weight: 800;
+            margin-bottom: 20px;
+            color: #c4b5fd;
+        }
+
+        .phase-card .phase-items {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+
+        .phase-card .phase-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 15px;
+            background: rgba(255,255,255,0.03);
+            border-radius: 8px;
+            font-size: 15px;
+            color: rgba(255,255,255,0.8);
+        }
+
+        .phase-card .phase-item span {
+            color: #7c3aed;
+        }
+
+        /* Cover specific */
+        .cover-logo-pres {
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(135deg, rgba(124, 58, 237, 0.3), rgba(59, 130, 246, 0.3));
+            border-radius: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 44px;
+            margin-bottom: 30px;
+            border: 2px solid rgba(124, 58, 237, 0.4);
+            backdrop-filter: blur(10px);
+        }
+
+        .cover-title-pres {
+            font-size: 72px;
+            font-weight: 900;
+            letter-spacing: 6px;
+            background: linear-gradient(135deg, #ffffff, #c4b5fd, #93c5fd);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 10px;
+        }
+
+        .cover-sub-pres {
+            font-size: 24px;
+            color: rgba(255,255,255,0.6);
+            font-weight: 300;
+            margin-bottom: 50px;
+        }
+
+        .cover-tagline {
+            font-size: 18px;
+            color: rgba(255,255,255,0.5);
+            padding: 12px 30px;
+            border: 1px solid rgba(255,255,255,0.15);
+            border-radius: 30px;
+        }
+
+        /* Thank you slide */
+        .thank-you-icon {
+            font-size: 80px;
+            margin-bottom: 20px;
+        }
+
+        /* Timeline visual */
+        .timeline-pres {
+            display: flex;
+            align-items: center;
+            gap: 0;
+            width: 100%;
+            max-width: 900px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .timeline-pres-item {
+            text-align: center;
+            flex: 1;
+            min-width: 140px;
+            position: relative;
+        }
+
+        .timeline-pres-item::after {
+            content: '';
+            position: absolute;
+            top: 28px;
+            left: 0;
+            right: 50%;
+            height: 2px;
+            background: rgba(124, 58, 237, 0.3);
+        }
+
+        .timeline-pres-item:last-child::after {
+            display: none;
+        }
+
+        .timeline-pres-dot {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #7c3aed, #3b82f6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            margin: 0 auto 12px;
+            position: relative;
+            z-index: 2;
+            box-shadow: 0 0 20px rgba(124, 58, 237, 0.4);
+        }
+
+        .timeline-pres-label {
+            font-size: 13px;
+            font-weight: 700;
+            color: rgba(255,255,255,0.8);
+        }
+
+        .timeline-pres-sub {
+            font-size: 11px;
+            color: rgba(255,255,255,0.4);
+            margin-top: 4px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .slide {
+                padding: 40px 30px;
+            }
+            .slide-title {
+                font-size: 32px;
+            }
+            .cover-title-pres {
+                font-size: 48px;
+            }
+            .content-grid, .content-grid.three-col, .content-grid.four-col {
+                grid-template-columns: 1fr;
+            }
+            .phase-card .phase-items {
+                grid-template-columns: 1fr;
+            }
+            .stats-bar {
+                gap: 15px;
+            }
+            .stat-number {
+                font-size: 36px;
+            }
+        }
+
+        /* Keyboard hint */
+        .key-hint {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            font-size: 12px;
+            color: rgba(255,255,255,0.3);
+            z-index: 100;
+        }
+    </style>
+</head>
+<body>
+
+<div class="key-hint">&#9654; استخدم الأسهم للتنقل</div>
+<button onclick="var a=document.createElement('a');a.href=location.href;a.download='عرض_ALUMINOR.html';document.body.appendChild(a);a.click();a.remove();" style="position:fixed;top:16px;left:16px;z-index:9999;background:rgba(124,58,237,.85);color:#fff;border:none;padding:8px 18px;border-radius:8px;font-family:Cairo,sans-serif;font-size:13px;font-weight:700;cursor:pointer;backdrop-filter:blur(8px)">📥 تحميل</button>
+
+<div class="progress-bar" id="progressBar"></div>
+
+<div class="slides-container" id="slidesContainer">
+
+    <!-- Slide 1: Title -->
+    <div class="slide active" data-slide="1">
+        <div class="cover-logo-pres">&#9670;</div>
+        <h1 class="cover-title-pres">ALUMINOR</h1>
+        <p class="cover-sub-pres">Aluminum & Glass Project Management System</p>
+        <p class="cover-tagline">نظام متكامل لإدارة مشاريع الألمنيوم والزجاج</p>
+    </div>
+
+    <!-- Slide 2: Overview -->
+    <div class="slide" data-slide="2">
+        <span class="slide-icon">&#127759;</span>
+        <h2 class="slide-title">نظرة عامة</h2>
+        <p class="slide-subtitle">ما هو نظام ALUMINOR؟</p>
+        <div class="content-grid">
+            <div class="card">
+                <div class="card-icon">&#128187;</div>
+                <h3>تطبيق ويب تقدمي (PWA)</h3>
+                <p>يعمل على جميع الأجهزة - هواتف، أجهزة لوحية، كمبيوتر. قابل للتثبيت ويعمل بدون إنترنت.</p>
+            </div>
+            <div class="card">
+                <div class="card-icon">&#128295;</div>
+                <h3>إدارة شاملة</h3>
+                <p>يغطي دورة حياة المشروع كاملة من الإنشاء وحتى التسليم والصيانة.</p>
+            </div>
+            <div class="card">
+                <div class="card-icon">&#128272;</div>
+                <h3>نظام صلاحيات متقدم</h3>
+                <p>أكثر من 60 إذن على مستوى الأزرار مع 6 قوالب مستخدمين جاهزة.</p>
+            </div>
+            <div class="card">
+                <div class="card-icon">&#128260;</div>
+                <h3>مزامنة فورية</h3>
+                <p>تحديث البيانات كل 20 ثانية بين جميع الأجهزة المتصلة.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 3: Architecture -->
+    <div class="slide" data-slide="3">
+        <span class="slide-icon">&#127959;</span>
+        <h2 class="slide-title">هيكل النظام</h2>
+        <p class="slide-subtitle">البنية التقنية والمكونات الرئيسية</p>
+        <div class="pres-tree">
+            <div class="pres-tree-root">&#9670; ALUMINOR System</div>
+            <div class="pres-tree-line"></div>
+            <div class="pres-tree-row">
+                <div class="pres-tree-item">
+                    <div class="pres-tree-line"></div>
+                    <div class="pres-tree-node backend">&#128421; Node.js + Express Server</div>
+                </div>
+                <div class="pres-tree-item">
+                    <div class="pres-tree-line"></div>
+                    <div class="pres-tree-node backend">&#128196; JSON File Storage</div>
+                </div>
+                <div class="pres-tree-item">
+                    <div class="pres-tree-line"></div>
+                    <div class="pres-tree-node frontend">&#127760; HTML/CSS/JS Frontend</div>
+                </div>
+                <div class="pres-tree-item">
+                    <div class="pres-tree-line"></div>
+                    <div class="pres-tree-node frontend">&#9881; Service Worker (PWA)</div>
+                </div>
+            </div>
+            <div class="pres-tree-line" style="height: 25px;"></div>
+            <div class="pres-tree-row">
+                <div class="pres-tree-item">
+                    <div class="pres-tree-line"></div>
+                    <div class="pres-tree-node">&#128203; المشاريع</div>
+                </div>
+                <div class="pres-tree-item">
+                    <div class="pres-tree-line"></div>
+                    <div class="pres-tree-node">&#128202; التقارير</div>
+                </div>
+                <div class="pres-tree-item">
+                    <div class="pres-tree-line"></div>
+                    <div class="pres-tree-node">&#128451; السجلات</div>
+                </div>
+                <div class="pres-tree-item">
+                    <div class="pres-tree-line"></div>
+                    <div class="pres-tree-node">&#128196; المستندات</div>
+                </div>
+                <div class="pres-tree-item">
+                    <div class="pres-tree-line"></div>
+                    <div class="pres-tree-node">&#128295; التركيبات</div>
+                </div>
+                <div class="pres-tree-item">
+                    <div class="pres-tree-line"></div>
+                    <div class="pres-tree-node">&#9881; الإعدادات</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 4: Module - Projects -->
+    <div class="slide" data-slide="4">
+        <span class="slide-icon">&#128203;</span>
+        <h2 class="slide-title">المشاريع</h2>
+        <p class="slide-subtitle">لوحة التحكم الرئيسية - Projects Dashboard</p>
+        <div class="stats-bar">
+            <div class="stat">
+                <div class="stat-number">&#8734;</div>
+                <div class="stat-label">مشاريع</div>
+            </div>
+            <div class="stat">
+                <div class="stat-number">13</div>
+                <div class="stat-label">زر إجراء</div>
+            </div>
+            <div class="stat">
+                <div class="stat-number">4</div>
+                <div class="stat-label">إحصائيات</div>
+            </div>
+        </div>
+        <div class="content-grid">
+            <div class="card">
+                <h3>&#127922; بطاقات تفاعلية</h3>
+                <p>عرض المشاريع على شكل بطاقات مع ألوان تعكس الحالة (نشط/تركيب/تسليم)</p>
+            </div>
+            <div class="card">
+                <h3>&#128200; إحصائيات</h3>
+                <p>إجمالي المشاريع - النشطة - قيد التركيب - تم التسليم</p>
+            </div>
+            <div class="card">
+                <h3>&#128269; بحث وفلاتر</h3>
+                <p>بحث متقدم مع فلترة حسب الحالة والشركة والمنطقة والتاريخ</p>
+            </div>
+            <div class="card">
+                <h3>&#128194; استيراد/تصدير</h3>
+                <p>دعم كامل لاستيراد وتصدير البيانات بتنسيق Excel</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 5: Module - Reports -->
+    <div class="slide" data-slide="5">
+        <span class="slide-icon">&#128202;</span>
+        <h2 class="slide-title">التقارير</h2>
+        <p class="slide-subtitle">نظام التقارير الشامل - Reports System</p>
+        <ul class="feature-list">
+            <li><span class="feat-icon">&#128200;</span> نظرة عامة - رسوم بيانية تفاعلية وإحصائيات شاملة</li>
+            <li><span class="feat-icon">&#128197;</span> تقارير أسبوعية - متابعة تفصيلية للتقدم الأسبوعي</li>
+            <li><span class="feat-icon">&#128198;</span> تقارير شهرية - ملخصات شاملة للأداء الشهري</li>
+            <li><span class="feat-icon">&#128100;</span> تقرير العملاء - تحليل مشاريع كل عميل</li>
+            <li><span class="feat-icon">&#128202;</span> خط زمني / جانت - مخطط جانت تفاعلي للمشاريع</li>
+        </ul>
+    </div>
+
+    <!-- Slide 6: Module - Records & Documents -->
+    <div class="slide" data-slide="6">
+        <span class="slide-icon">&#128451;</span>
+        <h2 class="slide-title">السجلات والمستندات</h2>
+        <p class="slide-subtitle">أرشيف التقارير وإنشاء المستندات الرسمية</p>
+        <div class="content-grid">
+            <div class="card">
+                <div class="card-icon">&#128451;</div>
+                <h3>السجلات (Records)</h3>
+                <ul>
+                    <li>تقارير الإنتاج المحفوظة</li>
+                    <li>التقارير الأسبوعية المحفوظة</li>
+                    <li>تقارير المواد المحفوظة</li>
+                    <li>عرض وطباعة وحذف</li>
+                </ul>
+            </div>
+            <div class="card">
+                <div class="card-icon">&#128196;</div>
+                <h3>المستندات (Documents)</h3>
+                <ul>
+                    <li>مستخلصات المشاريع</li>
+                    <li>أوامر العمل الرسمية</li>
+                    <li>علامات مائية تلقائية</li>
+                    <li>شعارات الشركة</li>
+                    <li>طباعة واستخراج PDF</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 7: Module - Installations -->
+    <div class="slide" data-slide="7">
+        <span class="slide-icon">&#128295;</span>
+        <h2 class="slide-title">التركيبات</h2>
+        <p class="slide-subtitle">إدارة عمليات التركيب - 4 تبويبات رئيسية</p>
+        <div class="content-grid">
+            <div class="card">
+                <div class="card-icon">&#128207;</div>
+                <h3>مقاسات</h3>
+                <ul>
+                    <li>إضافة قياسات من الموقع</li>
+                    <li>إرفاق صور</li>
+                    <li>ربط بالمشروع</li>
+                </ul>
+            </div>
+            <div class="card">
+                <div class="card-icon">&#128683;</div>
+                <h3>نواقص</h3>
+                <ul>
+                    <li>زجاج مكسور/مفقود</li>
+                    <li>ألمنيوم تالف</li>
+                    <li>إكسسوارات ناقصة</li>
+                </ul>
+            </div>
+            <div class="card">
+                <div class="card-icon">&#128666;</div>
+                <h3>أوامر تسليم</h3>
+                <ul>
+                    <li>إنشاء أوامر التسليم</li>
+                    <li>توقيع العميل</li>
+                    <li>تحديث تلقائي للحالة</li>
+                </ul>
+            </div>
+            <div class="card">
+                <div class="card-icon">&#128736;</div>
+                <h3>صيانة</h3>
+                <ul>
+                    <li>أوامر صيانة للفنيين</li>
+                    <li>متابعة التنفيذ</li>
+                    <li>شهادة تسليم تلقائية</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 8: Module - Settings -->
+    <div class="slide" data-slide="8">
+        <span class="slide-icon">&#9881;</span>
+        <h2 class="slide-title">الإعدادات</h2>
+        <p class="slide-subtitle">مركز التحكم الشامل - 12 تبويب</p>
+        <div class="content-grid three-col">
+            <div class="card" style="text-align:center;padding:15px;">
+                <div class="card-icon">&#127970;</div>
+                <h3 style="font-size:14px;">الشركات</h3>
+            </div>
+            <div class="card" style="text-align:center;padding:15px;">
+                <div class="card-icon">&#128274;</div>
+                <h3 style="font-size:14px;">الأمان</h3>
+            </div>
+            <div class="card" style="text-align:center;padding:15px;">
+                <div class="card-icon">&#128200;</div>
+                <h3 style="font-size:14px;">المراحل</h3>
+            </div>
+            <div class="card" style="text-align:center;padding:15px;">
+                <div class="card-icon">&#127978;</div>
+                <h3 style="font-size:14px;">المعارض</h3>
+            </div>
+            <div class="card" style="text-align:center;padding:15px;">
+                <div class="card-icon">&#127758;</div>
+                <h3 style="font-size:14px;">المناطق</h3>
+            </div>
+            <div class="card" style="text-align:center;padding:15px;">
+                <div class="card-icon">&#128204;</div>
+                <h3 style="font-size:14px;">الأعمدة</h3>
+            </div>
+            <div class="card" style="text-align:center;padding:15px;">
+                <div class="card-icon">&#127912;</div>
+                <h3 style="font-size:14px;">الشعارات</h3>
+            </div>
+            <div class="card" style="text-align:center;padding:15px;">
+                <div class="card-icon">&#128193;</div>
+                <h3 style="font-size:14px;">الأقسام</h3>
+            </div>
+            <div class="card" style="text-align:center;padding:15px;">
+                <div class="card-icon">&#128101;</div>
+                <h3 style="font-size:14px;">المستخدمين</h3>
+            </div>
+            <div class="card" style="text-align:center;padding:15px;">
+                <div class="card-icon">&#128190;</div>
+                <h3 style="font-size:14px;">النسخ الاحتياطي</h3>
+            </div>
+            <div class="card" style="text-align:center;padding:15px;">
+                <div class="card-icon">&#127796;</div>
+                <h3 style="font-size:14px;">العطلات</h3>
+            </div>
+            <div class="card" style="text-align:center;padding:15px;">
+                <div class="card-icon">&#127981;</div>
+                <h3 style="font-size:14px;">بيانات التصنيع</h3>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 9: Permissions -->
+    <div class="slide" data-slide="9">
+        <span class="slide-icon">&#128272;</span>
+        <h2 class="slide-title">نظام الصلاحيات</h2>
+        <p class="slide-subtitle">أكثر من 60 إذن على مستوى الأزرار</p>
+        <div style="text-align: center; margin-bottom: 25px;">
+            <span class="perm-badge perm-admin">&#128081; مدير النظام</span>
+            <span class="perm-badge perm-super">&#128188; مشرف</span>
+            <span class="perm-badge perm-tech">&#128295; فني</span>
+            <span class="perm-badge perm-sales">&#128176; مبيعات</span>
+            <span class="perm-badge perm-acct">&#128178; محاسب</span>
+            <span class="perm-badge perm-view">&#128065; مشاهد فقط</span>
+        </div>
+        <div class="content-grid">
+            <div class="card">
+                <h3>&#127919; فلترة متقدمة</h3>
+                <ul>
+                    <li>فلترة حسب الشركة</li>
+                    <li>فلترة حسب المنطقة</li>
+                    <li>فلترة حسب المعرض</li>
+                    <li>كل مستخدم يرى بياناته فقط</li>
+                </ul>
+            </div>
+            <div class="card">
+                <h3>&#128274; تحكم دقيق</h3>
+                <ul>
+                    <li>صلاحيات على مستوى الأزرار</li>
+                    <li>تحكم بالعلامات المائية</li>
+                    <li>قوالب صلاحيات جاهزة</li>
+                    <li>تخصيص فردي لكل مستخدم</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 10: Technical Features -->
+    <div class="slide" data-slide="10">
+        <span class="slide-icon">&#9889;</span>
+        <h2 class="slide-title">المميزات التقنية</h2>
+        <p class="slide-subtitle">التقنيات والمميزات المستخدمة</p>
+        <div class="content-grid three-col">
+            <div class="card" style="text-align:center;">
+                <div class="card-icon">&#9889;</div>
+                <h3>PWA</h3>
+                <p>تطبيق ويب تقدمي قابل للتثبيت مع Service Worker</p>
+            </div>
+            <div class="card" style="text-align:center;">
+                <div class="card-icon">&#128260;</div>
+                <h3>Real-time Sync</h3>
+                <p>مزامنة كل 20 ثانية</p>
+            </div>
+            <div class="card" style="text-align:center;">
+                <div class="card-icon">&#128196;</div>
+                <h3>JSON Storage</h3>
+                <p>تخزين مرن بدون قاعدة بيانات</p>
+            </div>
+            <div class="card" style="text-align:center;">
+                <div class="card-icon">&#128241;</div>
+                <h3>Responsive</h3>
+                <p>متجاوب مع جميع الشاشات</p>
+            </div>
+            <div class="card" style="text-align:center;">
+                <div class="card-icon">&#128424;</div>
+                <h3>Print Ready</h3>
+                <p>مستندات جاهزة للطباعة</p>
+            </div>
+            <div class="card" style="text-align:center;">
+                <div class="card-icon">&#128194;</div>
+                <h3>Excel Support</h3>
+                <p>استيراد وتصدير Excel</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 11: Roadmap - Phase 1 & 2 -->
+    <div class="slide" data-slide="11">
+        <span class="slide-icon">&#128640;</span>
+        <h2 class="slide-title">خطة التطوير</h2>
+        <p class="slide-subtitle">المرحلة الأولى والثانية</p>
+        <div class="content-grid">
+            <div class="phase-card" style="width:auto;">
+                <span class="phase-num">المرحلة 1</span>
+                <h3 style="font-size:20px;">&#128208; الرسومات والمخططات</h3>
+                <div class="phase-items" style="grid-template-columns:1fr;">
+                    <div class="phase-item"><span>&#9670;</span> صفحة رسومات هندسية</div>
+                    <div class="phase-item"><span>&#9670;</span> رفع AutoCAD/PDF</div>
+                    <div class="phase-item"><span>&#9670;</span> ربط بالمشاريع</div>
+                    <div class="phase-item"><span>&#9670;</span> معاينة داخل النظام</div>
+                    <div class="phase-item"><span>&#9670;</span> تتبع النسخ (Versioning)</div>
+                    <div class="phase-item"><span>&#9670;</span> اعتماد المشرف</div>
+                </div>
+            </div>
+            <div class="phase-card" style="width:auto;">
+                <span class="phase-num">المرحلة 2</span>
+                <h3 style="font-size:20px;">&#127981; أوامر التصنيع</h3>
+                <div class="phase-items" style="grid-template-columns:1fr;">
+                    <div class="phase-item"><span>&#9670;</span> تصنيع الألمنيوم</div>
+                    <div class="phase-item"><span>&#9670;</span> تصنيع الزجاج</div>
+                    <div class="phase-item"><span>&#9670;</span> ربط بالمقاسات</div>
+                    <div class="phase-item"><span>&#9670;</span> تتبع الحالة</div>
+                    <div class="phase-item"><span>&#9670;</span> تقارير الإنتاج</div>
+                    <div class="phase-item"><span>&#9670;</span> جدول زمني</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 12: Roadmap - Phase 3 & 4 -->
+    <div class="slide" data-slide="12">
+        <span class="slide-icon">&#128640;</span>
+        <h2 class="slide-title">خطة التطوير</h2>
+        <p class="slide-subtitle">المرحلة الثالثة والرابعة</p>
+        <div class="content-grid">
+            <div class="phase-card" style="width:auto;">
+                <span class="phase-num">المرحلة 3</span>
+                <h3 style="font-size:20px;">&#128176; العهدة والرواتب</h3>
+                <div class="phase-items" style="grid-template-columns:1fr;">
+                    <div class="phase-item"><span>&#9670;</span> إدارة العهد (أدوات/معدات/مواد)</div>
+                    <div class="phase-item"><span>&#9670;</span> تسليم واستلام العهد</div>
+                    <div class="phase-item"><span>&#9670;</span> تتبع المفقود والتالف</div>
+                    <div class="phase-item"><span>&#9670;</span> الرواتب والمستحقات</div>
+                    <div class="phase-item"><span>&#9670;</span> كشوف رواتب شهرية</div>
+                    <div class="phase-item"><span>&#9670;</span> حوافز وخصومات</div>
+                </div>
+            </div>
+            <div class="phase-card" style="width:auto;">
+                <span class="phase-num">المرحلة 4</span>
+                <h3 style="font-size:20px;">&#128101; فرق التركيبات</h3>
+                <div class="phase-items" style="grid-template-columns:1fr;">
+                    <div class="phase-item"><span>&#9670;</span> إدارة الفرق</div>
+                    <div class="phase-item"><span>&#9670;</span> تعريف الأعضاء والرؤساء</div>
+                    <div class="phase-item"><span>&#9670;</span> توزيع المشاريع</div>
+                    <div class="phase-item"><span>&#9670;</span> جدول العمل</div>
+                    <div class="phase-item"><span>&#9670;</span> تقارير الأداء</div>
+                    <div class="phase-item"><span>&#9670;</span> تتبع المواقع</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 13: Roadmap - Phase 5 -->
+    <div class="slide" data-slide="13">
+        <span class="slide-icon">&#127970;</span>
+        <h2 class="slide-title">خطة التطوير</h2>
+        <p class="slide-subtitle">المرحلة الخامسة - الفروع</p>
+        <div class="phase-card">
+            <span class="phase-num">المرحلة 5</span>
+            <h3>&#127970; إدارة الفروع</h3>
+            <div class="phase-items">
+                <div class="phase-item"><span>&#9670;</span> صفحة إدارة الفروع</div>
+                <div class="phase-item"><span>&#9670;</span> كل فرع له مشاريعه وفرقه</div>
+                <div class="phase-item"><span>&#9670;</span> تقارير منفصلة لكل فرع</div>
+                <div class="phase-item"><span>&#9670;</span> مقارنة أداء الفروع</div>
+            </div>
+        </div>
+        <div style="margin-top: 30px; text-align: center;">
+            <div class="stats-bar">
+                <div class="stat">
+                    <div class="stat-number">5</div>
+                    <div class="stat-label">مراحل تطوير</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-number">11</div>
+                    <div class="stat-label">صفحة جديدة</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-number">30+</div>
+                    <div class="stat-label">ميزة إضافية</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 14: Timeline -->
+    <div class="slide" data-slide="14">
+        <span class="slide-icon">&#128197;</span>
+        <h2 class="slide-title">الجدول الزمني</h2>
+        <p class="slide-subtitle">مراحل التطوير المستقبلية</p>
+        <div class="timeline-pres">
+            <div class="timeline-pres-item">
+                <div class="timeline-pres-dot">&#128208;</div>
+                <div class="timeline-pres-label">المرحلة 1</div>
+                <div class="timeline-pres-sub">الرسومات والمخططات</div>
+            </div>
+            <div class="timeline-pres-item">
+                <div class="timeline-pres-dot">&#127981;</div>
+                <div class="timeline-pres-label">المرحلة 2</div>
+                <div class="timeline-pres-sub">أوامر التصنيع</div>
+            </div>
+            <div class="timeline-pres-item">
+                <div class="timeline-pres-dot">&#128176;</div>
+                <div class="timeline-pres-label">المرحلة 3</div>
+                <div class="timeline-pres-sub">العهدة والرواتب</div>
+            </div>
+            <div class="timeline-pres-item">
+                <div class="timeline-pres-dot">&#128101;</div>
+                <div class="timeline-pres-label">المرحلة 4</div>
+                <div class="timeline-pres-sub">فرق التركيبات</div>
+            </div>
+            <div class="timeline-pres-item">
+                <div class="timeline-pres-dot">&#127970;</div>
+                <div class="timeline-pres-label">المرحلة 5</div>
+                <div class="timeline-pres-sub">الفروع</div>
+            </div>
+        </div>
+        <div style="margin-top: 40px; text-align:center;">
+            <p style="font-size:16px; color: rgba(255,255,255,0.5);">النظام الحالي: 6 صفحات رئيسية &nbsp;&#8594;&nbsp; بعد التطوير: 11+ صفحة</p>
+        </div>
+    </div>
+
+    <!-- Slide 15: Thank You -->
+    <div class="slide" data-slide="15">
+        <div class="thank-you-icon">&#9733;</div>
+        <h2 class="slide-title" style="font-size: 56px;">شكراً لكم</h2>
+        <p class="slide-subtitle" style="font-size: 20px; margin-bottom: 50px;">ALUMINOR - نظام إدارة مشاريع الألمنيوم والزجاج</p>
+        <div style="display: flex; gap: 30px; flex-wrap: wrap; justify-content: center;">
+            <div class="card" style="text-align: center; min-width: 200px;">
+                <div class="card-icon">&#127760;</div>
+                <h3>PWA متكامل</h3>
+            </div>
+            <div class="card" style="text-align: center; min-width: 200px;">
+                <div class="card-icon">&#128295;</div>
+                <h3>6 وحدات حالية</h3>
+            </div>
+            <div class="card" style="text-align: center; min-width: 200px;">
+                <div class="card-icon">&#128640;</div>
+                <h3>5 مراحل تطوير</h3>
+            </div>
+        </div>
+        <p style="margin-top: 40px; font-size: 14px; color: rgba(255,255,255,0.3);">جميع الحقوق محفوظة &copy; 2026</p>
+    </div>
+
+</div>
+
+<!-- Navigation -->
+<div class="nav-controls">
+    <button class="nav-btn" id="nextBtn" onclick="nextSlide()">&#9664;</button>
+    <span class="slide-counter" id="slideCounter">1 / 15</span>
+    <button class="nav-btn" id="prevBtn" onclick="prevSlide()">&#9654;</button>
+</div>
+
+<script>
+    let currentSlide = 1;
+    const totalSlides = 15;
+    let touchStartX = 0;
+    let touchEndX = 0;
+
+    function showSlide(n) {
+        const slides = document.querySelectorAll('.slide');
+        const prev = currentSlide;
+
+        if (n < 1) n = 1;
+        if (n > totalSlides) n = totalSlides;
+
+        slides.forEach((slide, i) => {
+            slide.classList.remove('active', 'prev');
+            if (i + 1 === n) {
+                slide.classList.add('active');
+            } else if (i + 1 === prev && prev !== n) {
+                slide.classList.add('prev');
+            }
+        });
+
+        currentSlide = n;
+        document.getElementById('slideCounter').textContent = currentSlide + ' / ' + totalSlides;
+
+        // Update progress bar
+        const progress = ((currentSlide - 1) / (totalSlides - 1)) * 100;
+        document.getElementById('progressBar').style.width = progress + '%';
+    }
+
+    function nextSlide() {
+        showSlide(currentSlide + 1);
+    }
+
+    function prevSlide() {
+        showSlide(currentSlide - 1);
+    }
+
+    // Keyboard navigation
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'ArrowLeft' || e.key === 'ArrowDown' || e.key === ' ') {
+            e.preventDefault();
+            nextSlide();
+        } else if (e.key === 'ArrowRight' || e.key === 'ArrowUp') {
+            e.preventDefault();
+            prevSlide();
+        } else if (e.key === 'Home') {
+            e.preventDefault();
+            showSlide(1);
+        } else if (e.key === 'End') {
+            e.preventDefault();
+            showSlide(totalSlides);
+        }
+    });
+
+    // Touch/Swipe support
+    document.addEventListener('touchstart', function(e) {
+        touchStartX = e.changedTouches[0].screenX;
+    }, { passive: true });
+
+    document.addEventListener('touchend', function(e) {
+        touchEndX = e.changedTouches[0].screenX;
+        handleSwipe();
+    }, { passive: true });
+
+    function handleSwipe() {
+        const diff = touchStartX - touchEndX;
+        const threshold = 50;
+
+        if (Math.abs(diff) > threshold) {
+            if (diff > 0) {
+                // Swipe left (next in RTL)
+                prevSlide();
+            } else {
+                // Swipe right (prev in RTL)
+                nextSlide();
+            }
+        }
+    }
+
+    // Initialize
+    showSlide(1);
+</script>
+
+</body>
+</html>

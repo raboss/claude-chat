@@ -1,0 +1,273 @@
+<!doctype html>
+<html lang="ar" dir="rtl" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>NouRion — العهدة المالية</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&family=IBM+Plex+Sans+Arabic:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="assets/css/nourion-tokens.css">
+  <link rel="stylesheet" href="assets/css/nourion-base.css">
+  <link rel="stylesheet" href="assets/css/nourion-components.css">
+
+  <script src="assets/js/nourion-theme.js"></script>
+  <script src="../src/modules/custody/custody.logic.js"></script>
+  <script src="../src/modules/custody/custody.view.js"></script>
+
+  <link rel="icon" type="image/svg+xml" href="assets/img/logo.svg">
+</head>
+<body>
+
+<div class="nr-app">
+
+  <aside class="nr-sidebar">
+    <div class="nr-sidebar__brand">
+      <img src="assets/img/logo.svg" alt="NouRion" style="height:32px;">
+    </div>
+    <nav class="nr-sidebar__nav">
+      <div class="nr-nav-section">
+        <div class="nr-nav-section__title">الرئيسية</div>
+        <a class="nr-nav-item" href="index.html"><span class="nr-nav-item__icon">◇</span> Design System</a>
+        <a class="nr-nav-item" href="projects.html"><span class="nr-nav-item__icon">◈</span> المشاريع</a>
+        <a class="nr-nav-item" href="reports.html"><span class="nr-nav-item__icon">📊</span> التقارير</a>
+      </div>
+      <div class="nr-nav-section">
+        <div class="nr-nav-section__title">التصنيع</div>
+        <a class="nr-nav-item" href="form-types.html"><span class="nr-nav-item__icon">◎</span> القطاعات</a>
+        <a class="nr-nav-item" href="measurements.html"><span class="nr-nav-item__icon">◎</span> المقاسات</a>
+        <a class="nr-nav-item" href="documents.html"><span class="nr-nav-item__icon">📄</span> المستندات</a>
+      </div>
+      <div class="nr-nav-section">
+        <div class="nr-nav-section__title">الإدارة</div>
+        <a class="nr-nav-item" href="hr.html"><span class="nr-nav-item__icon">👥</span> الموظفون</a>
+        <a class="nr-nav-item is-active"><span class="nr-nav-item__icon">💰</span> العهدة</a>
+        <a class="nr-nav-item" href="settings.html"><span class="nr-nav-item__icon">⚙</span> الإعدادات</a>
+      </div>
+    </nav>
+  </aside>
+
+  <main class="nr-app__main">
+
+    <header class="nr-topbar">
+      <div class="nr-topbar__title">العهدة المالية · Custody</div>
+      <div class="nr-topbar__actions">
+        <div class="nr-btn-group">
+          <button class="nr-btn nr-btn--sm" data-tab="overview">نظرة عامة</button>
+          <button class="nr-btn nr-btn--sm" data-tab="employees">الموظفون</button>
+          <button class="nr-btn nr-btn--sm" data-tab="invoices">الفواتير</button>
+          <button class="nr-btn nr-btn--sm" data-tab="calc">الحاسبة</button>
+        </div>
+        <button class="nr-btn nr-btn--ghost nr-btn--sm" data-nr-theme-toggle>
+          <span data-nr-theme-icon>☀</span>
+          <span data-nr-theme-label>الوضع الفاتح</span>
+        </button>
+      </div>
+    </header>
+
+    <div class="nr-app__content">
+
+      <div class="nr-alert nr-alert--info" style="margin-bottom: var(--nr-sp-8);">
+        <span class="nr-alert__icon">ⓘ</span>
+        <div class="nr-alert__body">
+          <div class="nr-alert__title">Phase 2.5 · custody POC</div>
+          <div class="nr-alert__msg">
+            نظام العهدة المالية الكامل: استلام عهدات → توزيع على موظفين → فواتير
+            (pending/settled/rejected) → تحويلات بين الموظفين. كل العمليات
+            <strong>pure functions</strong> (settle/reject/transfer لا تُعدّل البيانات الأصلية).
+            <strong>46 اختبار</strong> ناجح من أوّل محاولة.
+          </div>
+        </div>
+      </div>
+
+      <section style="margin-bottom: var(--nr-sp-8);">
+        <h1 style="font-size: var(--nr-fs-3xl); font-weight: 300;">
+          العهدة <span style="color: var(--nr-accent); font-weight: 500;">المالية</span>
+        </h1>
+        <p style="max-width: 720px;">
+          إدارة كاملة لعهدة المصنع: من استلام النقد من البنك → توزيعه على
+          الموظفين → تتبّع الفواتير ومصاريف كل موظف → التحويلات الفرعية بين الموظفين.
+        </p>
+      </section>
+
+      <!-- Global summary -->
+      <section style="margin-bottom: var(--nr-sp-8);">
+        <h6 class="nr-section-title">Global Summary</h6>
+        <div id="summaryHost"></div>
+      </section>
+
+      <!-- Tab content -->
+      <section id="tabContent" style="margin-bottom: var(--nr-sp-10);"></section>
+
+      <footer style="padding-top: var(--nr-sp-8); border-top: 1px solid var(--nr-border-subtle);">
+        <div class="nr-row-between">
+          <small>Module: custody · 46 tests · 13 logic functions · pure financial operations</small>
+          <small style="font-family: var(--nr-font-mono);">Phase 2.5 · POC #9</small>
+        </div>
+      </footer>
+
+    </div>
+  </main>
+</div>
+
+
+<script>
+  var L = NouRion.CustodyLogic;
+  var V = NouRion.CustodyView;
+
+  /* state — mutable but only via pure operations */
+  var state = {
+    records: [
+      { id: 'r1', amount: 100000, date: '2026-04-01', source: 'بنك الراجحي - حساب 1234' },
+      { id: 'r2', amount: 50000,  date: '2026-04-15', source: 'بنك الأهلي - حساب 5678' },
+      { id: 'r3', amount: 75000,  date: '2026-04-25', source: 'كاش من المدير'        }
+    ],
+    dists: [
+      // علي
+      { id: 'd1', custodyId: 'r1', employeeId: 'e1', employeeName: 'علي الحارثي',  amount: 30000, date: '2026-04-02', reason: 'مشروع الفيلا' },
+      { id: 'd3', custodyId: 'r2', employeeId: 'e1', employeeName: 'علي الحارثي',  amount: 15000, date: '2026-04-16', reason: 'مواد إضافية' },
+      // محمد
+      { id: 'd2', custodyId: 'r1', employeeId: 'e2', employeeName: 'محمد العتيبي', amount: 25000, date: '2026-04-03', reason: 'مشروع البرج' },
+      // خالد
+      { id: 'd5', custodyId: 'r3', employeeId: 'e4', employeeName: 'خالد الشهري',  amount: 20000, date: '2026-04-26', reason: 'تركيبات' },
+      // Transfer: علي → سعد (5000)
+      { id: 'd4', employeeId: 'e3', employeeName: 'سعد القحطاني', amount: 5000, date: '2026-04-10',
+        isTransfer: true, parentEmpId: 'e1' }
+    ],
+    invoices: [
+      // علي
+      { id: 'i1', custodyId: 'r1', employeeId: 'e1', employeeName: 'علي الحارثي', distId: 'd1', amount: 8000, adminSettled: true },
+      { id: 'i2', custodyId: 'r1', employeeId: 'e1', employeeName: 'علي الحارثي', distId: 'd1', amount: 4500, adminSettled: false },
+      { id: 'i3', custodyId: 'r2', employeeId: 'e1', employeeName: 'علي الحارثي', distId: 'd3', amount: 6000, adminSettled: false },
+      // محمد
+      { id: 'i4', custodyId: 'r1', employeeId: 'e2', employeeName: 'محمد العتيبي', distId: 'd2', amount: 10000, adminSettled: true },
+      { id: 'i5', custodyId: 'r1', employeeId: 'e2', employeeName: 'محمد العتيبي', distId: 'd2', amount: 1500,  rejected: true, rejectReason: 'مبلغ مكرّر' },
+      // سعد (من تحويل علي)
+      { id: 'i6', employeeId: 'e3', employeeName: 'سعد القحطاني', distId: 'd4', amount: 2000, adminSettled: false },
+      // خالد
+      { id: 'i7', custodyId: 'r3', employeeId: 'e4', employeeName: 'خالد الشهري', distId: 'd5', amount: 7500, adminSettled: false }
+    ]
+  };
+
+  var currentTab = 'overview';
+  var selectedEmpId = null;
+
+  var summaryHost = document.getElementById('summaryHost');
+  var tabContent  = document.getElementById('tabContent');
+
+  function renderTabButtons() {
+    document.querySelectorAll('[data-tab]').forEach(function (btn) {
+      if (btn.getAttribute('data-tab') === currentTab) btn.classList.add('nr-btn--primary');
+      else btn.classList.remove('nr-btn--primary');
+    });
+  }
+
+  function settleInvoiceById(invId) {
+    state.invoices = state.invoices.map(function (v) {
+      if (v.id === invId) return L.settleInvoice(v);
+      return v;
+    });
+    renderAll();
+  }
+
+  function rejectInvoiceById(invId) {
+    var reason = prompt('سبب الرفض:', '');
+    if (reason === null) return;
+    state.invoices = state.invoices.map(function (v) {
+      if (v.id === invId) return L.rejectInvoice(v, reason);
+      return v;
+    });
+    renderAll();
+  }
+
+  function renderTab() {
+    tabContent.innerHTML = '';
+
+    if (currentTab === 'overview') {
+      var t1 = document.createElement('h6');
+      t1.className = 'nr-section-title';
+      t1.textContent = 'العهد المستلَمة';
+      tabContent.appendChild(t1);
+      tabContent.appendChild(V.renderRecordsTable(state.records, state.dists));
+
+    } else if (currentTab === 'employees') {
+      if (selectedEmpId) {
+        var back = document.createElement('button');
+        back.className = 'nr-btn nr-btn--ghost nr-btn--sm';
+        back.textContent = '← رجوع للقائمة';
+        back.style.marginBottom = 'var(--nr-sp-3)';
+        back.addEventListener('click', function () { selectedEmpId = null; renderTab(); });
+        tabContent.appendChild(back);
+        tabContent.appendChild(V.renderEmployeeDetail(selectedEmpId, state.dists, state.invoices));
+      } else {
+        var t2 = document.createElement('h6');
+        t2.className = 'nr-section-title';
+        t2.textContent = 'حسابات الموظفين';
+        tabContent.appendChild(t2);
+        tabContent.appendChild(V.renderEmployeeAccountsGrid(state.dists, state.invoices, function (empId) {
+          selectedEmpId = empId;
+          renderTab();
+        }));
+      }
+
+    } else if (currentTab === 'invoices') {
+      var t3 = document.createElement('h6');
+      t3.className = 'nr-section-title';
+      t3.textContent = 'كل الفواتير — pending / settled / rejected';
+      tabContent.appendChild(t3);
+      tabContent.appendChild(V.renderInvoicesTable(state.invoices, settleInvoiceById, rejectInvoiceById));
+
+    } else if (currentTab === 'calc') {
+      var t4 = document.createElement('h6');
+      t4.className = 'nr-section-title';
+      t4.textContent = 'الحاسبة الذكية (notepad)';
+      tabContent.appendChild(t4);
+
+      var card = document.createElement('div');
+      card.className = 'nr-card';
+      card.style.marginBottom = 'var(--nr-sp-4)';
+      var body = document.createElement('div');
+      body.className = 'nr-card__body';
+      var ta = document.createElement('textarea');
+      ta.className = 'nr-textarea';
+      ta.style.minHeight = '160px';
+      ta.style.fontFamily = 'var(--nr-font-mono)';
+      ta.value = 'مواد كهربائية\n1,500\nسيلكون\n850+200\nبراغي\n3*150\nنقل\n1,200\nقهوة وتراويق\n75';
+      body.appendChild(ta);
+      card.appendChild(body);
+      tabContent.appendChild(card);
+
+      var resultHost = document.createElement('div');
+      tabContent.appendChild(resultHost);
+
+      function refresh() {
+        resultHost.innerHTML = '';
+        resultHost.appendChild(V.renderNotepadCalc(ta.value));
+      }
+      ta.addEventListener('input', refresh);
+      refresh();
+    }
+  }
+
+  function renderAll() {
+    summaryHost.innerHTML = '';
+    summaryHost.appendChild(V.renderGlobalSummary(state.records, state.dists, state.invoices));
+    renderTabButtons();
+    renderTab();
+  }
+
+  document.querySelectorAll('[data-tab]').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      currentTab = btn.getAttribute('data-tab');
+      selectedEmpId = null;
+      renderAll();
+    });
+  });
+
+  renderAll();
+</script>
+
+</body>
+</html>

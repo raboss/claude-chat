@@ -1,0 +1,197 @@
+/* ============================================================
+   NouRion — Design Tokens
+   Single source of truth for all brand values.
+   Do not use raw colors/spacing anywhere else — use these vars.
+   ============================================================ */
+
+:root {
+  /* ---------- Brand Identity ---------- */
+  --nr-brand-blue:        #0099ff;   /* electric blue — used ONLY on R */
+  --nr-brand-blue-bright: #33ccff;   /* hover / glow */
+  --nr-brand-blue-deep:   #0066cc;   /* pressed */
+
+  --nr-brand-silver:      #c0c0c6;
+  --nr-brand-silver-hi:   #e8e8ec;
+  --nr-brand-silver-lo:   #8a8a92;
+
+  /* ---------- Typography ----------
+     Technical / AI-grade pairing:
+     - Space Grotesk: geometric, used by anthropic/vercel/linear — feels AI-native.
+     - JetBrains Mono: precision-tuned monospace for numbers/code.
+     - IBM Plex Sans Arabic: IBM's research-grade Arabic, matches the tech tone.
+     Default weights kept LIGHT (300/400) per brand direction.
+  --------------------------------- */
+  --nr-font-sans: 'Space Grotesk', 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+  --nr-font-mono: 'JetBrains Mono', 'IBM Plex Mono', 'Consolas', 'Menlo', monospace;
+  --nr-font-ar:   'IBM Plex Sans Arabic', 'Space Grotesk', 'Segoe UI', sans-serif;
+
+  --nr-fs-xs:   11px;
+  --nr-fs-sm:   13px;
+  --nr-fs-base: 14px;
+  --nr-fs-md:   15px;
+  --nr-fs-lg:   17px;
+  --nr-fs-xl:   20px;
+  --nr-fs-2xl:  26px;
+  --nr-fs-3xl:  34px;
+  --nr-fs-4xl:  46px;
+
+  --nr-fw-light:    300;
+  --nr-fw-regular:  400;
+  --nr-fw-medium:   500;
+  --nr-fw-semibold: 600;
+  --nr-fw-bold:     700;
+
+  --nr-lh-tight:  1.2;
+  --nr-lh-normal: 1.5;
+  --nr-lh-loose:  1.75;
+
+  --nr-ls-tight:  -0.02em;
+  --nr-ls-normal: 0;
+  --nr-ls-wide:   0.06em;
+
+  /* ---------- Spacing (4px scale) ---------- */
+  --nr-sp-0:   0;
+  --nr-sp-1:   4px;
+  --nr-sp-2:   8px;
+  --nr-sp-3:   12px;
+  --nr-sp-4:   16px;
+  --nr-sp-5:   20px;
+  --nr-sp-6:   24px;
+  --nr-sp-8:   32px;
+  --nr-sp-10:  40px;
+  --nr-sp-12:  48px;
+  --nr-sp-16:  64px;
+  --nr-sp-20:  80px;
+
+  /* ---------- Radius ---------- */
+  --nr-r-none: 0;
+  --nr-r-sm:   4px;
+  --nr-r-md:   8px;
+  --nr-r-lg:   12px;
+  --nr-r-xl:   16px;
+  --nr-r-pill: 999px;
+  --nr-r-circle: 50%;
+
+  /* ---------- Borders ---------- */
+  --nr-border-w-1: 1px;
+  --nr-border-w-2: 2px;
+  --nr-border-w-4: 4px;
+
+  /* ---------- Transitions ---------- */
+  --nr-t-fast:   120ms cubic-bezier(.4,0,.2,1);
+  --nr-t-normal: 200ms cubic-bezier(.4,0,.2,1);
+  --nr-t-slow:   320ms cubic-bezier(.4,0,.2,1);
+
+  /* ---------- Z-index scale ---------- */
+  --nr-z-base:    1;
+  --nr-z-dropdown: 100;
+  --nr-z-sticky:   200;
+  --nr-z-overlay:  900;
+  --nr-z-modal:    1000;
+  --nr-z-toast:    1100;
+
+  /* ---------- Layout ---------- */
+  --nr-sidebar-w:    260px;
+  --nr-sidebar-w-sm: 64px;
+  --nr-topbar-h:     60px;
+  --nr-content-max:  1440px;
+}
+
+/* ============================================================
+   DARK THEME (default) — industrial, high-tech
+   ============================================================ */
+:root,
+[data-theme="dark"] {
+  --nr-bg-0:   #0a0b0f;   /* body deepest */
+  --nr-bg-1:   #111317;   /* sidebar / topbar */
+  --nr-bg-2:   #181a20;   /* cards */
+  --nr-bg-3:   #1f2229;   /* hover / input */
+  --nr-bg-4:   #272a33;   /* active / selected */
+
+  --nr-surface-raised: #1a1d24;
+  --nr-surface-sunken: #0d0f13;
+
+  --nr-border-subtle: #23262e;
+  --nr-border:        #2d3138;
+  --nr-border-strong: #3b4049;
+
+  --nr-text-primary:    #e8eaed;
+  --nr-text-secondary:  #a8adb6;
+  --nr-text-tertiary:   #6b7280;
+  --nr-text-disabled:   #4a4f57;
+  --nr-text-inverse:    #0a0b0f;
+
+  --nr-accent:         var(--nr-brand-blue);
+  --nr-accent-hover:   var(--nr-brand-blue-bright);
+  --nr-accent-active:  var(--nr-brand-blue-deep);
+  --nr-accent-soft:    rgba(0, 153, 255, 0.12);
+  --nr-accent-contrast: #ffffff;
+
+  --nr-success:      #10b981;
+  --nr-success-soft: rgba(16, 185, 129, 0.12);
+  --nr-warning:      #f59e0b;
+  --nr-warning-soft: rgba(245, 158, 11, 0.12);
+  --nr-danger:       #ef4444;
+  --nr-danger-soft:  rgba(239, 68, 68, 0.12);
+  --nr-info:         #38bdf8;
+  --nr-info-soft:    rgba(56, 189, 248, 0.12);
+
+  --nr-shadow-sm: 0 1px 2px rgba(0,0,0,.45);
+  --nr-shadow-md: 0 4px 12px rgba(0,0,0,.5);
+  --nr-shadow-lg: 0 10px 30px rgba(0,0,0,.6);
+  --nr-shadow-glow: 0 0 24px rgba(0,153,255,.25);
+
+  --nr-scrollbar-track: #111317;
+  --nr-scrollbar-thumb: #2d3138;
+
+  color-scheme: dark;
+}
+
+/* ============================================================
+   LIGHT THEME — clean, minimal, industrial
+   ============================================================ */
+[data-theme="light"] {
+  --nr-bg-0:   #f5f6f8;
+  --nr-bg-1:   #ffffff;
+  --nr-bg-2:   #ffffff;
+  --nr-bg-3:   #f1f3f6;
+  --nr-bg-4:   #e6e9ee;
+
+  --nr-surface-raised: #ffffff;
+  --nr-surface-sunken: #eef0f4;
+
+  --nr-border-subtle: #e6e9ee;
+  --nr-border:        #d5dae1;
+  --nr-border-strong: #b4bcc7;
+
+  --nr-text-primary:    #0f1418;
+  --nr-text-secondary:  #495362;
+  --nr-text-tertiary:   #6b7280;
+  --nr-text-disabled:   #a8adb6;
+  --nr-text-inverse:    #ffffff;
+
+  --nr-accent:         #0066cc;
+  --nr-accent-hover:   #0099ff;
+  --nr-accent-active:  #004c99;
+  --nr-accent-soft:    rgba(0, 102, 204, 0.10);
+  --nr-accent-contrast: #ffffff;
+
+  --nr-success:      #059669;
+  --nr-success-soft: rgba(5, 150, 105, 0.10);
+  --nr-warning:      #d97706;
+  --nr-warning-soft: rgba(217, 119, 6, 0.10);
+  --nr-danger:       #dc2626;
+  --nr-danger-soft:  rgba(220, 38, 38, 0.10);
+  --nr-info:         #0284c7;
+  --nr-info-soft:    rgba(2, 132, 199, 0.10);
+
+  --nr-shadow-sm: 0 1px 2px rgba(15,20,24,.06);
+  --nr-shadow-md: 0 4px 12px rgba(15,20,24,.08);
+  --nr-shadow-lg: 0 10px 30px rgba(15,20,24,.12);
+  --nr-shadow-glow: 0 0 24px rgba(0,102,204,.2);
+
+  --nr-scrollbar-track: #eef0f4;
+  --nr-scrollbar-thumb: #b4bcc7;
+
+  color-scheme: light;
+}

@@ -1,0 +1,213 @@
+<!doctype html>
+<html lang="ar" dir="rtl" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>NouRion — الرسم</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&family=IBM+Plex+Sans+Arabic:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="assets/css/nourion-tokens.css">
+  <link rel="stylesheet" href="assets/css/nourion-base.css">
+  <link rel="stylesheet" href="assets/css/nourion-components.css">
+
+  <script src="assets/js/nourion-theme.js"></script>
+  <script src="../src/modules/draw/draw.logic.js"></script>
+  <script src="../src/modules/draw/draw.view.js"></script>
+
+  <link rel="icon" type="image/svg+xml" href="assets/img/logo.svg">
+</head>
+<body>
+
+<div class="nr-app">
+
+  <aside class="nr-sidebar">
+    <div class="nr-sidebar__brand">
+      <img src="assets/img/logo.svg" alt="NouRion" style="height:32px;">
+    </div>
+    <nav class="nr-sidebar__nav">
+      <div class="nr-nav-section">
+        <div class="nr-nav-section__title">الرئيسية</div>
+        <a class="nr-nav-item" href="index.html"><span class="nr-nav-item__icon">◇</span> Design System</a>
+        <a class="nr-nav-item" href="projects.html"><span class="nr-nav-item__icon">◈</span> المشاريع</a>
+      </div>
+      <div class="nr-nav-section">
+        <div class="nr-nav-section__title">التصنيع</div>
+        <a class="nr-nav-item" href="forms.html"><span class="nr-nav-item__icon">📋</span> الاستمارة</a>
+        <a class="nr-nav-item" href="measurements.html"><span class="nr-nav-item__icon">◎</span> المقاسات</a>
+        <a class="nr-nav-item is-active"><span class="nr-nav-item__icon">📐</span> الرسم</a>
+        <a class="nr-nav-item" href="installations.html"><span class="nr-nav-item__icon">🔨</span> التركيبات</a>
+      </div>
+      <div class="nr-nav-section">
+        <div class="nr-nav-section__title">الإدارة</div>
+        <a class="nr-nav-item" href="hr.html"><span class="nr-nav-item__icon">👥</span> الموظفون</a>
+      </div>
+    </nav>
+  </aside>
+
+  <main class="nr-app__main">
+
+    <header class="nr-topbar">
+      <div class="nr-topbar__title">رسم النوافذ · Window Drawing</div>
+      <div class="nr-topbar__actions">
+        <button class="nr-btn nr-btn--ghost nr-btn--sm" data-nr-theme-toggle>
+          <span data-nr-theme-icon>☀</span>
+          <span data-nr-theme-label>الوضع الفاتح</span>
+        </button>
+      </div>
+    </header>
+
+    <div class="nr-app__content">
+
+      <div class="nr-alert nr-alert--info" style="margin-bottom: var(--nr-sp-8);">
+        <span class="nr-alert__icon">ⓘ</span>
+        <div class="nr-alert__body">
+          <div class="nr-alert__title">Phase 2.5 · draw POC</div>
+          <div class="nr-alert__msg">
+            أكبر module في النظام (4,356 سطر). استخرجنا <strong>10 دوال هندسية pure</strong>
+            (buildModel + panel grid + tBars + beads) وبدل <strong>canvas</strong> استخدمنا
+            <strong>SVG</strong> — النتيجة: أخفّ، قابل للطباعة مباشرة، لا ratina/zoom issues،
+            والأهم: قابل للاختبار. <strong>43 اختبار</strong> ناجح من أوّل محاولة.
+          </div>
+        </div>
+      </div>
+
+      <section style="margin-bottom: var(--nr-sp-8);">
+        <h1 style="font-size: var(--nr-fs-3xl); font-weight: 300;">
+          رسم <span style="color: var(--nr-accent); font-weight: 500;">النوافذ</span>
+        </h1>
+        <p style="max-width: 720px;">
+          عدّل الأبعاد والتقسيمات لرؤية النافذة تُرسم live + حساب كل قطع البوم
+          (BOM) تلقائياً: الحلق، القاطعات، الزجاج، البكلوز.
+        </p>
+      </section>
+
+      <!-- Controls -->
+      <section style="margin-bottom: var(--nr-sp-6);">
+        <div class="nr-card">
+          <div class="nr-card__header">
+            <div class="nr-card__title">الإعدادات</div>
+          </div>
+          <div class="nr-card__body nr-grid-4" style="grid-template-columns: repeat(6, 1fr);">
+            <div>
+              <label class="nr-label">العرض W</label>
+              <input class="nr-input" id="W" type="number" value="2000" step="50">
+              <small class="nr-help">mm</small>
+            </div>
+            <div>
+              <label class="nr-label">الارتفاع H</label>
+              <input class="nr-input" id="H" type="number" value="1500" step="50">
+              <small class="nr-help">mm</small>
+            </div>
+            <div>
+              <label class="nr-label">عمود divW</label>
+              <input class="nr-input" id="divW" type="number" value="2" min="1" max="10">
+              <small class="nr-help">قسم عرضي</small>
+            </div>
+            <div>
+              <label class="nr-label">صف divH</label>
+              <input class="nr-input" id="divH" type="number" value="1" min="1" max="10">
+              <small class="nr-help">قسم رأسي</small>
+            </div>
+            <div>
+              <label class="nr-label">الحلق sec</label>
+              <input class="nr-input" id="sec" type="number" value="23" step="1">
+              <small class="nr-help">mm</small>
+            </div>
+            <div>
+              <label class="nr-label">القاطع tBar</label>
+              <input class="nr-input" id="tBarW" type="number" value="28" step="1">
+              <small class="nr-help">mm</small>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Stats -->
+      <section style="margin-bottom: var(--nr-sp-6);">
+        <h6 class="nr-section-title">BOM Summary</h6>
+        <div id="statsHost"></div>
+      </section>
+
+      <!-- Drawing -->
+      <section style="margin-bottom: var(--nr-sp-6);">
+        <h6 class="nr-section-title">الرسم (SVG)</h6>
+        <div class="nr-card">
+          <div class="nr-card__body" style="background: var(--nr-bg-1);">
+            <div id="drawHost" style="max-width: 100%; display: flex; justify-content: center;"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Cut list -->
+      <section style="margin-bottom: var(--nr-sp-10);">
+        <h6 class="nr-section-title">Cut List</h6>
+        <div id="cutListHost"></div>
+      </section>
+
+      <footer style="padding-top: var(--nr-sp-8); border-top: 1px solid var(--nr-border-subtle);">
+        <div class="nr-row-between">
+          <small>Module: draw · 43 tests · 10 geometry functions · SVG renderer (no canvas)</small>
+          <small style="font-family: var(--nr-font-mono);">Phase 2.5 · POC #12</small>
+        </div>
+      </footer>
+
+    </div>
+  </main>
+</div>
+
+
+<script>
+  var L = NouRion.DrawLogic;
+  var V = NouRion.DrawView;
+
+  var statsHost    = document.getElementById('statsHost');
+  var drawHost     = document.getElementById('drawHost');
+  var cutListHost  = document.getElementById('cutListHost');
+
+  var inputs = ['W', 'H', 'divW', 'divH', 'sec', 'tBarW'];
+  var els = {};
+  inputs.forEach(function (k) {
+    els[k] = document.getElementById(k);
+    els[k].addEventListener('input', render);
+  });
+
+  function render() {
+    var dw = {
+      W:     parseInt(els.W.value, 10)    || 2000,
+      H:     parseInt(els.H.value, 10)    || 1500,
+      divW:  parseInt(els.divW.value, 10) || 1,
+      divH:  parseInt(els.divH.value, 10) || 1,
+      sec:   parseInt(els.sec.value, 10)  || 23,
+      tBarW: parseInt(els.tBarW.value, 10)|| 28,
+      bead: 22,
+      glassDed: 8,
+      panelWidths: [],
+      panelHeights: [],
+      vFull: true,
+      doorBottom: true
+    };
+
+    var model = L.buildModel(dw, null);
+
+    statsHost.innerHTML = '';
+    statsHost.appendChild(V.renderStats(model));
+
+    drawHost.innerHTML = '';
+    var svg = V.renderModel(model, {});
+    svg.style.width = '100%';
+    svg.style.maxHeight = '600px';
+    svg.style.height = 'auto';
+    drawHost.appendChild(svg);
+
+    cutListHost.innerHTML = '';
+    cutListHost.appendChild(V.renderCutList(model));
+  }
+
+  render();
+</script>
+
+</body>
+</html>

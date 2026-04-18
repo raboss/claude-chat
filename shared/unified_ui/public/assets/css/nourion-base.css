@@ -1,0 +1,162 @@
+/* ============================================================
+   NouRion — Base styles
+   Reset + typography + scrollbars + accessibility.
+   Depends on: nourion-tokens.css
+   ============================================================ */
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: var(--nr-fs-base);
+  line-height: var(--nr-lh-normal);
+  -webkit-text-size-adjust: 100%;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  font-feature-settings: 'ss01', 'ss02', 'cv11'; /* Space Grotesk alt-glyphs */
+}
+
+body {
+  font-family: var(--nr-font-sans);
+  font-weight: var(--nr-fw-light); /* light as default — AI/tech vibe */
+  background: var(--nr-bg-0);
+  color: var(--nr-text-primary);
+  min-height: 100vh;
+  transition: background var(--nr-t-normal), color var(--nr-t-normal);
+  letter-spacing: 0.005em;
+}
+
+/* RTL support — matches existing project */
+body[dir="rtl"],
+html[dir="rtl"] {
+  font-family: var(--nr-font-ar);
+}
+
+/* ---------- Headings ---------- */
+h1, h2, h3, h4, h5, h6 {
+  font-weight: var(--nr-fw-medium);
+  line-height: var(--nr-lh-tight);
+  letter-spacing: var(--nr-ls-tight);
+  color: var(--nr-text-primary);
+}
+
+h1 { font-size: var(--nr-fs-3xl); font-weight: var(--nr-fw-semibold); }
+h2 { font-size: var(--nr-fs-2xl); font-weight: var(--nr-fw-medium); }
+h3 { font-size: var(--nr-fs-xl);  font-weight: var(--nr-fw-medium); }
+h4 { font-size: var(--nr-fs-lg);  font-weight: var(--nr-fw-medium); }
+h5 { font-size: var(--nr-fs-md);  font-weight: var(--nr-fw-medium); }
+h6 { font-size: var(--nr-fs-base); font-weight: var(--nr-fw-medium); text-transform: uppercase; letter-spacing: var(--nr-ls-wide); color: var(--nr-text-secondary); }
+
+p {
+  color: var(--nr-text-secondary);
+  line-height: var(--nr-lh-normal);
+}
+
+small { font-size: var(--nr-fs-xs); color: var(--nr-text-tertiary); }
+
+a {
+  color: var(--nr-accent);
+  text-decoration: none;
+  transition: color var(--nr-t-fast);
+}
+a:hover { color: var(--nr-accent-hover); }
+a:focus-visible { outline: 2px solid var(--nr-accent); outline-offset: 2px; border-radius: var(--nr-r-sm); }
+
+code, kbd, pre, samp {
+  font-family: var(--nr-font-mono);
+  font-size: 0.9em;
+}
+
+code {
+  background: var(--nr-bg-3);
+  padding: 2px 6px;
+  border-radius: var(--nr-r-sm);
+  color: var(--nr-accent);
+}
+
+hr {
+  border: 0;
+  border-top: 1px solid var(--nr-border-subtle);
+  margin: var(--nr-sp-6) 0;
+}
+
+/* ---------- Images ---------- */
+img, svg, video, canvas {
+  max-width: 100%;
+  display: block;
+}
+
+/* ---------- Lists ---------- */
+ul, ol { list-style: none; }
+
+/* ---------- Scrollbars ---------- */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--nr-scrollbar-thumb) var(--nr-scrollbar-track);
+}
+
+*::-webkit-scrollbar { width: 10px; height: 10px; }
+*::-webkit-scrollbar-track { background: var(--nr-scrollbar-track); }
+*::-webkit-scrollbar-thumb {
+  background: var(--nr-scrollbar-thumb);
+  border-radius: var(--nr-r-pill);
+  border: 2px solid var(--nr-scrollbar-track);
+}
+*::-webkit-scrollbar-thumb:hover { background: var(--nr-border-strong); }
+
+/* ---------- Selection ---------- */
+::selection {
+  background: var(--nr-accent);
+  color: var(--nr-accent-contrast);
+}
+
+/* ---------- Focus ---------- */
+:focus { outline: none; }
+:focus-visible {
+  outline: 2px solid var(--nr-accent);
+  outline-offset: 2px;
+  border-radius: var(--nr-r-sm);
+}
+
+/* ---------- Utility: visually hidden but accessible ---------- */
+.nr-sr-only {
+  position: absolute !important;
+  width: 1px; height: 1px;
+  padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0,0,0,0);
+  white-space: nowrap; border: 0;
+}
+
+/* ---------- Reduced motion ---------- */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ---------- Layout helpers ---------- */
+.nr-container {
+  width: 100%;
+  max-width: var(--nr-content-max);
+  margin-inline: auto;
+  padding-inline: var(--nr-sp-6);
+}
+
+.nr-stack      { display: flex; flex-direction: column; gap: var(--nr-sp-4); }
+.nr-stack-sm   { display: flex; flex-direction: column; gap: var(--nr-sp-2); }
+.nr-stack-lg   { display: flex; flex-direction: column; gap: var(--nr-sp-8); }
+.nr-row        { display: flex; align-items: center; gap: var(--nr-sp-3); }
+.nr-row-between{ display: flex; align-items: center; justify-content: space-between; gap: var(--nr-sp-3); }
+.nr-grid-2     { display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--nr-sp-4); }
+.nr-grid-3     { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--nr-sp-4); }
+.nr-grid-4     { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--nr-sp-4); }
+
+@media (max-width: 768px) {
+  .nr-grid-2, .nr-grid-3, .nr-grid-4 { grid-template-columns: 1fr; }
+}
