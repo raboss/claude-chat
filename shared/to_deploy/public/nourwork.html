@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>نور ورك · NourWork</title>
+<link rel="stylesheet" href="/assets/css/nourion-tokens.css">
+<link rel="stylesheet" href="/assets/css/nourion-base.css">
+<link rel="stylesheet" href="/assets/css/nourion-components.css">
+<link rel="stylesheet" href="/assets/css/nourion-fonts.css">
+<link rel="stylesheet" href="/assets/css/nourwork.css">
+</head>
+<body>
+
+<!-- Shell (sidebar + topbar) injected by live-page-shell.js -->
+<div id="nr-shell"></div>
+
+<main class="nr-main">
+
+  <!-- Hero -->
+  <section class="nw-hero">
+    <div class="nw-hero-left">
+      <div class="nw-label">Ra Workshop · Integration Layer</div>
+      <h1 class="nw-title">نور ورك <em>NourWork</em></h1>
+      <p class="nw-sub">واجهة عربية لمشاريع Ra Workshop — اقرأ، اعرض، وحلل كل ما يصممه المهندس في لوحة واحدة.</p>
+
+      <div class="nw-stats">
+        <div class="nw-stat">
+          <div class="nw-stat-val" id="statProjects">—</div>
+          <div class="nw-stat-lbl">مشاريع</div>
+        </div>
+        <div class="nw-stat">
+          <div class="nw-stat-val" id="statMaterials">—</div>
+          <div class="nw-stat-lbl">قطاعات</div>
+        </div>
+        <div class="nw-stat">
+          <div class="nw-stat-val" id="statTemplates">—</div>
+          <div class="nw-stat-lbl">قوالب Romchi</div>
+        </div>
+        <div class="nw-stat">
+          <div class="nw-stat-val nw-health" id="statHealth">●</div>
+          <div class="nw-stat-lbl">SQL</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="nw-hero-right">
+      <!-- 3D Preview placeholder -->
+      <div class="nw-3d-placeholder">
+        <div class="nw-3d-badge">3D PREVIEW · Coming Soon</div>
+        <svg viewBox="0 0 200 200" class="nw-3d-svg">
+          <g transform="translate(100,100)" stroke="#B8BCC2" stroke-width="1.5" fill="none">
+            <ellipse rx="60" ry="22" opacity="0.7"/>
+            <ellipse rx="60" ry="22" opacity="0.7" transform="rotate(60)"/>
+            <ellipse rx="60" ry="22" opacity="0.7" transform="rotate(-60)"/>
+            <circle r="6" fill="#B8BCC2"/>
+          </g>
+        </svg>
+        <div class="nw-3d-hint">Blender rendering integration</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Tabs -->
+  <div class="nw-tabs">
+    <button class="nw-tab active" data-tab="projects">📁 المشاريع</button>
+    <button class="nw-tab" data-tab="materials">📦 القطاعات والمواد</button>
+    <button class="nw-tab" data-tab="templates">🎨 قوالب Romchi</button>
+    <button class="nw-tab" data-tab="api">🔌 API Console</button>
+  </div>
+
+  <!-- Projects Tab -->
+  <section class="nw-panel active" id="tab-projects">
+    <div class="nw-panel-head">
+      <h2>مشاريع Ra Workshop</h2>
+      <div class="nw-search-box">
+        <input type="search" id="searchProjects" placeholder="ابحث بالاسم أو الكود...">
+      </div>
+    </div>
+
+    <div class="nw-projects-grid" id="projectsGrid">
+      <div class="nw-loading">جاري التحميل...</div>
+    </div>
+  </section>
+
+  <!-- Project Detail Modal -->
+  <div class="nw-modal" id="projectModal" hidden>
+    <div class="nw-modal-backdrop" data-close></div>
+    <div class="nw-modal-card">
+      <div class="nw-modal-head">
+        <div>
+          <div class="nw-modal-label" id="modalCode">—</div>
+          <h2 class="nw-modal-title" id="modalName">—</h2>
+        </div>
+        <button class="nw-btn-icon" data-close aria-label="إغلاق">✕</button>
+      </div>
+
+      <div class="nw-modal-body">
+        <!-- Info grid -->
+        <div class="nw-info-grid">
+          <div class="nw-info">
+            <div class="nw-info-lbl">التاريخ</div>
+            <div class="nw-info-val" id="modalDate">—</div>
+          </div>
+          <div class="nw-info">
+            <div class="nw-info-lbl">العملة</div>
+            <div class="nw-info-val" id="modalCurrency">—</div>
+          </div>
+          <div class="nw-info">
+            <div class="nw-info-lbl">نوع المشروع</div>
+            <div class="nw-info-val" id="modalType">—</div>
+          </div>
+          <div class="nw-info">
+            <div class="nw-info-lbl">القيمة</div>
+            <div class="nw-info-val" id="modalValue">—</div>
+          </div>
+        </div>
+
+        <!-- Cost breakdown -->
+        <div class="nw-section">
+          <div class="nw-section-head">
+            <h3>تفاصيل التكلفة (Cost Breakdown)</h3>
+            <div class="nw-section-badge"><span id="costCount">—</span> بند</div>
+          </div>
+          <div class="nw-cost-table" id="costTable">
+            <div class="nw-loading-sm">جاري...</div>
+          </div>
+        </div>
+
+        <!-- Components summary -->
+        <div class="nw-section">
+          <div class="nw-section-head">
+            <h3>المكونات (Components)</h3>
+            <div class="nw-section-badge"><span id="compCount">—</span> مكوّن</div>
+          </div>
+          <div class="nw-components" id="componentsList">
+            <div class="nw-loading-sm">جاري...</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Materials Tab -->
+  <section class="nw-panel" id="tab-materials" hidden>
+    <div class="nw-panel-head">
+      <h2>مكتبة القطاعات والمواد</h2>
+      <div class="nw-search-box">
+        <input type="search" id="searchMaterials" placeholder="ابحث بالكود أو الاسم...">
+      </div>
+    </div>
+    <div class="nw-materials-grid" id="materialsGrid">
+      <div class="nw-loading">جاري التحميل...</div>
+    </div>
+  </section>
+
+  <!-- Templates Tab (Romchi) -->
+  <section class="nw-panel" id="tab-templates" hidden>
+    <div class="nw-panel-head">
+      <h2>قوالب Romchi</h2>
+      <div class="nw-template-filters">
+        <button class="nw-chip active" data-filter="all">الكل</button>
+        <button class="nw-chip" data-filter="arcs">أقواس</button>
+        <button class="nw-chip" data-filter="doors">أبواب</button>
+        <button class="nw-chip" data-filter="glasses">زجاج</button>
+      </div>
+    </div>
+    <div class="nw-templates-grid" id="templatesGrid">
+      <div class="nw-loading">جاري التحميل...</div>
+    </div>
+  </section>
+
+  <!-- API Console -->
+  <section class="nw-panel" id="tab-api" hidden>
+    <div class="nw-panel-head">
+      <h2>API Console — Ra + NourWork</h2>
+    </div>
+    <div class="nw-api-list">
+      <div class="nw-api-item" data-url="/api/ra/health">
+        <span class="nw-method get">GET</span>
+        <code>/api/ra/health</code>
+        <span class="nw-api-desc">فحص صحة قاعدة البيانات</span>
+      </div>
+      <div class="nw-api-item" data-url="/api/ra/projects">
+        <span class="nw-method get">GET</span>
+        <code>/api/ra/projects</code>
+        <span class="nw-api-desc">جميع المشاريع</span>
+      </div>
+      <div class="nw-api-item" data-url="/api/ra/projects/432">
+        <span class="nw-method get">GET</span>
+        <code>/api/ra/projects/:id</code>
+        <span class="nw-api-desc">مشروع واحد بالتفصيل</span>
+      </div>
+      <div class="nw-api-item" data-url="/api/ra/projects/432/cost-breakdown">
+        <span class="nw-method get">GET</span>
+        <code>/api/ra/projects/:id/cost-breakdown</code>
+        <span class="nw-api-desc">تفاصيل التكلفة</span>
+      </div>
+      <div class="nw-api-item" data-url="/api/ra/projects/432/components">
+        <span class="nw-method get">GET</span>
+        <code>/api/ra/projects/:id/components</code>
+        <span class="nw-api-desc">مكونات المشروع</span>
+      </div>
+      <div class="nw-api-item" data-url="/api/ra/materials">
+        <span class="nw-method get">GET</span>
+        <code>/api/ra/materials</code>
+        <span class="nw-api-desc">كتالوج المواد</span>
+      </div>
+      <div class="nw-api-item" data-url="/api/nourwork/templates">
+        <span class="nw-method get">GET</span>
+        <code>/api/nourwork/templates</code>
+        <span class="nw-api-desc">قوالب Romchi (arcs/doors/glasses)</span>
+      </div>
+    </div>
+
+    <div class="nw-api-output">
+      <div class="nw-api-output-head">
+        <span>Response</span>
+        <button class="nw-btn-ghost" id="clearApiOut">مسح</button>
+      </div>
+      <pre id="apiOutput">— اضغط على endpoint فوق لتجربته —</pre>
+    </div>
+  </section>
+
+</main>
+
+<!-- Scripts -->
+<script src="/assets/js/nourion-theme.js"></script>
+<script src="/assets/js/nourion-i18n.js"></script>
+<script src="/assets/js/live-page-shell.js"></script>
+<script src="/assets/js/nourwork-page.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,56 @@
+NOURWORK.HTML — جاهز للنشر
+
+التاريخ: 2026-04-20
+من: عماد
+إلى: حوبي
+
+═══════════════════════════════════════════════
+
+📦 الملفات المطلوب نسخها إلى nourion_unified/public/:
+
+  public/nourwork.html
+  public/assets/js/nourwork-page.js
+  public/assets/css/nourwork.css
+
+أمر النسخ على Linux:
+  cp -r shared/to_deploy/public/* /home/nour/ALUMINUM-MS/nourion_unified/public/
+
+═══════════════════════════════════════════════
+
+🎯 شو فيها:
+
+✅ Hero section — 4 stats live (مشاريع/قطاعات/قوالب/SQL health)
+✅ Projects tab — grid + search + click → modal
+✅ Project modal — تفاصيل + cost breakdown + components
+✅ Materials tab — 514 قطاع بـ search
+✅ Templates tab — 67 Romchi (arcs/doors/glasses) + فلتر
+✅ API Console — 7 endpoints interactive + live output
+✅ 3D preview placeholder — جاهز لـ Blender integration
+
+🎨 Silver-platinum luxury theme
+🌐 عربي كامل + RTL
+📱 Responsive
+
+═══════════════════════════════════════════════
+
+🔗 الرابط بعد النشر:
+
+https://aluminum-nour.ngrok.pro/unified/nourwork.html
+
+═══════════════════════════════════════════════
+
+📡 APIs اللي تستهلكها:
+
+GET /api/ra/health
+GET /api/ra/projects
+GET /api/ra/projects/:id
+GET /api/ra/projects/:id/cost-breakdown
+GET /api/ra/projects/:id/components
+GET /api/ra/materials
+GET /api/nourwork/templates
+
+كلها مختبرة وشغالة الآن (April 20) ✅
+
+═══════════════════════════════════════════════
+
+— عماد
